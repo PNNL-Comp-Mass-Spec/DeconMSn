@@ -1,0 +1,54 @@
+DeconMSn Revision History
+
+Version 2.2.2.3 ; November 3, 2010
+	- Added support to process zoom scans 
+
+Version 2.2.2.2 ; October 26, 2010
+	- Bug Fix. Parent intensities in log file were reported as negative number due to an overflow error. 
+	
+Version 2.2.2.1 ; October 23, 2009
+	- Bug fix. Fixed parent mz calculation when creating MGF files. 
+
+Version 2.1.4.1 ; July 2, 2009
+	- Recompiled to replace possible(?) buggy version at http://omics.pnl.gov/software
+		- Note that fast summing has been implemented but the accuracy of results has not been fully tested (as compared with version 2.1.3.2)
+
+Version 2.1.3.2 ; June 13, 2008
+	- Minor change in reporting mono_intensity in log file. If not THRASHed nor FindPeaked, the mono_intensity is now set to the parent intensity or the noise level(if the parent cannot be picked) .  
+
+Version 2.1.3.1 ; May 9, 2008
+	- Fixed bug in summed spectra for EIF_datasets
+	- Added more try-catch to make it more robust
+	- Other changes. 
+
+Version 2.1; May 1, 2008
+	- Added new parameters for processing mzXML files and ability to create level-specific DTAs in the parameter files
+	- Added modifications to Log file to include processing details and dataset information.
+	- Added version tab to properties of DeconMSn.exe and deconmsnengine.dll
+	- Added code to create _profile.txt file that contains Ion injection time (AGC time) and TIC of parent spectra.
+	- Other changes
+	
+Version 2.0; April 7, 2008
+	- Added command line switch -P, which allows the user to specify an XML Parameter file with processing options
+
+Version 1.9; March 17, 2008
+	- Algorithm modifications to -CDTA options
+	- Other changes
+
+Version 1.8; March 5, 2008
+	- Various improvements
+
+Version 1.6; December 19, 2007
+	- Algorithm change such that if the parent peak is below the noise floor, then adjacent scans are summed to improve S/N
+	- Now uses a single universal value of 1.00727638 for the charge carrier mass
+	- Fixed a bug in the MGF/CDTA creation process
+
+Version 1.5; November 8, 2007
+	- Fixed bug in summing spectra
+	- Inserted code to get Ion Injection Time and TIC for a scan (though the code is commented out)
+
+Version 1.4; September 17, 2007
+	- Now rounding the intensity values written out to 2 digits after the decimal point (was previously 5 digits)
+
+Version 1.4; September 12, 2007
+	- Initial public release

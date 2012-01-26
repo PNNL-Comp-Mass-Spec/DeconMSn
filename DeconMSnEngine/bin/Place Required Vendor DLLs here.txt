@@ -1,0 +1,21 @@
+After installing Thermo's Xcalibur software, copy the following files 
+from C:\Xcalibur\system\programs\ to this folder
+	CFRDBResources.dll
+	CFRUtil.dll
+	FControl2.dll
+	Fglobal.dll
+	Fileio.dll
+	finDB.dll
+	finSSClientLib.dll
+	Fregistry.dll
+	XRawfile2.dll
+
+After installing Agilent's Analyst software, copy the following files
+from C:\Program Files\Analyst\bin\ to this folder
+	ExploreDataObjects.dll
+	ExploreDataObjectsManaged.dll
+	ExploreDataObjectsps.dll
+
+In addition, you will need to update the following preprocessor options 
+based on the software you have installed:
+	MASSLYNX_4_INSTALLED; XCALIBUR_INSTALLED; ANALYST_INSTALLED;

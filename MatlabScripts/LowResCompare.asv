@@ -1,0 +1,25 @@
+% Compares the results of DeconMsn with Extract_msn
+% Reads in the fht file and the concatenated file list generated from
+% ConcatenateDtas.pl and compares the two based on charge and scan
+
+clc
+clear all;
+X = [] ; 
+
+fid_dtas = fopen('C:\data\Dta\validate_results\file_list.txt');
+fid_out = fopen('C:\data\Dta\Test\Combined_list.csv', 'wt') ; 
+
+filename = fgets(fid);
+while filename ~= -1    
+fileCh = strcat(filename) ;
+    fspectra = fopen(fileCh);
+    line = fgets(fspectra);
+    value = str2num(line);
+    mass = value(1);
+    charge = value(2);  
+    scan = GetScanFromFilename(filename);
+    fprintf(fid_out, '%d
+end
+fclose(fid_fht) ; 
+    
+ 

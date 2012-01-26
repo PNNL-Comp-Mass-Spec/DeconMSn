@@ -1,0 +1,17 @@
+//File list to compare beween extract_msn and deconMSN
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.10006.10006
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.10035.10035
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.10088.10088
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.1146.1146
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.6864.6864
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.7910.7910.3 
+
+
+
+
+
+//Other stupid reasons
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.4619.4619.3 in mzXML returned a 3 where raw didn't give anything, mono_mz in header was 0
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.3696.3696.3 for some reason mzXMl didn't gicve anything
+ShewMS_08-pt1-ff_12Oct06_OWL_06-08-04.660.660.1  this time RAW didn't give anything
+
