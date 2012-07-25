@@ -1,9 +1,9 @@
-// Created by Microsoft (R) C/C++ Compiler Version 13.10.3077 (3244613c).
+// Created by Microsoft (R) C/C++ Compiler Version 13.10.6030 (945599e2).
 //
-// c:\deconmsn\deconmsnengine\release\xrawfile2.tlh
+// d:\my documents\projects\deconmsn\deconmsnengine\release\xrawfile2.tlh
 //
 // C++ source equivalent of Win32 type library ..\bin\xrawfile2.dll
-// compiler-generated file created 09/28/09 at 16:54:34 - DO NOT EDIT!
+// compiler-generated file created 07/25/12 at 09:31:35 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
@@ -1581,7 +1581,7 @@ XVirUV;
 // Wrapper method implementations
 //
 
-#include "c:\deconmsn\deconmsnengine\release\xrawfile2.tli"
+#include "d:\my documents\projects\deconmsn\deconmsnengine\release\xrawfile2.tli"
 
 } // namespace XRAWFILE2Lib
 
