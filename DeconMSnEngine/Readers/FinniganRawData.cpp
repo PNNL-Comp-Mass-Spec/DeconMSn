@@ -428,9 +428,41 @@ namespace Engine
 
 			int ms_level = GetMSLevel(scan_num);
 			if (ms_level == 1)
+			{
+
+				char ch_filter [512] ; 					
+				_bstr_t bstr_filter ;
+				m_xraw2_class->GetFilterForScanNum((long)scan_num, &bstr_filter.GetBSTR()) ;  
+				strcpy(ch_filter,(char*)bstr_filter);		
+
+				bool isSIMScan= false;
+				//search for 'SIM'
+				for ( int chNum = 0; chNum < 512; chNum++)
+				{
+					if (ch_filter[chNum] == 'S')
+					{
+						if(ch_filter[chNum+1] == 'I')
+						{
+							if(ch_filter[chNum+1] == 'M')
+							{
+								isSIMScan=true;
+								break;
+							}
+						}
+					}
+				}
+
+				if (isSIMScan)
+				{
+					return false;
+				}
+
 				return true;
+			}
 			else
+			{			
 				return false;
+			}
 		}	
 		
 		double FinniganRawData::GetMonoMZFromHeader(int scan_num)

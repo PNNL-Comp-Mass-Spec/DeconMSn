@@ -763,8 +763,12 @@ namespace Decon2LS
 						
 			while (scan_num <= num_scans)
 			{	
-				mint_percent_done = (scan_num*100)/num_scans ;					
-				if (dta_processor->mobj_raw_data_dta->IsMSScan(scan_num))
+				mint_percent_done = (scan_num*100)/num_scans ;	
+
+				bool isMS1 = dta_processor->mobj_raw_data_dta->IsMSScan(scan_num);
+
+				
+				if (isMS1)
 				{	
 				    //Get MS spectra					
 					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																												

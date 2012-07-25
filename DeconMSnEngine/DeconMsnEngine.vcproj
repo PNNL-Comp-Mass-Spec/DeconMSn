@@ -27,7 +27,7 @@
 				AdditionalOptions="/Zl"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;C:\xerces-c\include\&quot;"
+				AdditionalIncludeDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\include&quot;;&quot;C:\xerces\xerces-c-windows_2000-msvc_60&quot;;&quot;C:\xerces-c\include\&quot;"
 				AdditionalUsingDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;XCALIBUR_INSTALLED"
 				MinimalRebuild="FALSE"
@@ -46,7 +46,7 @@
 				AdditionalDependencies="nochkclr.obj mscoree.lib msvcrtd.lib Ws2_32.lib xerces-c_2.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\xerces-c\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\xerces-c\lib&quot;;&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;"
 				ForceSymbolReferences="__DllMainCRTStartup@12"
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"/>
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zl"
-				AdditionalIncludeDirectories="&quot;C:\xerces-c\include\&quot;"
+				AdditionalIncludeDirectories="&quot;C:\xerces-c\include\&quot;;&quot;C:\xerces\xerces-c-windows_2000-msvc_60\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;XCALIBUR_INSTALLED"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
@@ -97,7 +97,7 @@
 				AdditionalDependencies="nochkclr.obj mscoree.lib msvcrt.lib Ws2_32.lib xerces-c_2.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\xerces-c\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;;&quot;C:\xerces-c\lib&quot;"
 				ForceSymbolReferences="__DllMainCRTStartup@12"
 				GenerateDebugInformation="TRUE"
 				TargetMachine="1"/>
