@@ -1,0 +1,7 @@
+Key points while upgrading from VS2003 to VS2010.
+
+- Remove "/Zl" flag in the "Command line options" property page for the C++ compiler.
+- set Properties->C/C++->Language->Treat WChar_t As Built in Type to No(/Zc:wchar_t-)
+
+Doing the above fixed ~ 370 linker errors. 
+
