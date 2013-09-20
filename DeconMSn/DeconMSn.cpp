@@ -254,10 +254,10 @@ int _tmain( int argc, char *argv[] )
 	
 	obj_proc_runner->CreateDTAFile() ; 
 
-	obj_dta_generation_parameters->__dtor() ; 
-	obj_peak_parameters->__dtor() ; 
-	obj_transform_parameters->__dtor() ; 
-	obj_proc_runner->__dtor() ; 
+	//obj_dta_generation_parameters->__dtor() ; 
+	//obj_peak_parameters->__dtor() ; 
+	//obj_transform_parameters->__dtor() ; 
+	//obj_proc_runner->__dtor() ; 
 	End = clock() ; 
 	cout<<"Stopping clock ticks. End = " << End << " ticks.\n";
 

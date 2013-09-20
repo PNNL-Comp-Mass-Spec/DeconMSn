@@ -1,11 +1,9 @@
-
 #include "IMSRawData.h"
 #include <map> 
 #include <iostream>
 #include <float.h>
 #include <fstream> 
 #include <math.h>
-#include <map>
 #include <io.h>
 #include <fcntl.h>
 #include <string.h>
@@ -36,6 +34,8 @@ namespace Engine
 				mvect_mxed_data.clear() ; 
 			if (mvect_scan_bpi.size() != 0)
 				mvect_scan_bpi.clear() ;
+			if (mvect_scan_bpi_adc.size() != 0)
+				mvect_scan_bpi_adc.clear() ;
 			if (mvect_scan_start_index.size() != 0)
 				mvect_scan_start_index.clear() ; 
 			if (mmap_bin_intensity_map.size() != 0)
@@ -66,7 +66,7 @@ namespace Engine
 
 			char last_char = 0 ; 
 
-			// Read the harder in, and initialize values
+			// Read the header in, and initialize values
 			while (!feof(pFile))
 			{
 				fgets(stringBuf, SIZE_BUF, pFile) ; 				
@@ -157,10 +157,9 @@ namespace Engine
 				tof_rec_size = 2* INT_SIZE ; 
 			else
 				tof_rec_size = SHRT_SIZE + INT_SIZE ; 
-
 			
 			
-			//Read in number of ims scans			
+			//Read in number of IMS scans			
 			int num_read = _read(fh, &mint_num_scans, INT_SIZE);			
 
 			// Read in the lengths and the tic values. 
@@ -179,8 +178,9 @@ namespace Engine
 				int temp  = int_vals[2*scan_num] ; 
 				temp = int_vals[scan_num*2+1] ; 				
 				mvect_scan_bpi.push_back(int_vals[2*scan_num]) ; 
+				mvect_scan_bpi_adc.push_back(int_vals[2*scan_num]) ; 
 				mvect_scan_start_index.push_back(num_pts_so_far) ;
-				num_pts_so_far += int_vals[scan_num*2+1] / tof_rec_size ; 
+				num_pts_so_far += int_vals[scan_num*2+1] / tof_rec_size; 
 			}
 			mvect_scan_start_index.push_back(num_pts_so_far) ; 
 			
@@ -197,12 +197,10 @@ namespace Engine
 			//std::cerr<<"Loading "<<file<<" # of points = "<<num_pts_so_far<<" Read points = "<<num_read/TOFREC_SIZE<<std::endl ; 
 
 			// Now copy into TOFRecords and stuff them into the vector
-			
-
             for (int pt_num = 0 ; pt_num < num_pts_so_far ; pt_num++)
 			{
 			try
-				{
+			{
 
 				while (mvect_scan_start_index[current_scan] < pt_num)
 					current_scan++  ;
@@ -220,6 +218,7 @@ namespace Engine
 				{
 					memcpy(&adc_rec, &temp[pt_num*tof_rec_size], tof_rec_size) ; 	
 					mvect_adc_data.push_back(adc_rec) ; 
+					
 					if (adc_rec.tof_bin > mint_max_scan_size)
 						mint_max_scan_size = adc_rec.tof_bin ; 
 				}
@@ -230,7 +229,7 @@ namespace Engine
 					if (rec.tof_bin > mint_max_scan_size)
 						mint_max_scan_size = rec.tof_bin ; 
 				}
-				}
+			}
 					
 			catch (std::exception &e)
 			{
@@ -244,12 +243,8 @@ namespace Engine
 			{
 				std::cerr<<e.what()<<std::endl ; 					
 			}
-
-		
-
-
 			}
-			
+
 			mint_max_scan_size++ ; 
 
 			delete [] temp ; 
@@ -265,6 +260,7 @@ namespace Engine
 				//ignoring /16 to increase resolution
 				int index_shifted = i/16 ; 
 				double mz_val = GetMassFromBin(i) ;
+
 				if (mz_val < mdbl_max_mz)
 				{
 					mint_stop_bin = index_shifted ; 
@@ -329,6 +325,7 @@ namespace Engine
 		{
 			mvect_data.clear() ; 
 			mvect_scan_bpi.clear() ; 
+			mvect_scan_bpi_adc.clear() ; 
 			mvect_scan_start_index.clear () ;
 			mvect_adc_data.clear() ; 
 			mvect_mxed_data.clear() ; 
@@ -408,7 +405,6 @@ namespace Engine
 				
 			}
 
-			
 			// now copy all the m/z values into vector. 
 			int last_bin = 0 ; 
 			int last_intensity = 0 ;
@@ -438,6 +434,7 @@ namespace Engine
 				mzs->push_back(mz_val) ; 
 
 				intensities->push_back((*iter).second) ;
+
 				last_bin = (int) (*iter).first ; 
 				last_intensity = (int) (*iter).second ; 
 				first = false ; 
@@ -452,8 +449,7 @@ namespace Engine
 		}
 
 		int	IMSRawData::GetNumScans()
-		{
-			return mint_num_scans ; 
+		{			return mint_num_scans ; 
 		}
 
 		double IMSRawData::GetSignalRange(int scan_num)
@@ -468,10 +464,10 @@ namespace Engine
 			scan_times->reserve(num_pts) ; 
 			for (int pt_num = 0 ; pt_num < num_pts ; pt_num++)
 			{
-				double intensity ; 
+				double intensity; 
 				if (mbln_is_adc_data)
 				{
-					intensity = (double) mvect_scan_bpi_adc[pt_num] ; 
+ 					intensity = (double) mvect_scan_bpi_adc[pt_num]; 
 				}
 				else if (mbln_is_multiplexed_data)
 				{
@@ -599,6 +595,7 @@ namespace Engine
 			if (current_scan < mint_num_scans)
 				stopIndex = mvect_scan_start_index[current_scan] ;	
 
+			//get min and max values for m/z and bin
 			for (int index = startIndex ; index < stopIndex ; index++)
 			{				
 				if (mbln_is_multiplexed_data)

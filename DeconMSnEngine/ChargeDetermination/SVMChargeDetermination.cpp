@@ -507,33 +507,34 @@ namespace Engine
 				if (mz > 0 && mz <= parent_Mz)
 				{
 					marr_pk_distribution[0]++;
-					marr_intensity_distribution[0] += (int) mvect_intensities[i];
+					marr_intensity_distribution[0] += mvect_intensities[i];
 				}
 				if (mz > parent_Mz && mz <= (2*parent_Mz))
 				{
 					marr_pk_distribution[1]++;
-					marr_intensity_distribution[1] += (int) mvect_intensities[i];
+					marr_intensity_distribution[1] += mvect_intensities[i];
 				}
 				if (mz > (2*parent_Mz) && mz <= (3*parent_Mz))
 				{
 					marr_pk_distribution[2]++;
-					marr_intensity_distribution[2] += (int) mvect_intensities[i];
+					marr_intensity_distribution[2] += mvect_intensities[i];
 				}
 				if (mz > (3* parent_Mz) && mz < (4*parent_Mz))
 				{
 					marr_pk_distribution[3]++;				
-					marr_intensity_distribution[3] += (int) mvect_intensities[i];
+					marr_intensity_distribution[3] += mvect_intensities[i];
 				}					
 			}
 			
 			
 			for (int i=0; i < num_bins; i++)
 			{
+				int val = marr_pk_distribution [i] ;				
 				sum += marr_pk_distribution[i];
 			}			
 
 			
-			pk1 = (double)marr_pk_distribution[0]/(double) sum;
+			pk1 = (double) marr_pk_distribution[0]/(double) sum;
 			pk2 = (double)marr_pk_distribution[1]/(double)sum;
 			pk3 = (double)marr_pk_distribution[2]/(double)sum;
 			pk4 = (double)marr_pk_distribution[3]/(double)sum;
@@ -568,8 +569,6 @@ namespace Engine
 				}	
 				mvect_xtest[vector_num] = this_test_vector;
 			}
-
-//			std::cout<<"Finished normalizing dataset "<<std::endl;
 			
 		}
 
@@ -605,6 +604,8 @@ namespace Engine
 			double **m1_value;
 			double **m2_value;
 			double **m3_value;
+			
+
 			
 			int num_vectors = (int)vect_xsup.size();
 			int num_test = (int) vect_xtest.size();
@@ -678,7 +679,7 @@ namespace Engine
 					sumX = sumX + val_m2 ;										
 				}		
 				//This is for ease of matrix addition
-				for (col_num=0; col_num < norm_x->cols; col_num++)
+				for (int col_num=0; col_num < norm_x->cols; col_num++)
                     norm_x_value[row_num][col_num] = sumX;
 			}
 
@@ -763,7 +764,7 @@ namespace Engine
 			int num_iterations  = 6 ;
 			int iter_num = 0 ; 
 			
-			//std::cout<<"Determining class for dataset"<<std::endl;
+
 			length_nbsv = mvect_nbsv.size() ;
 			num_class = 4 ; //(int)(1 + (int)(sqrt(1+4*2*length_nbsv)))/2 ; 
 			num_test = (int) mvect_xtest.size() ; 
@@ -794,8 +795,7 @@ namespace Engine
 				{
 					int startIndexToConsider = (int) mvect_aux[k] ; 
 					int stopIndexToConsider = (int) (mvect_aux[k] + mvect_nbsv[k+1]) - 1 ; 
-					SVMClassification(startIndexToConsider, stopIndexToConsider, k) ;
-
+					SVMClassification(startIndexToConsider, stopIndexToConsider, k) ; 
 					for (int row = 0; row < mmat_vote->rows; row++)
 					{
 						double val = mvect_ypredict[row];
@@ -816,8 +816,6 @@ namespace Engine
 							mmat_vote_val[row][j] = val1 ;
 						}
 					}
-
-					std::cout<<"this works too"<<std::endl;
 					k++;
 					iter_num++ ; 
 				}
@@ -840,8 +838,6 @@ namespace Engine
 
 		void SVMChargeDetermine::SVMClassification(int startIndex, int stopIndex, int k_bias)
 		{
-
-			//std::cout<<"In SVM classificication"<<std::endl;
 			std::vector<double> span;
 			std::vector<double> y;
 			std::vector <Engine::ChargeDetermination::FeatureList> chunk_xtest;
@@ -867,9 +863,7 @@ namespace Engine
 				int high_ind1_index = (ch1*chunksize) - 1 + startIndex;				
 				if(high_ind1_index > stopIndex)					
 					high_ind1_index = stopIndex; 
-
 				ind1.clear();
-
 				for(int index = 0; index <= (high_ind1_index-low_ind1_index); index++)
 					ind1.push_back(index + low_ind1_index);					
 
@@ -877,7 +871,7 @@ namespace Engine
 				chunk_xsup.clear();
 				for (int j = 0; j < (int)ind1.size(); j++)
 				{
-					int xsupIndex = ind1[j];
+					int xsupIndex = ind1[j];					
 					this_support_vector = mvect_xsup[xsupIndex];					
 					chunk_xsup.push_back(this_support_vector);
 				}
@@ -909,12 +903,12 @@ namespace Engine
 					svm_kernel = GetKernel(chunk_xtest, chunk_xsup);
 					svm_kernel_val = (double **) svm_kernel->ptr;
 			
+					
 					//Read in the weights w(ind1)
 					MATRIX *w;
 					double **w_value;
 					w = matrix_allocate((int)ind1.size(), 1, sizeof(double));
 					w_value = (double **) w->ptr;					
-
 					for (int i=0; i<(int)ind1.size(); i++)
 					{
 						int index = ind1[i];
@@ -927,6 +921,7 @@ namespace Engine
 					m1 = matrix_mult(svm_kernel, w);
 					m1_value = (double**)m1->ptr;
 					
+					
 					//y2(ind2) += m1;							
 					for(int i = 0; i < (int)ind2.size(); i++)
 					{
@@ -934,22 +929,31 @@ namespace Engine
 						
 						int vale = (int) mvect_ypredict[index] ; 
 						mvect_ypredict[index]+= m1_value[i][0];								
-						vale = (int) mvect_ypredict[index] ; 
+						vale = mvect_ypredict[index] ; 
 					}		
+
+					
 					matrix_free(m1);
 					matrix_free(svm_kernel);
 					matrix_free(w);
 				}
+				
 			}			
 			
-			//Add w0		
-			if ( mvect_b.size() > 0 ){
-				for (int i = 0; i < mvect_ypredict.size(); i++)
-				{			
-					mvect_ypredict[i] += mvect_b[k_bias];
-					//std::cout<< i << std::endl;
+			//Add w0			
+			for (int i = 0; i < (int) mvect_ypredict.size(); i++)
+			{			
+				double debug = mvect_ypredict[i];
+				if (i == 6312)
+				{
+					debug ++ ; 
+					double b = mvect_b[k_bias] ; 
+					b++ ; 
 				}
+				mvect_ypredict[i]+= mvect_b[k_bias];
+				
 			}
+		
 		}
 
 		void SVMChargeDetermine::LoadSVMFromXml()
@@ -974,6 +978,8 @@ namespace Engine
 			int weight_count = 0;
 			int feature_count = 0;
 			int support_count = 0;
+
+
 			
 			char *pEnd;
 			//Initialize the XML 
@@ -1022,7 +1028,7 @@ namespace Engine
 				{
 					throw toCatch ; 
 				}
-				catch(const exception &toCatch)
+				catch(const std::exception &toCatch)
 				{
 					throw toCatch.what() ; 
 				}

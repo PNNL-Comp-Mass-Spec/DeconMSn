@@ -78,6 +78,7 @@ namespace Engine {
 		~IMSRawData(void) ;
 		int GetNumScans() ; 
 		double GetDriftTime(int scan_num) ; 
+		int GetNumScansLoaded() { return GetNumScans() ; } 
 		int GetFrameNumber() ;
 		void GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int current_scan, int scan_range) ; 
 		void GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int start_scan, int stop_scan, double min_mz, double max_mz)  ; 

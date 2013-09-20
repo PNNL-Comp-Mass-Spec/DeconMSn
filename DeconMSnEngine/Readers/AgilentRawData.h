@@ -70,7 +70,9 @@ namespace Engine {
 		int GetScanSize() ; 
 		AgilentRawData(void) ;
 		~AgilentRawData(void) ;
+		int GetNumScansLoaded() { return GetNumScans() ; } 
 		int GetNumScans() ; 
+		int GetFirstScanNum() { return 1 ; } ; 
 		double GetSignalRange(int scan_num) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 
 		int GetParentScan(int scan_num);

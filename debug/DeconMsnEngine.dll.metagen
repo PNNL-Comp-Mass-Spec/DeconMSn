@@ -1,0 +1,638 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly DeconMsnEngine, Version=2.2.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly Microsoft.VisualC, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Class Decon2LS.clsElementIsotopes: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(System.String): PrivateScope, Public, SpecialName, RTSpecialName
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Interfaces:
+    System.ICloneable
+  Fields:
+    Engine.TheoreticalProfile.AtomicInformation* mobjAtomicInfo : Public
+  Methods:
+    Clone(): PrivateScope, Public, Virtual
+    Assign(clsElementIsotopes): PrivateScope, Public, Virtual, VtableLayoutMask
+    Write(String): PrivateScope, Public
+    Load(String): PrivateScope, Public
+    GetElementalIsotope(Int32, Int32& IsImplicitlyDereferenced, Int32& IsImplicitlyDereferenced, String& IsImplicitlyDereferenced, String& IsImplicitlyDereferenced, Single& IsImplicitlyDereferenced, Single& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    UpdateElementalIsotope(Int32, Int32& IsImplicitlyDereferenced, Int32& IsImplicitlyDereferenced, String& IsImplicitlyDereferenced, String& IsImplicitlyDereferenced, Double& IsImplicitlyDereferenced, Double& IsImplicitlyDereferenced): PrivateScope, Public
+    GetNumberOfElements(): PrivateScope, Public
+    SetElementalIsotopeComposition(AtomicInformation*): PrivateScope, Public
+    GetElementalIsotopeComposition(): PrivateScope, Public
+    LoadV1ElementIsotopes(XmlReader): PrivateScope, Public
+    SaveV1ElementIsotopes(XmlTextWriter): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.Peaks.clsPeak: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Fields:
+    Double mdbl_mz : Public
+    Double mdbl_intensity : Public
+    Double mdbl_SN : Public
+    Int32 mint_peak_index : Public
+    Int32 mint_data_index : Public
+    Double mdbl_FWHM : Public
+  Methods:
+    Set(Peak* IsImplicitlyDereferenced): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.Readers.clsRawDataPreprocessOptions: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    Double C   'get set' : 
+    Double B   'get set' : 
+    Double A   'get set' : 
+    Decon2LS.Readers.CalibrationType CalibrationType 'get set' : 
+    Boolean ApplyCalibration 'get ' : 
+    Int16 NumZeroFills 'get set' : 
+    Int32 ApodizationPercent 'get set' : 
+    Double ApodizationMaxX 'get set' : 
+    Double ApodizationMinX 'get set' : 
+    Boolean IsToBePreprocessed 'get ' : 
+    Decon2LS.Readers.ApodizationType ApodizationType 'get set' : 
+  Methods:
+    Clone(): PrivateScope, Public, Virtual, VtableLayoutMask
+    get_ApodizationType(): PrivateScope, Public, SpecialName
+    set_ApodizationType(ApodizationType): PrivateScope, Public, SpecialName
+    get_IsToBePreprocessed(): PrivateScope, Public, SpecialName
+    get_ApodizationMinX(): PrivateScope, Public, SpecialName
+    set_ApodizationMinX(Double): PrivateScope, Public, SpecialName
+    get_ApodizationMaxX(): PrivateScope, Public, SpecialName
+    set_ApodizationMaxX(Double): PrivateScope, Public, SpecialName
+    get_ApodizationPercent(): PrivateScope, Public, SpecialName
+    set_ApodizationPercent(Int32): PrivateScope, Public, SpecialName
+    get_NumZeroFills(): PrivateScope, Public, SpecialName
+    set_NumZeroFills(Int16): PrivateScope, Public, SpecialName
+    get_ApplyCalibration(): PrivateScope, Public, SpecialName
+    get_CalibrationType(): PrivateScope, Public, SpecialName
+    set_CalibrationType(CalibrationType): PrivateScope, Public, SpecialName
+    get_A(): PrivateScope, Public, SpecialName
+    set_A(Double): PrivateScope, Public, SpecialName
+    get_B(): PrivateScope, Public, SpecialName
+    set_B(Double): PrivateScope, Public, SpecialName
+    get_C(): PrivateScope, Public, SpecialName
+    set_C(Double): PrivateScope, Public, SpecialName
+    SaveV1FTICRPreProcessOptions(XmlTextWriter): PrivateScope, Public
+    LoadV1FTICRPreProcessOptions(XmlReader): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class DeconEngine.Utils: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Methods:
+    SetData(vector<float\,std::allocator<float> >* IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    SetData(vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    GetData(vector<float\,std::allocator<float> >* IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    GetData(vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    GetStr(SByte*, String&): PrivateScope, Public, Static
+    GetStr(String, SByte*): PrivateScope, Public, Static
+    GetAverage(vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetAverage(Single[]& IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetStandardDev(vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetStandardDev(Single[]& IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetBackgroundLevel(Single[]& IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetBackgroundLevel(vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single): PrivateScope, Public, Static
+    GetTIC(Double, Double, vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, vector<double\,std::allocator<double> >* IsImplicitlyDereferenced, Single, Double* IsImplicitlyDereferenced, Double* IsImplicitlyDereferenced): PrivateScope, Public, Static
+    ConvertElementTableToFormula(AtomicInformation* IsImplicitlyDereferenced, Hashtable, MolecularFormula* IsImplicitlyDereferenced): PrivateScope, Public, Static
+    SetPeaks(PeakData* IsImplicitlyDereferenced, clsPeak[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    SavitzkyGolaySmooth(Int16, Int16, Int16, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    ZeroFillUnevenData(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Int32): PrivateScope, Public, Static
+    Apodize(Double, Double, Double, Int32, Single[]& IsImplicitlyDereferenced, ApodizationType): PrivateScope, Public, Static
+    UnApodize(Single[]& IsImplicitlyDereferenced, ApodizationType): PrivateScope, Public, Static
+    FourierTransform(Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+    InverseFourierTransform(Single[]& IsImplicitlyDereferenced): PrivateScope, Public, Static
+Class Decon2LS.clsIsotopeFit: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    Decon2LS.enmIsotopeFitType IsotopeFitType 'get set' : 
+  Methods:
+    GetFitScore(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, clsPeak[]& IsImplicitlyDereferenced, Int16, Int32, Double, Double, Hashtable): PrivateScope, Public
+    SetOptions(String, String, Double, Boolean(HasFieldMarshal), Boolean(HasFieldMarshal)): PrivateScope, Public
+    get_IsotopeFitType(): PrivateScope, Public, SpecialName
+    set_IsotopeFitType(enmIsotopeFitType): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.HornTransform.clsAveragine: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Interfaces:
+    System.ICloneable
+  Properties:
+    Decon2LS.clsElementIsotopes ElementIsotopeComposition 'get set' : 
+    Double AverageMass 'get ' : 
+    Double MonoMass 'get ' : 
+  Methods:
+    Clone(): PrivateScope, Public, Virtual
+    get_MonoMass(): PrivateScope, Public, SpecialName
+    get_AverageMass(): PrivateScope, Public, SpecialName
+    get_ElementIsotopeComposition(): PrivateScope, Public, SpecialName
+    set_ElementIsotopeComposition(clsElementIsotopes): PrivateScope, Public, SpecialName
+    GenerateAveragineFormula(Double, String, String): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Struct Decon2LS.Readers.ApodizationType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.Readers.ApodizationType NOAPODIZATION = 5 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.ApodizationType TRIANGLE = 4 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.ApodizationType WELCH = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.ApodizationType HANNING = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.ApodizationType PARZEN = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.ApodizationType SQUARE = 0 : Public, Static, Literal, HasDefault
+Struct Decon2LS.Readers.CalibrationType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.Readers.CalibrationType UNDEFINED = 10 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType BRUKER_CALMET = 9 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType TIME_A_TSQ_PLUS_B_T_PLUS_C = 8 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B_PLUS_CI = 7 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B = 6 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType F = 5 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType AF_PLUS_B = 4 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B_OVER_FSQ_PLUS_CI_OVERFSQ = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B_OVER_FSQ = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.CalibrationType A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C_OVERFCUBE = 0 : Public, Static, Literal, HasDefault
+Struct Decon2LS.enmIsotopeFitType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.enmIsotopeFitType CHISQ = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.enmIsotopeFitType AREA = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.enmIsotopeFitType PEAK = 0 : Public, Static, Literal, HasDefault
+Class Decon2LS.DTAGeneration.clsDTAGenerationParameters: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Interfaces:
+    System.ICloneable
+  Properties:
+    Decon2LS.DTAGeneration.SPECTRA_TYPE SpectraType 'get set' : 
+    Decon2LS.DTAGeneration.OUTPUT_TYPE OutputType 'get set' : 
+    Int32 WindowSizetoCheck 'get set' : 
+    Double CCMass 'get set' : 
+    Int32 ConsiderChargeValue 'get set' : 
+    Int32 IsolationWindowSize 'get set' : 
+    Boolean ConsiderMultiplePrecursors 'get set' : 
+    System.String SVMParamFile 'get set' : 
+    Double MaxMass 'get set' : 
+    Double MinMass 'get set' : 
+    Int32 MaxScan 'get set' : 
+    Int32 MinIonCount 'get set' : 
+    Int32 MinScan 'get set' : 
+    Boolean IsProfileDataForMzXML 'get set' : 
+    Int32 NumMSnLevelsToIgnore 'get set' : 
+    Boolean IgnoreMSnScans 'get set' : 
+    Int32 MSnLevelToIgnore [Int32] 'get ' : 
+    Int32 MSnLevelToIgnore 'set' : 
+  Methods:
+    SaveV1DTAGenerationParameters(XmlTextWriter): PrivateScope, Public
+    LoadV1DTAGenerationParameters(XmlReader): PrivateScope, Public
+    Clone(): PrivateScope, Public, Virtual
+    get_MSnLevelToIgnore(Int32): PrivateScope, Public, SpecialName
+    set_MSnLevelToIgnore(Int32): PrivateScope, Public, SpecialName
+    get_IgnoreMSnScans(): PrivateScope, Public, SpecialName
+    set_IgnoreMSnScans(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_NumMSnLevelsToIgnore(): PrivateScope, Public, SpecialName
+    set_NumMSnLevelsToIgnore(Int32): PrivateScope, Public, SpecialName
+    get_IsProfileDataForMzXML(): PrivateScope, Public, SpecialName
+    set_IsProfileDataForMzXML(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_MinScan(): PrivateScope, Public, SpecialName
+    get_MinIonCount(): PrivateScope, Public, SpecialName
+    get_MaxScan(): PrivateScope, Public, SpecialName
+    get_MinMass(): PrivateScope, Public, SpecialName
+    get_MaxMass(): PrivateScope, Public, SpecialName
+    set_MinScan(Int32): PrivateScope, Public, SpecialName
+    set_MaxScan(Int32): PrivateScope, Public, SpecialName
+    set_MinMass(Double): PrivateScope, Public, SpecialName
+    set_MaxMass(Double): PrivateScope, Public, SpecialName
+    set_MinIonCount(Int32): PrivateScope, Public, SpecialName
+    set_SVMParamFile(String): PrivateScope, Public, SpecialName
+    get_SVMParamFile(): PrivateScope, Public, SpecialName
+    set_ConsiderMultiplePrecursors(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_ConsiderMultiplePrecursors(): PrivateScope, Public, SpecialName
+    set_IsolationWindowSize(Int32): PrivateScope, Public, SpecialName
+    get_IsolationWindowSize(): PrivateScope, Public, SpecialName
+    get_ConsiderChargeValue(): PrivateScope, Public, SpecialName
+    set_ConsiderChargeValue(Int32): PrivateScope, Public, SpecialName
+    get_CCMass(): PrivateScope, Public, SpecialName
+    set_CCMass(Double): PrivateScope, Public, SpecialName
+    get_WindowSizetoCheck(): PrivateScope, Public, SpecialName
+    set_WindowSizetoCheck(Int32): PrivateScope, Public, SpecialName
+    get_OutputType(): PrivateScope, Public, SpecialName
+    set_OutputType(OUTPUT_TYPE): PrivateScope, Public, SpecialName
+    set_SpectraType(SPECTRA_TYPE): PrivateScope, Public, SpecialName
+    get_SpectraType(): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Struct Decon2LS.DTAGeneration.OUTPUT_TYPE: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.DTAGeneration.OUTPUT_TYPE MZXML = 4 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.OUTPUT_TYPE CDTA = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.OUTPUT_TYPE LOG = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.OUTPUT_TYPE MGF = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.OUTPUT_TYPE DTA = 0 : Public, Static, Literal, HasDefault
+Struct Decon2LS.DTAGeneration.SPECTRA_TYPE: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.DTAGeneration.SPECTRA_TYPE HCD = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.SPECTRA_TYPE ETD = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.SPECTRA_TYPE CID = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.DTAGeneration.SPECTRA_TYPE ALL = 0 : Public, Static, Literal, HasDefault
+Class Decon2LS.HornTransform.clsHornTransformResults: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Fields:
+    Int32 mint_peak_index : Public
+    Int32 mint_scan_num : Public
+    Int16 mshort_cs : Public
+    Int32 mint_abundance : Public
+    Double mdbl_mz : Public
+    Double mdbl_fit : Public
+    Double mdbl_average_mw : Public
+    Double mdbl_mono_mw : Public
+    Double mdbl_most_intense_mw : Public
+    Double mdbl_fwhm : Public
+    Double mdbl_sn : Public
+    Int32 mint_mono_intensity : Public
+    Int32 mint_iplus2_intensity : Public
+    Double mdbl_delta_mz : Public
+    Boolean mbln_need_multiple_isotopes : Public
+    Int32 mint_num_isotopes_observed : Public
+    Int32[] marr_isotope_peak_indices : Public
+  Methods:
+    Set(IsotopeFitRecord* IsImplicitlyDereferenced): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.HornTransform.clsHornTransformParameters: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Interfaces:
+    System.ICloneable
+  Properties:
+    Double AbsolutePeptideIntensity 'get set' : 
+    Boolean UseAbsolutePeptideIntensity 'get set' : 
+    Decon2LS.enmIsotopeFitType IsotopeFitType 'get set' : 
+    Decon2LS.clsElementIsotopes ElementIsotopeComposition 'get set' : 
+    Boolean CheckAllPatternsAgainstCharge1 'get set' : 
+    Boolean ProcessMSMS 'get set' : 
+    Boolean CompleteFit 'get set' : 
+    Boolean ThrashOrNot 'get set' : 
+    System.String TagFormula 'get set' : 
+    System.String AveragineFormula 'get set' : 
+    Boolean O16O18Media 'get set' : 
+    Double MinIntensityForScore 'get set' : 
+    Int16 NumZerosToFill 'get set' : 
+    Boolean ZeroFill 'get set' : 
+    Double DeleteIntensityThreshold 'get set' : 
+    Double CCMass 'get set' : 
+    Double MaxFit 'get set' : 
+    Double MaxMW 'get set' : 
+    Int16 NumPeaksForShoulder 'get set' : 
+    Double PeptideMinBackgroundRatio 'get set' : 
+    Double MinS2N 'get set' : 
+    Int16 MaxCharge 'get set' : 
+    Double MaxMZ 'get set' : 
+    Double MinMZ 'get set' : 
+    Boolean UseMZRange 'get set' : 
+    Int32 NumScansToSumOver 'get set' : 
+    Boolean SumSpectraAcrossScanRange 'get set' : 
+    Boolean SumSpectra 'get set' : 
+    Boolean UseScanRange 'get set' : 
+    Boolean UseMercuryCaching 'get set' : 
+    Int32 MaxScan 'get set' : 
+    Int32 MinScan 'get set' : 
+    Boolean UseSavitzkyGolaySmooth 'get set' : 
+    Int16 SGOrder 'get set' : 
+    Int16 SGNumRight 'get set' : 
+    Int16 SGNumLeft 'get set' : 
+  Methods:
+    SaveV1HornTransformParameters(XmlTextWriter): PrivateScope, Public
+    SaveV1MiscellaneousParameters(XmlTextWriter): PrivateScope, Public
+    LoadV1HornTransformParameters(XmlReader): PrivateScope, Public
+    LoadV1MiscellaneousParameters(XmlReader): PrivateScope, Public
+    Clone(): PrivateScope, Public, Virtual
+    get_SGNumLeft(): PrivateScope, Public, SpecialName
+    set_SGNumLeft(Int16): PrivateScope, Public, SpecialName
+    get_SGNumRight(): PrivateScope, Public, SpecialName
+    set_SGNumRight(Int16): PrivateScope, Public, SpecialName
+    get_SGOrder(): PrivateScope, Public, SpecialName
+    set_SGOrder(Int16): PrivateScope, Public, SpecialName
+    get_UseSavitzkyGolaySmooth(): PrivateScope, Public, SpecialName
+    set_UseSavitzkyGolaySmooth(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_MinScan(): PrivateScope, Public, SpecialName
+    set_MinScan(Int32): PrivateScope, Public, SpecialName
+    get_MaxScan(): PrivateScope, Public, SpecialName
+    set_MaxScan(Int32): PrivateScope, Public, SpecialName
+    get_UseMercuryCaching(): PrivateScope, Public, SpecialName
+    set_UseMercuryCaching(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_UseScanRange(): PrivateScope, Public, SpecialName
+    set_UseScanRange(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_SumSpectra(): PrivateScope, Public, SpecialName
+    set_SumSpectra(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    set_SumSpectraAcrossScanRange(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_SumSpectraAcrossScanRange(): PrivateScope, Public, SpecialName
+    get_NumScansToSumOver(): PrivateScope, Public, SpecialName
+    set_NumScansToSumOver(Int32): PrivateScope, Public, SpecialName
+    get_UseMZRange(): PrivateScope, Public, SpecialName
+    set_UseMZRange(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_MinMZ(): PrivateScope, Public, SpecialName
+    set_MinMZ(Double): PrivateScope, Public, SpecialName
+    get_MaxMZ(): PrivateScope, Public, SpecialName
+    set_MaxMZ(Double): PrivateScope, Public, SpecialName
+    get_MaxCharge(): PrivateScope, Public, SpecialName
+    set_MaxCharge(Int16): PrivateScope, Public, SpecialName
+    get_MinS2N(): PrivateScope, Public, SpecialName
+    set_MinS2N(Double): PrivateScope, Public, SpecialName
+    get_PeptideMinBackgroundRatio(): PrivateScope, Public, SpecialName
+    set_PeptideMinBackgroundRatio(Double): PrivateScope, Public, SpecialName
+    get_NumPeaksForShoulder(): PrivateScope, Public, SpecialName
+    set_NumPeaksForShoulder(Int16): PrivateScope, Public, SpecialName
+    get_MaxMW(): PrivateScope, Public, SpecialName
+    set_MaxMW(Double): PrivateScope, Public, SpecialName
+    get_MaxFit(): PrivateScope, Public, SpecialName
+    set_MaxFit(Double): PrivateScope, Public, SpecialName
+    get_CCMass(): PrivateScope, Public, SpecialName
+    set_CCMass(Double): PrivateScope, Public, SpecialName
+    get_DeleteIntensityThreshold(): PrivateScope, Public, SpecialName
+    set_DeleteIntensityThreshold(Double): PrivateScope, Public, SpecialName
+    set_ZeroFill(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_ZeroFill(): PrivateScope, Public, SpecialName
+    get_NumZerosToFill(): PrivateScope, Public, SpecialName
+    set_NumZerosToFill(Int16): PrivateScope, Public, SpecialName
+    get_MinIntensityForScore(): PrivateScope, Public, SpecialName
+    set_MinIntensityForScore(Double): PrivateScope, Public, SpecialName
+    get_O16O18Media(): PrivateScope, Public, SpecialName
+    set_O16O18Media(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_AveragineFormula(): PrivateScope, Public, SpecialName
+    set_AveragineFormula(String): PrivateScope, Public, SpecialName
+    get_TagFormula(): PrivateScope, Public, SpecialName
+    set_TagFormula(String): PrivateScope, Public, SpecialName
+    get_ThrashOrNot(): PrivateScope, Public, SpecialName
+    set_ThrashOrNot(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_CompleteFit(): PrivateScope, Public, SpecialName
+    set_CompleteFit(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_ProcessMSMS(): PrivateScope, Public, SpecialName
+    set_ProcessMSMS(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_CheckAllPatternsAgainstCharge1(): PrivateScope, Public, SpecialName
+    set_CheckAllPatternsAgainstCharge1(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_ElementIsotopeComposition(): PrivateScope, Public, SpecialName
+    set_ElementIsotopeComposition(clsElementIsotopes): PrivateScope, Public, SpecialName
+    set_IsotopeFitType(enmIsotopeFitType): PrivateScope, Public, SpecialName
+    get_IsotopeFitType(): PrivateScope, Public, SpecialName
+    get_UseAbsolutePeptideIntensity(): PrivateScope, Public, SpecialName
+    set_UseAbsolutePeptideIntensity(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_AbsolutePeptideIntensity(): PrivateScope, Public, SpecialName
+    set_AbsolutePeptideIntensity(Double): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.HornTransform.clsHornTransform: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    System.String StatusMessage 'get ' : 
+    Int32 PercentDone 'get ' : 
+    Decon2LS.HornTransform.clsHornTransformParameters TransformParameters 'get set' : 
+  Methods:
+    get_TransformParameters(): PrivateScope, Public, SpecialName
+    set_TransformParameters(clsHornTransformParameters): PrivateScope, Public, SpecialName
+    get_PercentDone(): PrivateScope, Public, SpecialName
+    get_StatusMessage(): PrivateScope, Public, SpecialName
+    PerformTransform(Single, Single, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, clsPeak[]& IsImplicitlyDereferenced, clsHornTransformResults[]& IsImplicitlyDereferenced): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.Peaks.clsPeakProcessorParameters: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(Double, Double, Boolean, Decon2LS.Peaks.PEAK_FIT_TYPE): PrivateScope, Public, SpecialName, RTSpecialName
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Interfaces:
+    System.ICloneable
+  Properties:
+    Decon2LS.Peaks.PEAK_FIT_TYPE PeakFitType 'get set' : 
+    Double SignalToNoiseThreshold 'get set' : 
+    Double PeakBackgroundRatio 'get set' : 
+    Boolean ThresholdedData 'get set' : 
+  Methods:
+    LoadV1PeakParameters(XmlReader): PrivateScope, Public
+    SaveV1PeakParameters(XmlTextWriter): PrivateScope, Public
+    Clone(): PrivateScope, Public, Virtual
+    get_ThresholdedData(): PrivateScope, Public, SpecialName
+    set_ThresholdedData(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_PeakBackgroundRatio(): PrivateScope, Public, SpecialName
+    set_PeakBackgroundRatio(Double): PrivateScope, Public, SpecialName
+    get_SignalToNoiseThreshold(): PrivateScope, Public, SpecialName
+    set_SignalToNoiseThreshold(Double): PrivateScope, Public, SpecialName
+    get_PeakFitType(): PrivateScope, Public, SpecialName
+    set_PeakFitType(PEAK_FIT_TYPE): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.Peaks.clsPeakProcessor: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    Decon2LS.enmProfileType ProfileType 'get set' : 
+  Methods:
+    GetBackgroundIntensity(Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    DiscoverPeaks(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, clsPeak[]& IsImplicitlyDereferenced, Single, Single): PrivateScope, Public
+    SetOptions(clsPeakProcessorParameters): PrivateScope, Public
+    get_ProfileType(): PrivateScope, Public, SpecialName
+    set_ProfileType(enmProfileType): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Struct Decon2LS.Peaks.PEAK_FIT_TYPE: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.Peaks.PEAK_FIT_TYPE LORENTZIAN = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.Peaks.PEAK_FIT_TYPE QUADRATIC = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.Peaks.PEAK_FIT_TYPE APEX = 0 : Public, Static, Literal, HasDefault
+Struct Decon2LS.enmProfileType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.enmProfileType PROFILE = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.enmProfileType CENTROIDED = 0 : Public, Static, Literal, HasDefault
+Class Decon2LS.clsMercuryIsotopeDistribution: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    Decon2LS.clsElementIsotopes ElementIsotopes 'set' : 
+    Double MassVariance 'get ' : 
+    Double MostAbundantMZ 'get ' : 
+    Double MonoMolecularMass 'get ' : 
+    Double AverageMolecularMass 'get ' : 
+    Int16 ChargeState 'get set' : 
+    Double Resolution 'get set' : 
+    Decon2LS.ApodizationType ApodizationType 'get set' : 
+    Double ChargeCarrierMass 'get set' : 
+    Int32 MercurySize 'get set' : 
+  Methods:
+    CalculateMasses(Hashtable): PrivateScope, Public
+    CalculateDistribution(Hashtable): PrivateScope, Public
+    get_MercurySize(): PrivateScope, Public, SpecialName
+    set_MercurySize(Int32): PrivateScope, Public, SpecialName
+    get_ChargeCarrierMass(): PrivateScope, Public, SpecialName
+    set_ChargeCarrierMass(Double): PrivateScope, Public, SpecialName
+    get_ApodizationType(): PrivateScope, Public, SpecialName
+    set_ApodizationType(ApodizationType): PrivateScope, Public, SpecialName
+    get_Resolution(): PrivateScope, Public, SpecialName
+    set_Resolution(Double): PrivateScope, Public, SpecialName
+    get_ChargeState(): PrivateScope, Public, SpecialName
+    set_ChargeState(Int16): PrivateScope, Public, SpecialName
+    get_AverageMolecularMass(): PrivateScope, Public, SpecialName
+    get_MonoMolecularMass(): PrivateScope, Public, SpecialName
+    get_MostAbundantMZ(): PrivateScope, Public, SpecialName
+    get_MassVariance(): PrivateScope, Public, SpecialName
+    set_ElementIsotopes(clsElementIsotopes): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Struct Decon2LS.ApodizationType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.ApodizationType Lorentzian = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.ApodizationType Gaussian = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.ApodizationType Unknown = 0 : Public, Static, Literal, HasDefault
+Class Decon2LS.Results.clsLCMSPeak: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(Int32, Single, Single): PrivateScope, Public, SpecialName, RTSpecialName
+  Fields:
+    Int32 mint_scan : Public
+    Single mflt_mz : Public
+    Single mflt_intensity : Public
+Class Decon2LS.Readers.clsRawData: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(System.String, Decon2LS.Readers.FileType): PrivateScope, Public, SpecialName, RTSpecialName
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    System.String StatusMessage 'get ' : 
+    Int32 PercentDone 'get ' : 
+    System.String FileName 'get ' : 
+    Decon2LS.Readers.clsRawDataPreprocessOptions FTICRRawPreprocessOptions 'get set' : 
+    Decon2LS.Readers.FileType FileType 'get ' : 
+  Methods:
+    GetFirstScanNum(): PrivateScope, Public
+    get_FileType(): PrivateScope, Public, SpecialName
+    get_FTICRRawPreprocessOptions(): PrivateScope, Public, SpecialName
+    set_FTICRRawPreprocessOptions(clsRawDataPreprocessOptions): PrivateScope, Public, SpecialName
+    get_FileName(): PrivateScope, Public, SpecialName
+    get_PercentDone(): PrivateScope, Public, SpecialName
+    get_StatusMessage(): PrivateScope, Public, SpecialName
+    IsFTScan(Int32): PrivateScope, Public
+    LoadFile(String, FileType): PrivateScope, Public
+    LoadFile(SByte[], FileType): PrivateScope, Public
+    LoadFile(SByte*, FileType): PrivateScope, Public
+    Close(): PrivateScope, Public
+    GetNumScans(): PrivateScope, Public
+    GetScanTime(Int32): PrivateScope, Public
+    GetMSLevel(Int32): PrivateScope, Public
+    GetScanSize(): PrivateScope, Public
+    GetSpectrumType(Int32): PrivateScope, Public
+    GetTicFromFile(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Boolean(HasFieldMarshal)): PrivateScope, Public
+    GetSpectrum(Int32, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetParentScan(Int32): PrivateScope, Public
+    GetMzsInRange(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single, Single): PrivateScope, Public
+    GetScanDescription(Int32): PrivateScope, Public
+    GetFTICRSamplingRate(): PrivateScope, Public
+    GetFTICRTransient(Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetSummedSpectra(Int32, Int32, Double, Double, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetSummedSpectra(Int32, Int32, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.Results.clsTransformResults: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Fields:
+    Engine.Results.LCMSTransformResults* mobj_lcms_results : Public
+  Properties:
+    Single[] Scans 'get ' : 
+    Int16[] Charges 'get ' : 
+    Single[] MonoMasses 'get ' : 
+    Decon2LS.Readers.FileType FileType 'get set' : 
+    System.String FileName 'get ' : 
+  Methods:
+    GetMinScan(): PrivateScope, Public
+    GetMaxScan(): PrivateScope, Public
+    GetNumPeaks(): PrivateScope, Public
+    SetLCMSTransformResults(LCMSTransformResults*): PrivateScope, Public
+    IsDeisotoped(): PrivateScope, Public
+    GetRawData(clsLCMSPeak[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetRawDataSortedInIntensity(clsLCMSPeak[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetSIC(Int32, Int32, Single, Single, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetScanPeaks(Int32, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    WriteResults(String, Boolean(HasFieldMarshal)): PrivateScope, Public
+    WriteScanResults(String): PrivateScope, Public
+    ReadResults(String): PrivateScope, Public
+    get_FileName(): PrivateScope, Public, SpecialName
+    get_FileType(): PrivateScope, Public, SpecialName
+    set_FileType(FileType): PrivateScope, Public, SpecialName
+    get_MonoMasses(): PrivateScope, Public, SpecialName
+    get_Charges(): PrivateScope, Public, SpecialName
+    get_Scans(): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Class Decon2LS.clsProcRunner: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Properties:
+    Decon2LS.Readers.clsRawDataPreprocessOptions FTICRPreprocessOptions 'get set' : 
+    Decon2LS.DTAGeneration.clsDTAGenerationParameters DTAGenerationParameters 'get set' : 
+    Decon2LS.Results.clsTransformResults HornTransformResults 'get ' : 
+    Decon2LS.HornTransform.clsHornTransformParameters HornTransformParameters 'get set' : 
+    Decon2LS.Peaks.clsPeakProcessorParameters PeakProcessorParameters 'get set' : 
+    Int32 trial 'get ' : 
+    System.String OutputPathForDTACreation 'get set' : 
+    Decon2LS.Readers.FileType FileType 'get set' : 
+    System.String FileName 'get set' : 
+    Int32 ProcessState 'get ' : 
+    Int32 PercentDone 'get ' : 
+    Int32 CurrentScanNum 'get ' : 
+  Methods:
+    CreateTransformResults(): PrivateScope, Public
+    Reset(): PrivateScope, Public
+    CreateTransformResultWithPeaksOnly(): PrivateScope, Public
+    CreateTransformResultWithNoPeaks(): PrivateScope, Public
+    MemoryTest(): PrivateScope, Public
+    CreateDTAFile(): PrivateScope, Public
+    get_CurrentScanNum(): PrivateScope, Public, SpecialName
+    get_PercentDone(): PrivateScope, Public, SpecialName
+    get_ProcessState(): PrivateScope, Public, SpecialName
+    get_FileName(): PrivateScope, Public, SpecialName
+    set_FileName(String): PrivateScope, Public, SpecialName
+    get_FileType(): PrivateScope, Public, SpecialName
+    set_FileType(FileType): PrivateScope, Public, SpecialName
+    get_OutputPathForDTACreation(): PrivateScope, Public, SpecialName
+    set_OutputPathForDTACreation(String): PrivateScope, Public, SpecialName
+    get_trial(): PrivateScope, Public, SpecialName
+    get_PeakProcessorParameters(): PrivateScope, Public, SpecialName
+    set_PeakProcessorParameters(clsPeakProcessorParameters): PrivateScope, Public, SpecialName
+    get_HornTransformParameters(): PrivateScope, Public, SpecialName
+    set_HornTransformParameters(clsHornTransformParameters): PrivateScope, Public, SpecialName
+    get_HornTransformResults(): PrivateScope, Public, SpecialName
+    get_DTAGenerationParameters(): PrivateScope, Public, SpecialName
+    set_DTAGenerationParameters(clsDTAGenerationParameters): PrivateScope, Public, SpecialName
+    get_FTICRPreprocessOptions(): PrivateScope, Public, SpecialName
+    set_FTICRPreprocessOptions(clsRawDataPreprocessOptions): PrivateScope, Public, SpecialName
+    {dtor}(): PrivateScope, Public
+Struct Decon2LS.Readers.FileType: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.Readers.FileType ASCII = 9 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType BRUKER_ASCII = 8 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType PNNL_IMS = 7 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType MZXMLRAWDATA = 6 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType ICR2LSRAWDATA = 5 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType SUNEXTREL = 4 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType AGILENT_TOF = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType MICROMASSRAWDATA = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType FINNIGAN = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType BRUKER = 0 : Public, Static, Literal, HasDefault
+    Decon2LS.Readers.FileType UNDEFINED = 10 : Public, Static, Literal, HasDefault
+Struct Decon2LS.enmProcessState: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.enmProcessState ERROR = 3 : Public, Static, Literal, HasDefault
+    Decon2LS.enmProcessState COMPLETE = 2 : Public, Static, Literal, HasDefault
+    Decon2LS.enmProcessState RUNNING = 1 : Public, Static, Literal, HasDefault
+    Decon2LS.enmProcessState IDLE = 0 : Public, Static, Literal, HasDefault
+Class Decon2LS.clsTransformFile: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName
+  Methods:
+    ReadFile(String, clsTransformResults, clsPeakProcessorParameters, clsHornTransformParameters): PrivateScope, Public
+    WriteFile(SByte*, clsTransformResults, clsPeakProcessorParameters, clsHornTransformParameters): PrivateScope, Public
+    WriteFile(String, clsTransformResults, clsPeakProcessorParameters, clsHornTransformParameters): PrivateScope, Public
+    {dtor}(): PrivateScope, Public
+Class Engine.Isotope: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, SpecialName, RTSpecialName

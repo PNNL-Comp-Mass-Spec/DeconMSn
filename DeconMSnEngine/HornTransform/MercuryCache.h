@@ -32,7 +32,7 @@ namespace Engine
 			std::vector<double> mvect_isotope_dist_vals ; 
 			std::vector<int> mvect_entity_elements ;
 #pragma warning(default:4251)
-			inline GetIsotopeDistributionCachedAtPosition(int position, short charge, double FWHM, double min_theoretical_intensity, std::vector<double>&mzs, std::vector<double>&intensities) ;
+			inline int GetIsotopeDistributionCachedAtPosition(int position, short charge, double FWHM, double min_theoretical_intensity, std::vector<double>&mzs, std::vector<double>&intensities) ;
 			double mdbl_cc_mass ; 
 			int mint_mercury_size ; 
 

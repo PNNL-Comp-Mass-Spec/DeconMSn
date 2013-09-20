@@ -1,9 +1,9 @@
-// Created by Microsoft (R) C/C++ Compiler Version 13.10.6030 (f1a02a21).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 10.00.40219.01 (454cf6f1).
 //
-// d:\my documents\projects\deconmsn\deconmsnengine\debug\xrawfile2.tlh
+// d:\users\d3x720\documents\projects\deconmsnold - copy\deconmsnengine\debug\xrawfile2.tlh
 //
 // C++ source equivalent of Win32 type library ..\bin\xrawfile2.dll
-// compiler-generated file created 07/24/12 at 18:11:37 - DO NOT EDIT!
+// compiler-generated file created 09/20/13 at 12:36:57 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
@@ -228,11 +228,17 @@ enum MS_PrecursorEnergy
     MS_AcceptAnyPrecursorEnergy = 1
 };
 
+#pragma pack(push, 8)
+
 struct MS_MassRange
 {
     double dLowMass;
     double dHighMass;
 };
+
+#pragma pack(pop)
+
+#pragma pack(push, 8)
 
 struct MS_ScanEvent
 {
@@ -263,6 +269,10 @@ struct MS_ScanEvent
     long arrSourceFragmentationEnergiesValid[50];
 };
 
+#pragma pack(pop)
+
+#pragma pack(push, 8)
+
 struct MS_ScanIndex
 {
     unsigned long m_ulDataOffset;
@@ -279,6 +289,10 @@ struct MS_ScanIndex
     double m_dHighMass;
 };
 
+#pragma pack(pop)
+
+#pragma pack(push, 8)
+
 struct MS_UVScanIndex
 {
     int nPacketType;
@@ -286,6 +300,10 @@ struct MS_UVScanIndex
     double dStartTime;
     double dTIC;
 };
+
+#pragma pack(pop)
+
+#pragma pack(push, 8)
 
 struct MS_DataPeak
 {
@@ -295,6 +313,10 @@ struct MS_DataPeak
     long scan;
 };
 
+#pragma pack(pop)
+
+#pragma pack(push, 8)
+
 struct MS_PrecursorInfo
 {
     double dMonoIsoMZ;
@@ -302,6 +324,8 @@ struct MS_PrecursorInfo
     long nChargeState;
     long nScanNumber;
 };
+
+#pragma pack(pop)
 
 struct __declspec(uuid("5fe970b1-29c3-11d3-811d-00104b304896"))
 IXRawfile : IDispatch
@@ -1581,7 +1605,7 @@ XVirUV;
 // Wrapper method implementations
 //
 
-#include "d:\my documents\projects\deconmsn\deconmsnengine\debug\xrawfile2.tli"
+#include "d:\users\d3x720\documents\projects\deconmsnold - copy\deconmsnengine\debug\xrawfile2.tli"
 
 } // namespace XRAWFILE2Lib
 

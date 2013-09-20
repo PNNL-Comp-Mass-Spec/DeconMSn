@@ -130,6 +130,15 @@ namespace Engine
 				calib->SetSize(mint_num_points_in_scan) ; 
 				calib->SetLowMassFrequency(mdbl_low_mass_freq) ; 
 				calib->SetSampleRate(mdbl_sample_rate);
+				
+				//[gord] this hack is meant to reverse the sign of calibrationConstantB, resulting in the correct
+				//m/z calculation for CalibrationType 9
+				if (menm_calibration_type == (CalibrationType)9)
+				{
+					mdbl_calib_const_b = -1 * mdbl_calib_const_b;
+				}
+
+
 				calib->SetCalibrationEquationParams(mdbl_calib_const_a, mdbl_calib_const_b, mdbl_calib_const_c);
 				if (mobj_calibrator != NULL)
 				{
@@ -286,7 +295,13 @@ namespace Engine
 					ptr += strlen(cal_b_tag) ; 
 					mdbl_calib_const_b = atof(ptr) ; 
 					// somehow, because of a nice quirk in the s/w, this is stored negatively.
-					mdbl_calib_const_b = -1 * mdbl_calib_const_b ; 
+
+					
+					mdbl_calib_const_b = -1 * mdbl_calib_const_b ;     //Gord says:  this might be the source of the discrepancy 
+																	// for CalibrationType 9; between ICR2LS and DeconTools!
+																	// See the LoadFile method and the adjustment made downstream of this method call
+					
+					
 				}
 				if ((ptr = strstr(buffer,cal_c_tag)) != NULL)
 				{
@@ -396,7 +411,7 @@ namespace Engine
 			}
 			else
 			{
-				if (num_pts <= 0 || num_pts > mint_num_points_in_scan*pow(2,mshort_num_zeros))
+				if (num_pts <= 0 || num_pts > mint_num_points_in_scan * pow((float)2,(float)mshort_num_zeros))
 					num_pts = mint_num_points_in_scan*(1<<mshort_num_zeros) ; 
 				memcpy((char *)mptr_data, (char *)mptr_data_copy, num_pts) ; 
 			}

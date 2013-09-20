@@ -101,6 +101,7 @@ namespace Engine
 			int GetScanSize() ; 
 			SunExtrelRawData(void) ;
 			~SunExtrelRawData(void) ;
+			int GetNumScansLoaded() { return mint_last_scan_num ; } 
 			int GetNumScans() ; 
 			void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) {}  ; 
 			

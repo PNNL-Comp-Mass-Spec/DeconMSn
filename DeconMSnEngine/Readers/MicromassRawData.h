@@ -17,7 +17,7 @@
 // Also make sure that DacServer.dll exists in c:\Masslynx or change the path
 // below accordingly. 
 #ifdef MASSLYNX_4_INSTALLED
-#import "c:\\Masslynx\\DacServer.dll"
+#import "..\Library\DacServer.dll"
 #endif
 
 namespace Engine {
@@ -92,7 +92,10 @@ namespace Engine {
 		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
 		double GetScanTime(int scan_num) ; 
 		int GetScanSize() ; 
+		int GetFirstScanNum() { return 1 ; } 
+		int GetLastScanNum() { return GetNumScans()-1 ; } ;
 		int GetNumScans() ;
+		int GetNumScansLoaded() { return GetNumScans() ; } 
 		double GetSignalRange(int scan_num) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ;  
 		

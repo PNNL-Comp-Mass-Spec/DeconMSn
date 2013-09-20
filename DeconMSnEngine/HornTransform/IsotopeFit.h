@@ -76,6 +76,8 @@ namespace Engine
 			//! flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
 			bool mbln_complete_fit ; 
 
+
+
 			//! Gets the isotope distribution for the given most abundance mass and charge with provided resolution.
 			/*!
 				\param most_abundant_mass Specifies the mass of the observed distribution which is believed to represent the most 
@@ -130,6 +132,26 @@ namespace Engine
 				\param min_threshold - threshold for that spectrum
 			*/
 			bool IsIsotopeLinkedDistribution(double min_threshold) ; 
+			
+			PeakProcessing::PeakData GetTheoreticalIsotopicDistributionPeakList(std::vector<double> *xvals, std::vector<double> *yvals);
+
+
+			//will calculate the delta mz (referenced to the theor) based on several of the observed peaks
+			double CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth, PeakProcessing::PeakData &obsPeakData, PeakProcessing::PeakData &theorPeakData, double theorIntensityCutOff);
+
+
+
+			/*
+
+			*/
+			double FindIsotopicDist(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
+				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
+				double spacingWeight, double spacingVar,
+				double signalToNoiseWeight, double signalToNoiseThresh,
+				double ratioWeight, double ratioThreshold, 
+				double fitWeight, double fitThreshold, bool debug = false) ;
+
+			
 			//! calculates the fit score for a peak.
 			/*
 				\param pk_data  variable which stores the data itself
@@ -141,7 +163,8 @@ namespace Engine
 			*/
 			double GetFitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
 				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
-				double min_theoretical_intensity_for_score, bool debug = false) ; 
+				double min_theoretical_intensity_for_score, double leftFitStringencyFactor, double rightFitStringencyFactor,
+				bool debug = false) ; 
 			//! calculates the fit score for a peak against a molecular formula.
 			/*
 				\param pk_data  variable which stores the data itself
@@ -163,8 +186,8 @@ namespace Engine
 				\param mz_delta specifies the mass delta between theoretical and observed m/z with the best fit so far.
 				\param min_intensity minimum intensity for score
 			*/
-			virtual double FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, double mz_delta, 
-				double min_intensity_for_score, bool debug = false ) = 0   ;
+			virtual double FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
+				double mz_delta, double min_intensity_for_score, bool debug = false ) = 0   ;
 			//! calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed intensity by specified intensity.
 			/*
 				\param pk_data  variable which stores the data itself
@@ -174,8 +197,8 @@ namespace Engine
 				\param min_intensity minimum intensity for score
 				\param debug prints debugging information if this is set to true.
 			*/
-			virtual double FitScore(PeakProcessing::PeakData &pk_data, short cs, double normalizer, double mz_delta, 
-				double min_intensity_for_score, bool debug = false ) = 0   ;
+			virtual double FitScore(PeakProcessing::PeakData &pk_data, short cs, double normalizer, 
+				double mz_delta, double min_intensity_for_score, bool debug = false ) = 0   ;
 
 			//! gets the intensity for a given mz. 
 			/*!
@@ -185,7 +208,9 @@ namespace Engine
 				\param mz the m/z value for which we want to find the intensity. 
 				\param ptr_vect_mzs pointer to std::vector with observed m/z values.
 				\param ptr_vect_intensities pointer to std::vector with observed intensity values.
-				\return returns the intensity of the peak which has the given m/z. If the exact peak is not present, then we interpolate the intensity. If the m/z value is greater than the maximum mz or less than the minimum m/z, 0 is returned.
+				\return returns the intensity of the peak which has the given m/z. If the exact peak is not present, 
+				then we interpolate the intensity. If the m/z value is greater than the maximum mz or less, 
+				then the minimum m/z, 0 is returned.
 			*/
 			inline double GetPointIntensity(double mz, std::vector<double> *ptr_vect_mzs, std::vector<double> *ptr_vect_intensities)
 			{

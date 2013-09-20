@@ -1,4 +1,6 @@
 #include "interpolation.h"
+#include <math.h>
+
 //#include "DeconException.h"
 
 #include <iostream>
@@ -68,9 +70,9 @@ namespace Engine
 				double temp_last_last = mvect_temp_spline[n-2] ; 
 				double y2_last = (un-qn*temp_last_last)/(qn*y2_last_last + 1.0) ; 
 				mvect_Y2[n-1]= y2_last ;
-				for(k=n-2;k>=0;k--) 
+				for(k=n-2;k>=0;k--)                                       //[gord] this loop takes forever when summing spectra
 				{
-					double temp = mvect_temp_spline[k] ; 
+					double temp = mvect_temp_spline[k] ;     
 					double y2_next_val = mvect_Y2[k+1] ; 
 					double y2_val = mvect_Y2[k] ; 
 					mvect_Y2[k]=y2_val* y2_next_val + temp;
@@ -115,11 +117,21 @@ namespace Engine
 			tempY.push_back(y[0]) ; 
 
 			float last_diff = min_distance ; 
+			int lastDiffIndex = 0;
 			float lastX = x[0] ; 
 			for (int index = 1 ; index < num_pts-1 ; index++)
 			{
 				float current_diff = x[index] - lastX ; 
-				if (current_diff > 1.5 * last_diff)
+				double diffBetweenCurrentAndBase = x[index] - x[lastDiffIndex];
+				double differenceFactor = 1.5;
+
+
+				if (sqrt(diffBetweenCurrentAndBase)>differenceFactor)
+				{
+					differenceFactor=sqrt(diffBetweenCurrentAndBase);
+				}
+
+				if (current_diff > differenceFactor * last_diff)
 				{
 					// insert points. 
 					int num_pts_to_add = ((int) (current_diff / last_diff + 0.5)) -1  ; 
@@ -167,6 +179,7 @@ namespace Engine
 					tempX.push_back(x[index]); 
 					tempY.push_back(y[index]); 
 					last_diff = current_diff ; 
+					lastDiffIndex = index;
 					lastX = x[index] ; 
 				}
 			}
@@ -220,11 +233,24 @@ namespace Engine
 				tempY.push_back(y[0]) ; 
 
 				double last_diff = min_distance ; 
+				int lastDiffIndex = 0;
+
 				double lastX = x[0] ; 
+
 				for (int index = 1 ; index < num_pts-1 ; index++)
 				{
 					double current_diff = x[index] - lastX ; 
-					if (current_diff > 1.5 * last_diff)
+					double diffBetweenCurrentAndBase = x[index] - x[lastDiffIndex];
+					double differenceFactor = 1.5;
+
+
+					if (sqrt(diffBetweenCurrentAndBase)>differenceFactor)
+					{
+						differenceFactor=sqrt(diffBetweenCurrentAndBase);
+					}
+
+
+					if (current_diff > differenceFactor * last_diff)
 					{
 						// insert points. 
 						int num_pts_to_add = ((int) (current_diff / last_diff + 0.5)) -1  ; 
@@ -273,6 +299,7 @@ namespace Engine
 						tempX.push_back(x[index]); 
 						tempY.push_back(y[index]); 
 						last_diff = current_diff ; 
+						lastDiffIndex = index;
 						lastX = x[index] ; 
 					}
 				}

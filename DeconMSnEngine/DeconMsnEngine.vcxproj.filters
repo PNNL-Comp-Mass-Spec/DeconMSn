@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Readers">
+      <UniqueIdentifier>{d486e12e-22b2-4ff7-aa75-897a45aa2fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Readers\Source Files">
+      <UniqueIdentifier>{8eb6ac9d-f10d-4118-8658-82847bbb4f20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Readers\Source Files\RAMP">
+      <UniqueIdentifier>{015ac913-cb3c-402b-8943-b68b4f4153eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Readers\Header Files">
+      <UniqueIdentifier>{2a944b94-0990-457e-b566-413eeded6e21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Readers\Header Files\RAMP">
+      <UniqueIdentifier>{8ba31987-11eb-44fa-8cd0-f160d7fb092d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Calibrations">
+      <UniqueIdentifier>{d1514a03-6c98-46a3-ba16-89b75e20dc60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Calibrations\Source Files">
+      <UniqueIdentifier>{b3683527-8666-4092-a7d3-b48e0467c7b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Calibrations\Header Files">
+      <UniqueIdentifier>{049ece68-fa36-46c4-add1-ae09909cb54d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{9cfb46fa-f627-4e98-986d-53a6afe8992a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Source Files">
+      <UniqueIdentifier>{18bcd0b3-2c61-4f9c-a2b2-423f1c762e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Header Files">
+      <UniqueIdentifier>{c2546ac5-62b4-4f2a-aae2-38bb6d0be7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PeakProcessor">
+      <UniqueIdentifier>{58c867bb-e323-4105-88a9-2b35459d1fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PeakProcessor\Source Files">
+      <UniqueIdentifier>{990528d5-180d-4ddd-bac6-9f7dd940e934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PeakProcessor\Header Files">
+      <UniqueIdentifier>{e98bb131-e446-491b-8e75-23e3d753df6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HornTransform">
+      <UniqueIdentifier>{033aa8da-a276-4e66-ac8a-c0a859e84c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HornTransform\Source Files">
+      <UniqueIdentifier>{ccc95585-1398-4bf8-b006-166bc74462a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HornTransform\Header Files">
+      <UniqueIdentifier>{9acb348b-2ff8-4c5b-aa15-416f7f39e4b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TheoreticalProfile">
+      <UniqueIdentifier>{3bc26940-004d-49a5-81eb-1ab795bb904b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TheoreticalProfile\Source Files">
+      <UniqueIdentifier>{8b5d5e38-6739-4979-b51a-8470855511ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TheoreticalProfile\Header Files">
+      <UniqueIdentifier>{9c47228d-7fe8-4266-8854-f6ecd33ae671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChargeDetermination">
+      <UniqueIdentifier>{b73dabe8-283a-40c7-99e6-e7a3a93d62ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChargeDetermination\Source Files">
+      <UniqueIdentifier>{1a1f4ab2-ea2e-4ed4-a9a7-cdc4f3ce9db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChargeDetermination\Header Files">
+      <UniqueIdentifier>{97a39d1e-bab1-425f-90cc-9b54ff0c35bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Results">
+      <UniqueIdentifier>{f35731cf-1d07-4838-b00c-344f56a69a49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Results\Source Files">
+      <UniqueIdentifier>{c923dac8-f7f3-48d2-b5ed-a0b192e47272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Results\Header Files">
+      <UniqueIdentifier>{9da30608-0e5e-4a16-a6dc-d1611c49243d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTAGeneration">
+      <UniqueIdentifier>{21284143-99f7-45f7-bb44-e3709780e603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTAGeneration\Source Files">
+      <UniqueIdentifier>{acf64039-f508-4f9f-baf3-3954797887c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTAGeneration\Header Files">
+      <UniqueIdentifier>{dcb18dde-b659-4e0a-9b21-947554d834b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResultChecker">
+      <UniqueIdentifier>{57fe558b-5649-4d86-93ca-79c8354b7c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResultChecker\Source Files">
+      <UniqueIdentifier>{8130d88c-da3a-41ea-97eb-9fb99acc910a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResultChecker\Header Files">
+      <UniqueIdentifier>{508b3b3d-4b7f-4cc6-a90c-fe52f863bd5e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsAveragine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsDTAGenerationParameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsElementIsotopes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsHornTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsHornTransformParameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsHornTransformResults.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsIsotopeFit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsMercuryIsotopeDistribution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsPeak.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsPeakProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsPeakProcessorParameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsProcRunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsRawData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsRawDataPreprocessOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsTransformFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clsTransformResults.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeconEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeconEngineUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\AgilentRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\AsciiRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\BrukerAsciiRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\BrukerRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\FinniganRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\Ic2LSRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\IMSRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\MicromassRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\MZXmlRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\RawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\ReaderFactory.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\SunExtrelRawData.cpp">
+      <Filter>Readers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\Ramp\base64.cpp">
+      <Filter>Readers\Source Files\RAMP</Filter>
+    </ClCompile>
+    <ClCompile Include="Readers\Ramp\ramp.cpp">
+      <Filter>Readers\Source Files\RAMP</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibrations\Calibrator.cpp">
+      <Filter>Calibrations\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibrations\CalibratorImp.cpp">
+      <Filter>Calibrations\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Apodization.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\BlockDeque.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\DeconException.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Fft32.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\helpers.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Interpolation.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Matrix.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\savgol.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\SavGolSmoother.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeakProcessor\Peak.cpp">
+      <Filter>PeakProcessor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeakProcessor\PeakData.cpp">
+      <Filter>PeakProcessor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeakProcessor\PeakFit.cpp">
+      <Filter>PeakProcessor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeakProcessor\PeakProcessor.cpp">
+      <Filter>PeakProcessor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\AreaFit.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\ChiSqFit.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\IsotopeFit.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\IsotopeFitRecord.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\MassTransform.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\MercuryCache.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HornTransform\PeakFit.cpp">
+      <Filter>HornTransform\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TheoreticalProfile\AtomicInformation.cpp">
+      <Filter>TheoreticalProfile\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TheoreticalProfile\Averagine.cpp">
+      <Filter>TheoreticalProfile\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TheoreticalProfile\MercuryIsotopeDistribution.cpp">
+      <Filter>TheoreticalProfile\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TheoreticalProfile\MolecularFormula.cpp">
+      <Filter>TheoreticalProfile\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChargeDetermination\AutoCorrelationChargeDetermination.cpp">
+      <Filter>ChargeDetermination\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChargeDetermination\FeatureSpace.cpp">
+      <Filter>ChargeDetermination\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChargeDetermination\SVMChargeDetermination.cpp">
+      <Filter>ChargeDetermination\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Results\LCMSTransformResults.cpp">
+      <Filter>Results\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTAGeneration\DTAGeneration.cpp">
+      <Filter>DTAGeneration\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTAGeneration\MSnInformationRecord.cpp">
+      <Filter>DTAGeneration\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTAGeneration\ProfileRecord.cpp">
+      <Filter>DTAGeneration\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultChecker\ResultChecker.cpp">
+      <Filter>ResultChecker\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="clsAveragine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsDTAGenerationParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsElementIsotopes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsHornTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsHornTransformParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsHornTransformResults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsIsotopeFit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsLCMSPeak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsMercuryIsotopeDistribution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsPeak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsPeakProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsPeakProcessorParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsProcRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsRawData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsRawDataPreprocessOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsTransformFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clsTransformResults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeconEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeconEngineUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\AgilentRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\AsciiRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\BrukerAsciiRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\BrukerRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\FinniganRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\Icr2lsRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\IMSRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\MicromassRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\MZXmlRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\RawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\ReaderFactory.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\SunExtrelRawData.h">
+      <Filter>Readers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\Ramp\base64.h">
+      <Filter>Readers\Header Files\RAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Readers\Ramp\ramp.h">
+      <Filter>Readers\Header Files\RAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibrations\Calibrator.h">
+      <Filter>Calibrations\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibrations\CalibratorImp.h">
+      <Filter>Calibrations\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Apodization.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\BlockDeque.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\DeconException.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Fft32.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\helpers.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Interpolation.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Matrix.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\SavGolSmoother.h">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\Peak.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\PeakData.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\PeakFit.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\PeakIndex.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\PeakProcessor.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeakProcessor\PeakStatistician.h">
+      <Filter>PeakProcessor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\AreaFit.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\ChiSqFit.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\IsotopeFit.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\IsotopeFitRecord.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\MassTransform.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\MercuryCache.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HornTransform\PeakFit.h">
+      <Filter>HornTransform\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheoreticalProfile\AtomicInformation.h">
+      <Filter>TheoreticalProfile\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheoreticalProfile\Averagine.h">
+      <Filter>TheoreticalProfile\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheoreticalProfile\MercuryIsotopeDistribution.h">
+      <Filter>TheoreticalProfile\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheoreticalProfile\MolecularFormula.h">
+      <Filter>TheoreticalProfile\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChargeDetermination\AutoCorrelationChargeDetermination.h">
+      <Filter>ChargeDetermination\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChargeDetermination\FeatureSpace.h">
+      <Filter>ChargeDetermination\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChargeDetermination\SVMChargeDetermination.h">
+      <Filter>ChargeDetermination\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Results\LCMSPeak.h">
+      <Filter>Results\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Results\LCMSPeakIndex.h">
+      <Filter>Results\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Results\LCMSTransformResults.h">
+      <Filter>Results\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTAGeneration\DTAGeneration.h">
+      <Filter>DTAGeneration\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTAGeneration\MSnInformationRecord.h">
+      <Filter>DTAGeneration\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTAGeneration\ProfileRecord.h">
+      <Filter>DTAGeneration\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultChecker\ResultChecker.h">
+      <Filter>ResultChecker\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\DeconMSn\DeconMSn\xml1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

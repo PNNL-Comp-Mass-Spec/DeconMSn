@@ -22,6 +22,8 @@ namespace Engine {
 		char *marr_headerName;
 		char *marr_serName;
 
+		Engine::Calibrations::CCalibrator *mobj_calibrator;
+
 		int FindHeaderParams() ; 
 		int mint_num_spectra ; 
 		int mint_num_points_in_scan ; 
@@ -37,6 +39,8 @@ namespace Engine {
 		double GetBasePeakIntensity(std::vector<double> &mzs, std::vector<double> &intensities) ; 
 		double GetTotalIonCount(std::vector<double> &mzs, std::vector<double> &intensities) ; 
 
+
+		int GetNumSpectraFromFileSizeInfo(void) ; 
 	public:
 		~BrukerRawData(void);
 		BrukerRawData(void);
@@ -46,10 +50,12 @@ namespace Engine {
 
 		void Open(char *header_n, char *ser_file_name);
 
+		void SetCalibrator(Engine::Calibrations::CCalibrator *calib);
 		virtual void Load(char *file_n) ; 
 		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  
 		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ;  
 		double GetScanTime(int scan_num) ; 
+		int GetNumScansLoaded() { return mint_last_scan_num ; } ; 
 		int GetNumScans() ; 
 		int GetScanSize() ; 
 		double GetSignalRange(int scan_num) ; 
@@ -65,6 +71,7 @@ namespace Engine {
 		bool IsProfileScan(int scan_num) ;
 		int GetMSLevel(int scan_num) ; 
 		int GetLastScanNum() { return mint_num_spectra ; } 
+		int GetFirstScanNum() { return 1 ; } 
 	};
 }	
 }

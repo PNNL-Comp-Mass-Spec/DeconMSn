@@ -54,11 +54,13 @@ namespace Engine
 
 		bool IsotopeFit::FindPeak(double min_mz, double max_mz, double &mz_value, double &intensity, bool debug)
 		{
-			clock_t start_t = clock() ; 
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ; 
 			if (!mbln_last_value_was_cached)
 			{
 				bool found = mobj_isotope_dist.FindPeak(min_mz, max_mz, mz_value, intensity) ; 
-				mint_find_peak_calc += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_calc += (clock() - start_t) ; 
 				return found ; 
 			}
 
@@ -66,10 +68,10 @@ namespace Engine
 			intensity = 0 ; 
 
 			int num_pts = (int) mvect_distribution_mzs.size() ; 
-			if (debug)
-			{
-				std::cerr<<" Num points = "<<num_pts<<" searching for min_mz = "<<min_mz<<std::endl ; 
-			}
+			//if (debug)
+			//{
+			//	std::cout<<" Num points = "<<num_pts<<" searching for min_mz = "<<min_mz<<std::endl ; 
+			//}
 
 			int index = mobj_pk_index.GetNearestBinary(mvect_distribution_mzs, min_mz, 0, num_pts-1) ; 
 			if (index >= num_pts)
@@ -87,7 +89,9 @@ namespace Engine
 				index-- ; 
 			}
 
+			//find index of peak with maximum intensity
 			int max_index = -1 ; 
+			
 			for ( ; index < num_pts ; index++)
 			{
 				double mz = mvect_distribution_mzs[index] ; 
@@ -104,7 +108,8 @@ namespace Engine
 			}
 			if (max_index == -1)
 			{
-				mint_find_peak_cached += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_cached += (clock() - start_t) ; 
 				return false ; 
 			}
 
@@ -126,29 +131,33 @@ namespace Engine
 					&& mvect_distribution_mzs[max_index + 1] < X2 + 2.0/mobj_isotope_dist.mint_points_per_amu)
 				{
 					double d ;
-					d = (Y2 - Y1) * (X3 - X2) ; 
-					d = d - (Y3 - Y2) * (X2 - X1) ;
+					d = (Y2 - Y1) * (X3 - X2) ;     //[gord] slope?  what is this?...  Denominator... see below
+					d = d - (Y3 - Y2) * (X2 - X1) ;  //
 			   
 					if (d == 0)
 						mz_value = X2 ; 
 					else
-						mz_value = ((X1 + X2) - ((Y2 - Y1) * (X3 - X2) * (X1 - X3)) / d) / 2.0 ; 
+						mz_value = ((X1 + X2) - ((Y2 - Y1) * (X3 - X2) * (X1 - X3)) / d) / 2.0 ;    //[gord] what's this doing?? Looks like a mid-point calculation
 				}
 				else
 				{
 					mz_value = X2 ; 
 					intensity = mvect_distribution_intensities[max_index] ; 
 				}
-				mint_find_peak_cached += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_cached += (clock() - start_t) ; 
 				return true ; 
 			}
 
 			mz_value = X2 ; 
 			intensity = mvect_distribution_intensities[max_index] ; 
-			mint_find_peak_cached += (clock() - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// mint_find_peak_cached += (clock() - start_t) ; 
 			return true ; 
 		}
 
+		
 		bool IsotopeFit::IsIsotopeLinkedDistribution(double min_threshold)
 		{
 			int num_isotopes = mvect_isotope_mzs.size()  ; 
@@ -165,21 +174,175 @@ namespace Engine
 			return false ; 
 		}
 
+		
+		
+		//[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that
+		// the user could favor certain fitting parameters (i.e. space between isotopomers) over others
+		double IsotopeFit::FindIsotopicDist(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
+				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
+				double spacingWeight, double spacingVar,
+				double signalToNoiseWeight, double signalToNoiseThresh,
+				double ratioWeight, double ratioThreshold, 
+				double fitWeight, double fitThreshold, bool debug)
+		{
+			if (cs <= 0) {exit(1);}
+
+			
+			//Get theoretical distribution using Mercury algorithm
+			double peak_mass = (pk.mdbl_mz - mdbl_cc_mass)* cs ; 
+			double resolution = pk.mdbl_mz / pk.mdbl_FWHM ;
+			GetIsotopeDistribution(peak_mass, cs,  resolution, mvect_distribution_mzs, mvect_distribution_intensities, 
+				delete_intensity_threshold, debug) ;
+
+			
+			double theorMostAbundantPeakMZ = mobj_isotope_dist.mdbl_max_peak_mz ; 
+
+			
+			
+			
+			double delta =  pk.mdbl_mz - theorMostAbundantPeakMZ ; 
+			
+			PeakProcessing::Peak leftPeak;
+
+			double spacingScore = 0;
+			double signalToNoiseScore = 0;
+			double ratioScore = 0;
+			double fitScore = 0;
+			double totalScore = 0;
+			double maximumScore = spacingWeight + signalToNoiseWeight + ratioWeight + fitWeight;
+
+			
+
+
+			//this will select peaks to the left until 
+			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)          
+			{
+				double theorLeftPeakMZ = 0;
+				double theorLeftPeakIntensity = 0;
+				pk_data.FindPeak(pk.mdbl_mz - dd - pk.mdbl_FWHM, pk.mdbl_mz - dd + pk.mdbl_FWHM, leftPeak) ;    //PeakProcessing.FindPeak
+				mobj_isotope_dist.FindPeak(theorMostAbundantPeakMZ - dd - 0.2/cs, theorMostAbundantPeakMZ - dd + 0.2/cs, theorLeftPeakMZ, theorLeftPeakIntensity);
+
+
+
+
+				
+				if (leftPeak.mdbl_mz > 0)    //if there is an experimental peak...
+				{
+					//get spacing score
+					spacingScore = spacingWeight * 1 ; 
+
+					//get S/N score
+					if (leftPeak.mdbl_SN > signalToNoiseThresh)
+					{
+						signalToNoiseScore = signalToNoiseWeight * 1 ;
+					}
+
+					//get Ratio score
+					double leftPeakRatio = leftPeak.mdbl_intensity / pk.mdbl_intensity;
+					double theorLeftPeakRatio = theorLeftPeakIntensity / 1;    //TODO: need to check if this most abundant theor peak's intensity is 1
+
+
+
+
+
+
+
+
+				}
+
+			
+				//get Ratio score
+				
+
+				
+
+
+
+
+
+
+
+
+
+
+			}
+
+
+			
+
+
+			//get S/N score
+
+			
+
+			//get Fit score
+
+			//calculate maximum score
+
+			//get overall score
+			
+			
+
+
+			return 0;
+		    
+			
+
+
+
+
+		}
+		
+		
+		PeakProcessing::PeakData IsotopeFit::GetTheoreticalIsotopicDistributionPeakList(std::vector<double> *xvals, std::vector<double> *yvals)
+		{
+			PeakProcessing::PeakData peakList;
+			PeakProcessing::PeakProcessor processor;
+			processor.SetOptions(0.5, 1, false, (PeakProcessing::PEAK_FIT_TYPE)0);
+			processor.DiscoverPeaks(xvals,yvals,0,10000);
+			
+
+			int numpeaks = processor.mobj_peak_data->GetNumPeaks();
+			
+			for (int i=0; i<numpeaks; i++)
+			{
+				PeakProcessing::Peak peak;
+			    processor.mobj_peak_data->GetPeak(i,peak);
+				peakList.AddPeak(peak);
+			}
+
+			return peakList;
+
+
+			
+		}
+
+
+		/*
+		This fitter is used by MassTransform.cpp.   It does more than just get a fit score. It first
+		gets a fit score and then slides to the left until the fit score does not improve and then resets
+		to the center point and then slides to the right until the fit score does not improve. Returns the
+		best fit score and fills the isotopic profile (isotopeFitRecord)
+		*/
 		double IsotopeFit::GetFitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
 				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
-				double min_theoretical_intensity_for_score, bool debug)
+				double min_theoretical_intensity_for_score, double leftFitStringencyFactor, 
+				double rightFitStringencyFactor, bool debug)
 		{
 			if (cs <= 0)
 			{
-				std::cerr<<"Negative value for charge state. "<<cs<<std::endl ; 
+				std::cout<<"Negative value for charge state. "<<cs<<std::endl ; 
 				exit(1) ; 
 			}
 			//initialize 
 			double peak_mass = (pk.mdbl_mz - mdbl_cc_mass)* cs ; 
 			// by now the cc_mass, tag formula and media options in Mercury(Isotope generation)
-			// should be set. 
+			// should be set.    
 			if (debug)
-				std::cerr<<"Getting isotope distribution for mass = "<<peak_mass<<" mz = "<<pk.mdbl_mz<<" charge = "<<cs<<std::endl ; 
+			{
+				std::cout<<"\n\n-------------------- BEGIN TRANSFORM ---------------------------"<<cs<<std::endl ; 
+				std::cout<<"Getting isotope distribution for mass = "<<peak_mass<<" mz = "<<pk.mdbl_mz<<" charge = "<<cs<<std::endl ; 
+			}
 			double resolution = pk.mdbl_mz / pk.mdbl_FWHM ;
 			// DJ Jan 07 2007: Need to get all peaks down to delete interval so that range of deletion is correct. 
 			//GetIsotopeDistribution(peak_mass, cs,  resolution, mvect_distribution_mzs, mvect_distribution_intensities, 
@@ -187,19 +350,55 @@ namespace Engine
 			GetIsotopeDistribution(peak_mass, cs,  resolution, mvect_distribution_mzs, mvect_distribution_intensities, 
 				delete_intensity_threshold, debug) ;
 
+
+			PeakProcessing::PeakData theorPeakData= IsotopeFit::GetTheoreticalIsotopicDistributionPeakList(&mvect_distribution_mzs, &mvect_distribution_intensities);
+
+			int numpeaks = theorPeakData.GetNumPeaks();
+			
+			if (debug)
+			{
+				std::cout<<"---------------------------------------- THEORETICAL PEAKS ------------------"<<std::endl ;
+				std::cout<<"Theoretical peak\t"<<"Index\t"<<"MZ\t"<<"Intensity\t"<<"FWHM\t"<<"SigNoise"<<std::endl;
+				for (int i=0; i<numpeaks; i++)
+				{
+					PeakProcessing::Peak theorpeak;
+					theorPeakData.GetPeak(i,theorpeak);
+					std::cout<<"Theoretical peak\t"<<i<<"\t"<<theorpeak.mdbl_mz<<"\t"<<theorpeak.mdbl_intensity<<"\t"<<theorpeak.mdbl_FWHM<<"\t"<<theorpeak.mdbl_SN<<std::endl;
+				}
+				std::cout<<"---------------------------------------- END THEORETICAL PEAKS ------------------"<<std::endl;
+			}
+
+
+
+
+			
 			// Anoop April 9 2007: For checking if the distribution does not overlap/link with any other distribution
 			// Beginnings of deisotoping correction			
 			//bool is_linked = false ; 
 			//is_linked =  IsIsotopeLinkedDistribution(delete_intensity_threshold) ; 
 
 			double delta =  pk.mdbl_mz - mobj_isotope_dist.mdbl_max_peak_mz ; 
+
+
+			
+
+
 			double fit ; 
-			if(debug)
-				std::cerr<<"Going for first fit"<<std::endl ; 
+			//if(debug)
+			//	std::cout<<"Going for first fit"<<std::endl ; 
 			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, debug) ; 
+			
+
 			if (debug)
-				std::cerr<<"\tFirst fit  = "<<fit<<" Intensity = "<<pk.mdbl_intensity
-					<<" Charge = "<<cs<<" FWHM = "<<pk.mdbl_FWHM<<" delta = "<<delta<<std::endl ; 
+			{
+				std::cout<<"Peak\tPeakIdx\tmz\tintens\tSN\tFWHM\tfit\tdelta"<<std::endl;
+
+				std::cout<<"CENTER\t"<<pk.mint_peak_index<<"\t"<<pk.mdbl_mz<<"\t"<<pk.mdbl_intensity<<"\t"<<pk.mdbl_SN<<"\t"<<pk.mdbl_FWHM<<"\t"<<fit<<"\t"<<delta<<"\t"<<std::endl;
+			}
+			
+			//if (debug)
+			//	std::cout<<"\tFirst fit  = "<<fit<<" Intensity = "<<pk.mdbl_intensity
+			//		<<" Charge = "<<cs<<" FWHM = "<<pk.mdbl_FWHM<<" delta = "<<delta<<std::endl ; 
 
 			if (!mbln_thrash )
 			{
@@ -212,43 +411,65 @@ namespace Engine
 				return fit ; 
 			}
 
-			double p1fit =-1, m1fit = -1  ; 
+			double p1fit =-1, m1fit = -1  ;        // [gord]: this seems unused
 			double Mpeak = mobj_isotope_dist.mdbl_max_peak_mz ; 
 			PeakProcessing::Peak nxt_peak ; 
 
 			double best_fit = fit ; 
 			double best_delta = delta ; 
-			double MaxY = pk.mdbl_intensity ; 
+			double MaxY = pk.mdbl_intensity ;
 
-			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)
+
+
+			//------------- Slide to the LEFT --------------------------------------------------
+			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)          
 			{
-				double mz, intensity ; 
+				double mz, intensity ;    //[gord] should these be reset to '0'?
+				
+				//check for theoretical peak to the right of TheoreticalMaxPeak; store mz and intensity
 				bool found_peak = FindPeak(Mpeak+dd - 0.2/cs, Mpeak+dd+ 0.2 /cs, mz, intensity, debug) ; 
-				if (found_peak)
+				
+				// if the above theoretical peak was found,  look one peak to the LEFT in the Experimental peaklist
+				if (found_peak)  
 				{
-					pk_data.FindPeak(pk.mdbl_mz - dd - pk.mdbl_FWHM, pk.mdbl_mz - dd + pk.mdbl_FWHM, nxt_peak) ; 
+					pk_data.FindPeak(pk.mdbl_mz - dd - pk.mdbl_FWHM, pk.mdbl_mz - dd + pk.mdbl_FWHM, nxt_peak) ;    //PeakProcessing.FindPeak
 				}
 
-				if (debug)
-					std::cerr<<"\t\t Move by "<<dd ; 
+				//if (debug)
+				//	std::cout<<"\t\t Move by "<<dd ; 
 
-				if (mz > 0 && nxt_peak.mdbl_mz > 0)
+				if (mz > 0 && nxt_peak.mdbl_mz > 0)    //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
 				{
-					delta = pk.mdbl_mz - mz ;
-					PeakProcessing::Peak current_peak_copy = pk ; 
+					delta = pk.mdbl_mz - mz ;       // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
+					PeakProcessing::Peak current_peak_copy = pk ;                   // in c++ this copy is created by value;
 					current_peak_copy.mdbl_intensity = nxt_peak.mdbl_intensity ; 
 					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score) ; 
 					if (debug)
-						std::cerr<<" isotopes. Fit ="<<fit<<" Charge = "<<cs<<" Intensity = "<<nxt_peak.mdbl_intensity<<" delta = "<<delta<<std::endl ; 			}
+					{
+						//std::cout<<" isotopes. Fit ="<<fit<<" Charge = "<<cs<<" Intensity = "<<nxt_peak.mdbl_intensity<<" delta = "<<delta<<std::endl ;
+						std::cout<<"LEFT\t"<<nxt_peak.mint_peak_index<<"\t"<<nxt_peak.mdbl_mz<<"\t"<<nxt_peak.mdbl_intensity<<"\t"<<nxt_peak.mdbl_SN<<"\t"<<nxt_peak.mdbl_FWHM<<"\t"<<fit<<"\t"<<delta<<std::endl;
+					}
+
+				}
+
 				else
 				{
 					if (debug)
-						std::cerr<<" No peak found"<<std::endl ; 
-					fit = best_fit + 0.001 ; 
+						std::cout<<"LEFT\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<std::endl;
+					fit = best_fit + 1000 ;   // make the fit terrible
 				}
-				// should allow thrashing backwards even if fit was greater than best_fit, if its still very small.
+				// TODO: Currently, if fix score is less than best_fit, iteration stops.  Future versions should continue attempted fitting if fit was within a specified range of the best fit
 				// 26th February 2007 Deep Jaitly
-				if (fit <= best_fit)
+				/*if (fit <= best_fit) 
+				{
+					if (nxt_peak.mdbl_intensity > pk.mdbl_intensity)
+						pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
+					MaxY = pk.mdbl_intensity ; 
+					best_fit = fit ; 
+					best_delta = delta ; 
+				}*/
+				double leftFitFactor = fit / best_fit;
+				if (leftFitFactor <= leftFitStringencyFactor)
 				{
 					if (nxt_peak.mdbl_intensity > pk.mdbl_intensity)
 						pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
@@ -258,26 +479,32 @@ namespace Engine
 				}
 				else
 				{
-					if (p1fit == -1)
+					if (p1fit == -1)       //[gord]   what is this doing?  Peak1 fit??
 						p1fit = fit ; 
 					if (!mbln_complete_fit)
 						break ; 
 				}
 			}
 
+			//if (debug)
+			//		std::cout<<"\n---------------- Sliding to the RIGHT -------------------------" ; 
 			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)
 			{
 				double mz, intensity ;
 				mz = 0 ; 
 				intensity = 0 ; 
 
+				////check for theoretical peak to the LEFT of TheoreticalMaxPeak; store mz and intensity
 				bool found_peak = FindPeak(Mpeak - dd - 0.2/cs, Mpeak - dd + 0.2 /cs, mz, intensity, debug) ; 
+				
+				
+				// if the above theoretical peak was found,  look one peak to the RIGHT in the Experimental peaklist
 				if (found_peak)
 				{
 					pk_data.FindPeak(pk.mdbl_mz + dd - pk.mdbl_FWHM, pk.mdbl_mz + dd + pk.mdbl_FWHM, nxt_peak) ; 
 				}
-				if (debug)
-					std::cerr<<"\t\t Move back by "<<dd ;
+				//if (debug)
+				//	std::cout<<"\t\t Move back by "<<dd ;
 				if (mz > 0 && nxt_peak.mdbl_mz > 0)
 				{
 					delta = pk.mdbl_mz - mz ; 
@@ -286,15 +513,33 @@ namespace Engine
 					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score) ; 
 					//fit = FitScore(pk_data, cs, nxt_peak.mdbl_intensity, delta) ; 
 					if (debug)
-						std::cerr<<" isotopes. Fit ="<<fit<<" Charge = "<<cs<<" Intensity = "<<nxt_peak.mdbl_intensity<<" delta = "<<delta<<std::endl ; 
+					{
+						//std::cout<<" isotopes. Fit ="<<fit<<" Charge = "<<cs<<" Intensity = "<<nxt_peak.mdbl_intensity<<" delta = "<<delta<<std::endl ; 
+						std::cout<<"RIGHT\t"<<nxt_peak.mint_peak_index<<"\t"<<nxt_peak.mdbl_mz<<"\t"<<nxt_peak.mdbl_intensity<<"\t"<<nxt_peak.mdbl_SN<<"\t"<<nxt_peak.mdbl_FWHM<<"\t"<<fit<<"\t"<<delta<<std::endl;
+
+					}
 				}
 				else
 				{
-					fit = best_fit +0.001 ;
+					fit = best_fit + 1000 ;    //force it to be a bad fit
 					if (debug)
-						std::cerr<<"No peak found"<<std::endl ; 
+					{
+					//	std::cout<<"No peak found"<<std::endl ; 
+						std::cout<<"RIGHT\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<"\t"<<-1<<std::endl;
+
+					}
 				}
-				if (fit <= best_fit)
+
+				/*if (fit <= best_fit)
+				{
+				if (nxt_peak.mdbl_intensity > pk.mdbl_intensity)
+				pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
+				MaxY = pk.mdbl_intensity ; 
+				best_fit = fit ; 
+				best_delta = delta ; 
+				}*/
+				double rightFitFactor = fit / best_fit;
+				if (rightFitFactor <= rightFitStringencyFactor)
 				{
 					if (nxt_peak.mdbl_intensity > pk.mdbl_intensity)
 						pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
@@ -302,6 +547,8 @@ namespace Engine
 					best_fit = fit ; 
 					best_delta = delta ; 
 				}
+				
+			
 				else
 				{
 					if (m1fit == -1)
@@ -313,6 +560,23 @@ namespace Engine
 
 			delta = best_delta ;
 
+			double theorIntensityCutoff = 30;  // 
+
+			double peakWidth = pk.mdbl_FWHM; 
+
+			if (debug)
+				{
+						std::cout<<"Std delta = \t"<<delta<<std::endl;
+				}
+
+
+			//delta = CalculateDeltaFromSeveralObservedPeaks(delta, peakWidth, pk_data, theorPeakData, theorIntensityCutoff);
+
+		if (debug)
+				{
+						std::cout<<"Weighted delta = \t"<<delta<<std::endl;
+				}
+
 			iso_record.mdbl_fit = best_fit ; 
 			iso_record.mshort_cs = cs ; 
 			iso_record.mdbl_mz = pk.mdbl_mz ; 
@@ -320,21 +584,23 @@ namespace Engine
 			iso_record.mdbl_average_mw = mobj_isotope_dist.mdbl_average_mw + delta * cs ; 
 			iso_record.mdbl_mono_mw = mobj_isotope_dist.mdbl_mono_mw + delta*cs ; 
 			iso_record.mdbl_most_intense_mw = mobj_isotope_dist.mdbl_most_intense_mw + delta*cs ; 
+
+
 			//iso_record.mbln_flag_isotope_link = is_linked ; 
 			return best_fit ; 
 		}
 
 		double IsotopeFit::GetFitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
-			TheoreticalProfile::MolecularFormula &formula, double delete_intensity_threshold, 
-			double min_theoretical_intensity_for_score, bool debug)
+				TheoreticalProfile::MolecularFormula &formula, double delete_intensity_threshold, 
+				double min_theoretical_intensity_for_score, bool debug)
 		{
 			if (cs <= 0)
 			{
-				std::cerr<<"Negative value for charge state. "<<cs<<std::endl ; 
+				std::cout<<"Negative value for charge state. "<<cs<<std::endl ; 
 				exit(1) ; 
 			}
 			if (debug)
-				std::cerr<<"Getting isotope distribution for formula = "<<formula<<" mz = "<<pk.mdbl_mz<<" charge = "<<cs<<std::endl ; 
+				std::cout<<"Getting isotope distribution for formula = "<<formula<<" mz = "<<pk.mdbl_mz<<" charge = "<<cs<<std::endl ; 
 
 			double resolution = pk.mdbl_mz / pk.mdbl_FWHM ;
 
@@ -350,7 +616,7 @@ namespace Engine
 			double delta =  pk.mdbl_mz - mobj_isotope_dist.mdbl_max_peak_mz ; 
 			double fit ; 
 			if(debug)
-				std::cerr<<"Going for first fit"<<std::endl ; 
+				std::cout<<"Going for first fit"<<std::endl ; 
 			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, debug) ; 
 			return fit ; 
 		}
@@ -415,7 +681,7 @@ namespace Engine
 			stop_mz = stop_mz + delta ; 
 			if (debug)
 			{
-				std::cerr<<"\t Start MZ for deletion ="<<start_mz<<" Stop MZ for deletion = "<<stop_mz<<std::endl ;
+				std::cout<<"\t Start MZ for deletion ="<<start_mz<<" Stop MZ for deletion = "<<stop_mz<<std::endl ;
 			}
 
 			return ; 
@@ -427,10 +693,17 @@ namespace Engine
 		{
 			double current_mz = most_abundant_mass/charge + mdbl_cc_mass ;
 			double FWHM = current_mz / resolution ; 
-			clock_t start_t = clock() ;
+			
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ;
 
-			if (!mbln_use_isotope_distribution_caching ||!mobj_mercury_cache.GetIsotopeDistributionCached(most_abundant_mass, charge, 
-				FWHM, min_theoretical_intensity, mzs, intensities))
+			//first check the UseCaching option; then check if it is in the cache or not. 
+			//if it is in the cache, the data is retrieved and the method returns true
+			//so If either is false then need to Calculate theor isotopic dist. 
+			bool needToCalculateIsotopeDistribution = (!mbln_use_isotope_distribution_caching ||!mobj_mercury_cache.GetIsotopeDistributionCached(most_abundant_mass, charge, 
+				FWHM, min_theoretical_intensity, mzs, intensities));
+			
+			if (needToCalculateIsotopeDistribution)   
 			{
 				mbln_last_value_was_cached = false ;
 				mobj_averagine.GetAverageFormulaForMass(most_abundant_mass, mobj_empirical_formula) ; 
@@ -438,13 +711,14 @@ namespace Engine
 
 				mobj_isotope_dist.mdbl_cc_mass = mdbl_cc_mass ;
 				mobj_isotope_dist.menm_ap_type = TheoreticalProfile::GAUSSIAN ; 
+				
 
 				intensities.clear() ; 
 				mzs.clear() ; 
 
 				if (debug)
 				{
-					std::cerr<<"Getting distribution for chemical ="<<mobj_empirical_formula<<std::endl ;
+					std::cout<<"Getting distribution for chemical ="<<mobj_empirical_formula<<std::endl ;
 				}
 				mobj_isotope_dist.CalculateDistribution(charge, resolution, mobj_empirical_formula, mzs, intensities, min_theoretical_intensity, 
 					mvect_isotope_mzs, mvect_isotope_intensities, debug) ; 
@@ -465,8 +739,10 @@ namespace Engine
 				mobj_isotope_dist.mdbl_most_intense_mw = mobj_mercury_cache.mdbl_most_intense_mw ; 
 				mobj_isotope_dist.mdbl_max_peak_mz =  mobj_mercury_cache.mdbl_most_intense_mw/charge + mdbl_cc_mass - ELECTRON_MASS ; 
 			}
-			clock_t stop_t = clock() ; 
-			mint_distribution_processing_time  += (stop_t - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// clock_t stop_t = clock() ; 
+			// mint_distribution_processing_time  += (stop_t - start_t) ; 
 			
 			return ; 
 		}
@@ -487,5 +763,83 @@ namespace Engine
 		{
 			iso_comp = mobj_isotope_dist.mobj_elemental_isotope_composition ;
 		}
+
+		double IsotopeFit::CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth, PeakProcessing::PeakData &obsPeakData, PeakProcessing::PeakData &theorPeakData, double theorIntensityCutOff)
+		{
+			//the idea is to use a selected number of theor peaks
+			//and for each theor peak,  use the delta (mz offset) info
+			//to find the obs peak data and determine the delta value for that peak.
+			//accumulate delta values in an array and then calculate a weighted average
+			
+			int numTheorPeaks = theorPeakData.GetNumPeaks();
+
+			PeakProcessing::PeakData filteredTheorPeakData;
+
+			
+			//filter the theor list
+			int numFilteredTheorPeaks = 0;
+			for (int i=0; i<numTheorPeaks; i++)
+			{
+				PeakProcessing::Peak peak;
+				theorPeakData.GetPeak(i,peak);
+
+				if (peak.mdbl_intensity>= theorIntensityCutOff)
+				{
+					filteredTheorPeakData.AddPeak(peak);
+					numFilteredTheorPeaks++;
+				}
+			}
+
+			if (numFilteredTheorPeaks==0)return startingDelta;
+
+			
+
+			double* deltaArray = new double[numFilteredTheorPeaks];
+			double* intensityArray= new double [numFilteredTheorPeaks];
+			double intensitySum = 0 ;
+
+			double weightedSumOfDeltas = 0;
+
+			for (int i=0; i<numFilteredTheorPeaks; i++)
+			{
+				PeakProcessing::Peak theorPeak;
+				filteredTheorPeakData.GetPeak(i,theorPeak);
+
+				double targetMZLower = theorPeak.mdbl_mz + startingDelta - peakWidth; 
+				double targetMZUpper = theorPeak.mdbl_mz + startingDelta + peakWidth; 
+				
+				PeakProcessing::Peak foundPeak;
+				obsPeakData.FindPeak(targetMZLower,targetMZUpper,foundPeak);
+
+				if (foundPeak.mdbl_mz>0)
+				{
+					deltaArray[i] = foundPeak.mdbl_mz - theorPeak.mdbl_mz;
+					intensityArray[i] = foundPeak.mdbl_intensity;
+					intensitySum += foundPeak.mdbl_intensity;
+				}
+				else
+				{
+					deltaArray[i] = startingDelta;
+					intensityArray[i] = 0;       //obs peak was not found; therefore assign 0 intensity (will have no effect on delta calc)
+				}
+			}
+
+			if (intensitySum==0)return startingDelta;   // no obs peaks found at all;  return default
+
+
+			//now perform a weighted average
+
+			double weightedDelta = 0 ;
+			for (int i=0; i< numFilteredTheorPeaks; i++)
+			{
+				weightedDelta += intensityArray[i] / intensitySum * deltaArray[i];
+			}
+
+			return weightedDelta; 
+
+		}
+
+
+		
 	}
 }

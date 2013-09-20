@@ -12,6 +12,9 @@
 #include "../Utilities/Helpers.h"
 #include <vector>
 #include <float.h>
+#include <iostream>
+#include <iomanip>
+
 
 const double MAX_MZ = 100000 ; 
 const double MIN_MZ = 392.2944 ; 
@@ -21,10 +24,19 @@ namespace Engine
 {
 	namespace Calibrations
 	{
-		enum  CalibrationType	{ A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C_OVERFCUBE = 0, A_OVER_F_PLUS_B_OVER_FSQ, 
-								A_OVER_F_PLUS_B_OVER_FSQ_PLUS_CI_OVERFSQ, A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C, 
-								AF_PLUS_B, F, A_OVER_F_PLUS_B,  A_OVER_F_PLUS_B_PLUS_CI, 
-								TIME_A_TSQ_PLUS_B_T_PLUS_C, BRUKER_CALMET, UNDEFINED} ; 
+		enum  CalibrationType	{ 
+			A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C_OVERFCUBE = 0, 
+			A_OVER_F_PLUS_B_OVER_FSQ, 
+			A_OVER_F_PLUS_B_OVER_FSQ_PLUS_CI_OVERFSQ, 
+			A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C,
+			AF_PLUS_B, 
+			F, 
+			A_OVER_F_PLUS_B,  
+			A_OVER_F_PLUS_B_PLUS_CI, 
+			TIME_A_TSQ_PLUS_B_T_PLUS_C, 
+			BRUKER_CALMET, 
+			UNDEFINED
+		} ; 
 			// Type 0: m/z = A/f + B/f^2 + C/f^3
 			// Type 1: m/z = A/f + |Vt|B/f^2
 			// Type 2: m/z = A/f + |Vt|B/f^2 + I|Vt|C/f^2
@@ -136,10 +148,20 @@ namespace Engine
 
 			inline void GetMassFromFreq9(double freq, double &mass)
 			{
+								
 				if(freq != 0)
 					mass = (-mdbl_calib_const_a - sqrt((mdbl_calib_const_a * mdbl_calib_const_a ) - 4 * (mdbl_calib_const_b - freq) * mdbl_calib_const_c)) / (2 * (mdbl_calib_const_b - freq)) ; 
 				else
 					mass = MAX_MASS ; 
+
+				
+
+				if (mass > 810 && mass < 813)
+				{
+					
+					std::cout<<mdbl_calib_const_a<<"\t"<<mdbl_calib_const_b<<"\t"<<mdbl_calib_const_c<<"\t"<<std::setprecision(15)
+						<<freq<<"\t"<<std::setprecision(15)<<mass<<std::endl ; }
+				
 			}
 
 

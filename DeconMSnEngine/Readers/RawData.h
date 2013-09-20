@@ -20,7 +20,7 @@ namespace Engine {
 	const int MAX_FNAME_LEN = 512 ;
 	const int MAX_ERR_LEN = 512 ;
 
-	enum FileType { BRUKER = 0, FINNIGAN, MICROMASSRAWDATA, AGILENT_TOF, SUNEXTREL, ICR2LSRAWDATA, MZXMLRAWDATA, PNNL_IMS, BRUKER_ASCII, ASCII} ;
+	enum FileType { BRUKER = 0, FINNIGAN, MICROMASSRAWDATA, AGILENT_TOF, SUNEXTREL, ICR2LSRAWDATA, MZXMLRAWDATA, PNNL_IMS, BRUKER_ASCII, ASCII, PNNL_UIMF, YAFMS} ;
 
 	enum CalibrationType	{ A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C_OVERFCUBE = 0, A_OVER_F_PLUS_B_OVER_FSQ,
 						A_OVER_F_PLUS_B_OVER_FSQ_PLUS_CI_OVERFSQ, A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C,
@@ -60,7 +60,7 @@ namespace Engine {
 		virtual double GetScanTime(int scan_num) = 0 ;
 		virtual int GetScanSize() = 0 ;
 		virtual int GetNumScansLoaded() { return GetNumScans() ; } ;
-		virtual int GetSpectrumType(int scan_num)
+		virtual short GetSpectrumType(int scan_num)
 		{
 			return 0 ;
 		}

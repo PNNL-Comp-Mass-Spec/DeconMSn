@@ -40,7 +40,7 @@ namespace Engine
 			virtual int GetNumScans() ;
 			virtual double GetScanTime(int scan_num) ; 
 			virtual int GetScanSize() ; 
-			
+			virtual short GetSpectrumType(int scan_num); 
 			void GetScanDescription(int scan, char *description)
 			{
 				strcpy(description, "Scan #") ; 
@@ -55,7 +55,6 @@ namespace Engine
 			virtual int GetNumScansLoaded() { return mint_current_scan ; } ;
 			int GetParentScan(int scan_num) ;			
 			bool IsMSScan(int scan_num) ;			
-			int GetSpectrumType(int scan_num);
 			double GetParentMz(int scan_num) ;
 			int GetMSLevel(int scan_num) ; 
 			bool IsProfileScan(int scan_num) ;

@@ -1,0 +1,1 @@
+DeconMSn -XMGF -I35 -F6005 -L6012 "D:\Data\Orbitrap\QC_Shew_08_04-pt5-2_11Jan09_Sphinx_08-11-18.RAW"

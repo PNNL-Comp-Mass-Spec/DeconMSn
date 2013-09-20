@@ -93,7 +93,7 @@ namespace Engine {
 			void Close() ;
 			virtual void Load(char *file_n) ;
 			double GetScanTime(int scan_num) ; 
-			int FinniganRawData::GetSpectrumType(int scan_num);
+			short GetSpectrumType(int scan_num);
 			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  
 			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_points) ;  
 			double GetSignalRange(int scan_num) ; 

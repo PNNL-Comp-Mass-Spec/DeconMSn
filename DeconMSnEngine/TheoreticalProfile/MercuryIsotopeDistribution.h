@@ -82,6 +82,13 @@ namespace Engine
 			MercuryIsotopeDistribution(char *isotope_file_name) ; 
 			void SetElementalIsotopeComposition(const AtomicInformation &iso_comp) ; 
 			~MercuryIsotopeDistribution(void) {};
+
+			/*[gord] 
+			vect_x = mz values of isotopic profile that are above the threshold
+			vect_y = intensity values of isotopic profile that are above the threshold
+			vect_isotope_mzs = peak top mz's for the peaks of the isotopic profile
+			vect_isotope_intensities = peak top intensities's for the peaks of the isotopic profile
+			*/
 			inline void CalculateDistribution(short charge, double resolution, MolecularFormula &formula, 
 				std::vector<double> &vect_x, std::vector<double> &vect_y, double threshold, 
 				std::vector<double> &vect_isotope_mzs, std::vector<double> &vect_isotope_intensities, 
@@ -135,7 +142,14 @@ namespace Engine
 
 
 				Engine::FFT::Four1(num_points, mvect_frequency_data,-1);  // myers changes this line to 	Realft(FreqData,NumPoints,-1);
-
+			
+				/*
+				[gord] 'OutputData' fills 'vect_x', 'vect_y'
+				[gord] vect_x = mz values of isotopic profile that are above the threshold
+				[gord] vect_y = intensity values of isotopic profile that are above the threshold
+				[gord] vect_isotope_mzs = peak top mz's for the peaks of the isotopic profile
+				[gord] vect_isotope_intensities = peak top intensities's for the peaks of the isotopic profile
+				*/
 				OutputData(num_points, charge, vect_x, vect_y, threshold, vect_isotope_mzs, vect_isotope_intensities);
 
 				//NormalizeToPercentIons(vect_y) ; 
@@ -320,6 +334,9 @@ namespace Engine
 				if (charge == 0)
 					charge = 1 ; 
 
+			
+				//[gord] fill mz and intensity arrays, ignoring minimum thresholds
+				
 				for (i=num_points/2+1; i<=num_points; i++)
 				{
 					double mz = (double)(i-num_points-1)/mint_points_per_amu + mdbl_average_mw / charge + (mdbl_cc_mass - ELECTRON_MASS) ;
@@ -348,14 +365,16 @@ namespace Engine
 					double mz = mvect_mz[i] ; 
 					if (intensity > threshold)
 					{
-						vect_y.push_back(intensity) ;
-						vect_x.push_back(mz) ;
-						if (intensity >= last_intensity)
+						vect_y.push_back(intensity) ;            //fill intensity array if above threshold
+						vect_x.push_back(mz) ;					//fill mz array if above threshold
+						if (intensity >= last_intensity)     // intensities are increasing... (on the upslope of the theor peak)
 						{
 							if (i != num_points -1)
 							{
-								if (mvect_intensity[i+1] < intensity)
+								if (mvect_intensity[i+1] < intensity)   //  if true, 'intensity' marks the maximum
 								{
+									// now three points are defined (X1,Y1) (X2,Y2) and (X3,Y2), with the maximum being (X2,Y2)
+									
 									if (i > 0 )
 									{
 										X1_iso = mvect_mz[i-1] ; 
@@ -373,16 +392,19 @@ namespace Engine
 									X3_iso = mvect_mz[i+1] ; 
 									Y3_iso = mvect_intensity[i + 1] ; 
 
-									double d_iso = ((Y2_iso - Y1_iso) * (X3_iso - X2_iso) - (Y3_iso - Y2_iso) * (X2_iso - X1_iso)) ;						   
-									if (d_iso == 0)
+									//[gord] it seems that the top three points are not necessarily symmetrical. 
+									// so must first test the symmetry
+
+									double symmetryRatioCalc = ((Y2_iso - Y1_iso) * (X3_iso - X2_iso) - (Y3_iso - Y2_iso) * (X2_iso - X1_iso)) ;						   
+									if (symmetryRatioCalc == 0)    //symmetrical
 										vect_isotope_mzs.push_back(X2_iso) ;
-									else
+									else     //not symmetrical...   gord:  I'm not sure how the center point is calculated... perhaps a midpoint calc?
 										vect_isotope_mzs.push_back(((X1_iso + X2_iso) - ((Y2_iso - Y1_iso) * (X3_iso - X2_iso) * (X1_iso - X3_iso)) / ((Y2_iso - Y1_iso) * (X3_iso - X2_iso) - (Y3_iso - Y2_iso) * (X2_iso - X1_iso))) / 2.0) ; 
 									vect_isotope_intensities.push_back(intensity) ; 
 
 								}
 							}
-							else
+							else    // if intensities are decreasing, fill the remaining points 
 							{
 								X1_iso = mvect_mz[i-1] ; 
 								Y1_iso = mvect_intensity[i-1] ; 
@@ -404,7 +426,7 @@ namespace Engine
 						}
 					}
 					last_intensity = intensity ; 
-					if (intensity > highest_intensity)
+					if (intensity > highest_intensity)     //[gord] this is used in determining the max of the entire theor isotopic profile
 					{
 						highest_intensity = intensity ; 
 
@@ -433,12 +455,14 @@ namespace Engine
 							Y3 = Y2 ; 
 						}
 					}
-				}
-				double d = ((Y2 - Y1) * (X3 - X2) - (Y3 - Y2) * (X2 - X1)) ;
+				}     //end of loop over all points
+				
+				//[gord] determine if three points are symmetrical around the max point (X2,Y2)
+				double symmetryRatioCalc = ((Y2 - Y1) * (X3 - X2) - (Y3 - Y2) * (X2 - X1)) ;
 		   
-				if (d == 0)
+				if (symmetryRatioCalc == 0)     //symmetrical
 					mdbl_max_peak_mz = X2 ;
-				else
+				else   //not symmetrical
 					mdbl_max_peak_mz = ((X1 + X2) - ((Y2 - Y1) * (X3 - X2) * (X1 - X3)) / ((Y2 - Y1) * (X3 - X2) - (Y3 - Y2) * (X2 - X1))) / 2.0 ; 
 				// remember that the mono isotopic mass is calculated using theoretical values rather than 
 				// fit with the fourier transformed point. Hence even if the monoisotopic mass is the most intense

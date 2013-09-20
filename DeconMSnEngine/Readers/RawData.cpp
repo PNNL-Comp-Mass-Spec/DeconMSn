@@ -17,6 +17,7 @@
 #include <io.h>
 #include <fstream>
 #include <fcntl.h>
+#include <errno.h>
 
 #include "..\Utilities\Interpolation.h"
 #include "..\PeakProcessor\PeakIndex.h" 

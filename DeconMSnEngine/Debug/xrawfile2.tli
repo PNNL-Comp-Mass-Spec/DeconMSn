@@ -1,9 +1,9 @@
-// Created by Microsoft (R) C/C++ Compiler Version 13.10.6030 (f1a02a21).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 10.00.40219.01 (454cf6f1).
 //
-// d:\my documents\projects\deconmsn\deconmsnengine\debug\xrawfile2.tli
+// d:\users\d3x720\documents\projects\deconmsnold - copy\deconmsnengine\debug\xrawfile2.tli
 //
 // Wrapper implementations for Win32 type library ..\bin\xrawfile2.dll
-// compiler-generated file created 07/24/12 at 18:11:37 - DO NOT EDIT!
+// compiler-generated file created 09/20/13 at 12:36:57 - DO NOT EDIT!
 
 #pragma once
 

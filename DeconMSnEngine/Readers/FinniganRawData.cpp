@@ -245,7 +245,7 @@ namespace Engine
 		}
 
 		
-		int FinniganRawData::GetSpectrumType(int scan_num){
+		short FinniganRawData::GetSpectrumType(int scan_num){
 			char ch_filter [512];
 			_bstr_t bstr_filter ;
 			m_xraw2_class->GetFilterForScanNum((long)scan_num, &bstr_filter.GetBSTR()) ;  
@@ -522,7 +522,8 @@ namespace Engine
 			}
 			else
 			{
-				for (int chNum = 0; chNum < 512; chNum++)
+				int chNum;
+				for (chNum = 0; chNum < 512; chNum++)
 				{
 					if (ch_filter[chNum] == '@')
 					{

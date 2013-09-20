@@ -350,6 +350,12 @@ namespace Engine
 		{
 			return mint_num_spectra ; 
 		}
+
+		int AsciiRawData::GetFirstScanNum()
+		{
+			return 1 ; 
+		}
+
 		int AsciiRawData::GetScanSize()
 		{
 			return mint_num_points_in_scan ; 

@@ -1,35 +1,29 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeconMSn", "DeconMSn\DeconMSn.vcproj", "{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeconMSn", "DeconMSn\DeconMSn.vcxproj", "{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeconMsnEngine", "DeconMSnEngine\DeconMsnEngine.vcproj", "{1A747672-EF23-475B-8945-F065B7EDFEEE}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeconMsnEngine", "DeconMSnEngine\DeconMsnEngine.vcxproj", "{1A747672-EF23-475B-8945-F065B7EDFEEE}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DeconMSnInstaller", "DeconMSnInstaller\DeconMSnInstaller.vdproj", "{7C40AAF6-E2D5-4C18-B15D-24F82C0E814A}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Debug.ActiveCfg = Debug|Win32
-		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Debug.Build.0 = Debug|Win32
-		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Release.ActiveCfg = Release|Win32
-		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Release.Build.0 = Release|Win32
-		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Debug.ActiveCfg = Debug|Win32
-		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Debug.Build.0 = Debug|Win32
-		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Release.ActiveCfg = Release|Win32
-		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Release.Build.0 = Release|Win32
-		{7C40AAF6-E2D5-4C18-B15D-24F82C0E814A}.Debug.ActiveCfg = Debug
-		{7C40AAF6-E2D5-4C18-B15D-24F82C0E814A}.Release.ActiveCfg = Release
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Debug|Win32.Build.0 = Debug|Win32
+		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Release|Win32.ActiveCfg = Release|Win32
+		{4F6D32A0-3022-43A9-B3F0-5FA485ED5CEA}.Release|Win32.Build.0 = Release|Win32
+		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Debug|Win32.Build.0 = Debug|Win32
+		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Release|Win32.ActiveCfg = Release|Win32
+		{1A747672-EF23-475B-8945-F065B7EDFEEE}.Release|Win32.Build.0 = Release|Win32
+		{7C40AAF6-E2D5-4C18-B15D-24F82C0E814A}.Debug|Win32.ActiveCfg = Debug
+		{7C40AAF6-E2D5-4C18-B15D-24F82C0E814A}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

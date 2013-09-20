@@ -25,15 +25,15 @@ namespace Engine
 
 		const double GAUSSIAN_PROFILE_FACTOR_VAL = 1.86 ; 
 		
-		inline void GetPeakAndIntensity(double mz1, double mz2, double I1, double I2, double mhalf, double &mz, double &I)
+		inline void GetPeakAndIntensity(double mz1, double mz2, double I1, double I2, double halfFWHM, double &mz, double &I)
 			{	
 				double log_inv = 1/log(GAUSSIAN_PROFILE_FACTOR_VAL) ;
-				mz = 0.5 * (mz1*mz1 - mz2*mz2 - mhalf*mhalf*log(I2/I1)*log_inv)/(mz1-mz2) ; 
-				I = I1 * pow(GAUSSIAN_PROFILE_FACTOR_VAL, (mz1-mz) * (mz1-mz)/ (mhalf*mhalf)) ; 
-			//	I = I1 * pow(2, (mz1-mz) * (mz1-mz)/ (mhalf*mhalf)) ; 
+				mz = 0.5 * (mz1*mz1 - mz2*mz2 - halfFWHM*halfFWHM*log(I2/I1)*log_inv)/(mz1-mz2) ; 
+				I = I1 * pow(GAUSSIAN_PROFILE_FACTOR_VAL, (mz1-mz) * (mz1-mz)/ (halfFWHM*halfFWHM)) ; 
+			//	I = I1 * pow(2, (mz1-mz) * (mz1-mz)/ (halfFWHM*halfFWHM)) ; 
 			}
 
-		inline void GetPeakTops(std::vector<double> &mzs_dll, std::vector<double> &intensities_dll, std::vector<double> &pk_mz_vect, std::vector <double> &pk_int_vect, std::vector<int> &isotope_indices, double mhalf, double mz_spacing)
+		inline void GetPeakTops(std::vector<double> &mzs_dll, std::vector<double> &intensities_dll, std::vector<double> &pk_mz_vect, std::vector <double> &pk_int_vect, std::vector<int> &isotope_indices, double halfFWHM, double mz_spacing)
 		{
 			// Now go through each isotope, figure out its peaktop and the intensity at the peak top.
 			// remember that this is nothing but a sampling issue. The peak tops might not be sampled. 
@@ -70,7 +70,7 @@ namespace Engine
 
 				if (I2 > 0 && ((mz1-mz2) < 2*mz_spacing || (mz2-mz1 < 2*mz_spacing)))
 				{
-					GetPeakAndIntensity(mz1, mz2, I1, I2, mhalf, mz, I) ; 
+					GetPeakAndIntensity(mz1, mz2, I1, I2, halfFWHM, mz, I) ; 
 					// also check for overflows etc by making sure the value didn't explode by a factor greater than 1.5.
 					if (I > I1 * 1.5)
 					{
@@ -231,7 +231,7 @@ namespace Engine
 			
 		}
 
-		inline MercuryCache::GetIsotopeDistributionCachedAtPosition(int position, short charge, 
+		inline int MercuryCache::GetIsotopeDistributionCachedAtPosition(int position, short charge, 
 			double FWHM, double min_theoretical_intensity, std::vector<double> &mzs, std::vector<double> &intensities)
 		{
 			
@@ -240,7 +240,7 @@ namespace Engine
 				// in the memory location we will save in the following order: 
 				// charge, most abundant mw, monoisotopic mw, average mw, num_pts, mz1, int1, mz2, int2 .. 
 				// use the FWHM that was passed. 
-				double mhalf = FWHM/2 ; 
+				double halfFWHM = FWHM/2 ; 
 				mdbl_most_intense_mw = mvect_isotope_dist_vals[position+1] ; 
 				mdbl_mono_mw = mvect_isotope_dist_vals[position+2]; 
 				mdbl_average_mw = mvect_isotope_dist_vals[position+3] ; 
@@ -256,7 +256,7 @@ namespace Engine
 					if (i < mass_range)
 					{
 						mass_range = i * 2 ;
-						i = 0 ;
+						i = 0 ;   // break out of loop
 					}
 				}
 				if (mass_range <= 0) 
@@ -268,7 +268,7 @@ namespace Engine
 				for (int i = 0 ; i < mint_mercury_size ; i++)
 				{
 					double mz = amuperpoint * i  ;
-					double ratio = pow(GAUSSIAN_PROFILE_FACTOR_VAL,-1*mz*mz/(mhalf*mhalf)) ; 
+					double ratio = pow(GAUSSIAN_PROFILE_FACTOR_VAL,-1*mz*mz/(halfFWHM*halfFWHM)) ; 
 					if (ratio < min_theoretical_intensity /100)
 						break ; 
 					num_pts++ ; 
@@ -296,7 +296,7 @@ namespace Engine
 						{
 							//intersecting, possibly. See what the m/z is till which current guy should 
 							// go.
-							intersect_mz = (mz_iso + next_mz)/2.0 - (mhalf * mhalf * log(next_intensity/intensity_iso))/(2*(next_mz-mz_iso)*log(GAUSSIAN_PROFILE_FACTOR_VAL)) ;
+							intersect_mz = (mz_iso + next_mz)/2.0 - (halfFWHM * halfFWHM * log(next_intensity/intensity_iso))/(2*(next_mz-mz_iso)*log(GAUSSIAN_PROFILE_FACTOR_VAL)) ;
 						}
 					}
 					int i = -num_pts ; 
@@ -322,7 +322,7 @@ namespace Engine
 							previous_intersect_mz = intersect_mz ; 
 							break ; 
 						}
-						double ratio = pow(GAUSSIAN_PROFILE_FACTOR_VAL,-1*(mz_diff/mhalf)*(mz_diff/mhalf)) ; 
+						double ratio = pow(GAUSSIAN_PROFILE_FACTOR_VAL,-1*(mz_diff/halfFWHM)*(mz_diff/halfFWHM)) ; 
 						double intensity_calc = intensity_iso * ratio ; 
 						if (intensity_calc > min_theoretical_intensity)
 						{
@@ -330,7 +330,9 @@ namespace Engine
 							intensities.push_back(intensity_calc) ; 
 						}
 					}
+		
 				}
+				return 0;
 		}
 		bool MercuryCache::GetIsotopeDistributionCached(double observed_most_abundant_mass, short charge, double FWHM, 
 			double min_theoretical_intensity, std::vector<double>&mzs, std::vector<double>&intensities)
@@ -339,8 +341,11 @@ namespace Engine
 			intensities.clear() ; 
 
 			bool found = false ; 
-			int mass_val = (int)(observed_most_abundant_mass+0.5) ; 
+			int mass_val = (int)(observed_most_abundant_mass+0.5) ;   //[gord] masses are rounded off to an Int; so '0.5' is added to make sure rounding happens properly. 
 			int position = -1 ; 
+			
+			//[gord]i think (!) the following advances to the mass_val and then if the chargeState
+			//is used in caching then will find the correct chargeState and get its cached data
 			for (std::multimap<int, int>::iterator iter = mmap_isotope_dist_vals_cached.find(mass_val) ;
 				iter != mmap_isotope_dist_vals_cached.end() && (*iter).first == mass_val ; iter++)
 			{
@@ -360,7 +365,7 @@ namespace Engine
 					}
 				}
 			}
-			if (found)
+			if (found)    //found the mass value in question; now get the data
 			{
 				GetIsotopeDistributionCachedAtPosition(position, charge, FWHM, min_theoretical_intensity, 
 					mzs, intensities) ; 

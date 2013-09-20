@@ -85,6 +85,7 @@ namespace Engine {
 		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ; 
 		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
 		int GetScanSize() ; 
+		int GetNumScansLoaded() { return GetNumScans() ; } 
 		Icr2lsRawData(void) ;
 		~Icr2lsRawData(void) ;
 		int GetNumScans() ; 

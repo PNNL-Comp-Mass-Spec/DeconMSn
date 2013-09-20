@@ -16,6 +16,9 @@
 #include <io.h>
 #include <fcntl.h>
 #include <float.h> 
+#include <stdio.h>
+#include <errno.h>
+
 
 namespace Engine 
 {
@@ -61,14 +64,49 @@ namespace Engine
 			return marr_serName ; 
 		}
 
+
+		void  BrukerRawData::SetCalibrator(Engine::Calibrations::CCalibrator *calib)
+				{
+					mobj_calibrator = calib ;
+					SetDataSize(mobj_calibrator->GetSize());
+					mint_num_spectra = GetNumSpectraFromFileSizeInfo();
+				}
+
 		void BrukerRawData::Open(char *header_n, char *ser_file_name)
 		{
-			strcpy(marr_serName, ser_file_name) ; 
-			strcpy(marr_headerName, ser_file_name) ; 
-			strcat(marr_headerName, "\\acqus") ; 
-			strcat(marr_serName, "\\ser") ; 
+	
+
+			if (IsDir(ser_file_name))
+			{
+				strcpy(marr_serName, ser_file_name) ; 
+				strcpy(marr_headerName, ser_file_name) ; 
+				strcat(marr_headerName, "\\acqus") ; 
+				strcat(marr_serName, "\\ser") ; 
+
+			}
+			else
+			{
+				// assuming an acqu file was selected.. go back to the name of the folder.
+				char fileName[512] ;
+				int pos = strlen(ser_file_name)-1 ; 
+				while(pos >= 0 && ser_file_name[pos] != '\\' 
+					&& ser_file_name[pos] != '\/')
+				{
+					pos-- ; 
+				}
+				strncpy(marr_serName, ser_file_name, pos) ; 
+				strncpy(marr_headerName, ser_file_name, pos) ; 
+
+				strcat(&marr_headerName[pos], "\\acqus") ; 
+				strcat(&marr_serName[pos], "\\ser") ; 
+
+				strcpy(fileName, ser_file_name) ; 
+
+			}
 
 			FindHeaderParams() ; 
+			mint_num_spectra = GetNumSpectraFromFileSizeInfo();
+
 		}
 
 		double BrukerRawData::GetScanTime(int scan_num)
@@ -80,6 +118,13 @@ namespace Engine
 		{
 			Open("acqus", file_n) ; 
 		}
+
+
+
+	
+
+
+
 
 		void BrukerRawData::SetDataSize(int sz) 
 		{
@@ -148,26 +193,29 @@ namespace Engine
 			calib->SetCalibrationEquationParams(ML1,ML2,0.0);
 			SetCalibrator(calib) ; 
 
-			// Now we need to get the size of the data so we can find out the number of scans. 
-			int fh;
-			fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
-			if (fh == ENOENT || fh == -1 )
-			{
-				// try using the fid extention instead of the .ser business.
-				int len = strlen(marr_serName) ; 
-				marr_serName[len-3] = 'f' ; 
-				marr_serName[len-2] = 'i' ; 
-				marr_serName[len-1] = 'd' ; 
-				fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
-			}
-			/* Seek the beginning of the file: */
-			__int64 pos64 = 0 ;
-			pos64 = _lseeki64(fh, 0, SEEK_END );
-			__int64		blockSizeInBytes = (__int64) (sizeof(int) * mint_num_points_in_scan) ; 
-			mint_num_spectra = (int)((pos64+2) / blockSizeInBytes) ; // add 2 just in case we have an exact multiple - 1.
-
-			_close( fh );
 			return 0; // success
+
+
+			//[gord] delete later - this has been moved to method: GetNumSpectraFromFileSizeInfo, called elsewhere
+			//// Now we need to get the size of the data so we can find out the number of scans. 
+			//int fh;
+			//fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
+			//if (fh ==  ENOENT || fh == -1 )
+			//{
+			//	// try using the fid extention instead of the .ser business.
+			//	int len = strlen(marr_serName) ; 
+			//	marr_serName[len-3] = 'f' ; 
+			//	marr_serName[len-2] = 'i' ; 
+			//	marr_serName[len-1] = 'd' ; 
+			//	fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
+			//}
+			///* Seek the beginning of the file: */
+			//__int64 pos64 = 0 ;
+			//pos64 = _lseeki64(fh, 0, SEEK_END );
+			//__int64		blockSizeInBytes = (__int64) (sizeof(int) * mint_num_points_in_scan) ; 
+			//mint_num_spectra = (int)((pos64+2) / blockSizeInBytes) ; // add 2 just in case we have an exact multiple - 1.
+
+			//_close( fh );
 		}
 
 		int	BrukerRawData::ReadSpectraFloats(int spectra_num)
@@ -283,7 +331,9 @@ namespace Engine
 			int n = mobj_calibrator->GetRawPointsApplyFFT(marr_temp_data_block, mzs, intensities, num_pts) ; 
 			// lets only take points whose mz is less than MAX_MZ.
 			// these are going to be sorted so just start at the right end. 
-			for (int pt_num = 0 ; pt_num < num_pts ; pt_num++)
+			
+			int pt_num;
+			for (pt_num = 0 ; pt_num < num_pts ; pt_num++)
 			{
 				if((*mzs)[pt_num] > MAX_MZ)
 					break ; 
@@ -378,6 +428,38 @@ namespace Engine
 				}
 			}
 		}
+
+		int BrukerRawData::GetNumSpectraFromFileSizeInfo()
+		{
+
+			int numSpectra = 0;
+
+			if (mint_num_points_in_scan==0)return 0 ;      // prevent divide by 0
+
+			int fh;
+			fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
+			if (fh ==  ENOENT || fh == -1 )
+			{
+				// try using the fid extention instead of the .ser business.
+				int len = strlen(marr_serName) ; 
+				marr_serName[len-3] = 'f' ; 
+				marr_serName[len-2] = 'i' ; 
+				marr_serName[len-1] = 'd' ; 
+				fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
+			}
+			/* Seek the beginning of the file: */
+			__int64 pos64 = 0 ;
+			pos64 = _lseeki64(fh, 0, SEEK_END );
+			__int64		blockSizeInBytes = (__int64) (sizeof(int) * mint_num_points_in_scan) ; 
+			numSpectra = (int)((pos64+2) / blockSizeInBytes) ; // add 2 just in case we have an exact multiple - 1.
+
+			_close( fh );
+
+			return numSpectra;
+
+
+		}
+
 
 	}
 }

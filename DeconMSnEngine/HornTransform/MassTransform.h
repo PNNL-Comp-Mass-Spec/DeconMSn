@@ -61,6 +61,17 @@ namespace Engine
 			// Check feature against charge 1 . 
 			bool mbln_check_against_charge1 ; 
 
+			//gord added
+			bool mbln_isActualMonoMZUsed;
+			double mdbl_leftFitStringencyFactor;
+			double mdbl_rightFitStringencyFactor;
+			bool mbln_sum_spectra_across_frame_range;
+			int mint_num_frames_to_sum_over;
+
+			bool mbln_UseRAPIDDeconvolution;
+			
+
+
 			int mint_get_fit_score_time ; 
 			int mint_remaining_time ; 
 
@@ -89,14 +100,20 @@ namespace Engine
 			
 			void GetOptions(short &max_charge, double &max_mw, double &max_fit, double &min_s2n, double &cc_mass, 
 				double &delete_threshold_intensity, double &min_theoretical_intensity_for_score, 
-				short &num_peaks_for_shoulder, bool &check_fit_against_charge1, bool &use_mercury_caching, bool &is_labelled_media) ; 
+				short &num_peaks_for_shoulder, bool &check_fit_against_charge1, bool &use_mercury_caching, 
+				bool &is_labelled_media) ; 
 			void GetIsotopeFitType(IsotopicFittingType &enm_isotope_fit_type) ; 
 			void GetIsotopeFitOptions(std::string &averagine_mf, std::string &tag_mf, bool &thrash_or_not, bool &complete_fit) ; 
 
 
 			void SetOptions(short max_charge, double max_mw, double max_fit, double min_s2n, double cc_mass, 
 				double delete_threshold_intensity, double min_theoretical_intensity_for_score, short num_peaks_for_shoulder, 
-				bool check_fit_against_charge1, bool use_mercury_caching, bool o16_o18_media) ; 
+				bool check_fit_against_charge1, bool use_mercury_caching, bool o16_o18_media); 
+
+			void SetOptions(short max_charge, double max_mw, double max_fit, double min_s2n, double cc_mass, 
+				double delete_threshold_intensity, double min_theoretical_intensity_for_score, short num_peaks_for_shoulder, 
+				bool check_fit_against_charge1, bool use_mercury_caching, bool o16_o18_media, 
+				double leftFitStringencyFactor, double rightFitStringencyFactor, bool isActualMonoMZUsed) ; 
 
 			void SetIsotopeFitType(IsotopicFittingType enm_isotope_fit_type) ; 
 			void SetIsotopeFitOptions(std::string averagine_mf, std::string tag_mf, bool thrash_or_not, bool complete_fit) ; 

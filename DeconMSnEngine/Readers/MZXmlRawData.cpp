@@ -154,7 +154,7 @@ namespace Engine
 			return true ; 
 		}
 
-		int MZXmlRawData::GetSpectrumType(int scan_num){
+		short MZXmlRawData::GetSpectrumType(int scan_num){
 			int scan = scan_num ; 			
 			int error = -1 ; 
 			struct ScanHeaderStruct scanHeader ; 

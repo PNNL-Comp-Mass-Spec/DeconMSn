@@ -49,6 +49,7 @@ namespace Engine {
 		double GetSignalRange(int scan_num) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 
 		virtual int GetNumScansLoaded() { return mint_last_scan_num ; } ;
+		int GetFirstScanNum() { return 1 ; }
 		int GetLastScanNum() { return mint_num_spectra ; } ; 
 		int GetParentScan(int scan_num)
 		{
