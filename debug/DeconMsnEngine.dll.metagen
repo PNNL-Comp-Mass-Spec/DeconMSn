@@ -608,6 +608,7 @@ Struct Decon2LS.Readers.FileType: AutoLayout, AnsiClass, Class, Public, Sealed, 
   :System.Enum
   Fields:
     Int32 value__ : Public, SpecialName, RTSpecialName
+    Decon2LS.Readers.FileType UNDEFINED = 10 : Public, Static, Literal, HasDefault
     Decon2LS.Readers.FileType ASCII = 9 : Public, Static, Literal, HasDefault
     Decon2LS.Readers.FileType BRUKER_ASCII = 8 : Public, Static, Literal, HasDefault
     Decon2LS.Readers.FileType PNNL_IMS = 7 : Public, Static, Literal, HasDefault
@@ -618,7 +619,6 @@ Struct Decon2LS.Readers.FileType: AutoLayout, AnsiClass, Class, Public, Sealed, 
     Decon2LS.Readers.FileType MICROMASSRAWDATA = 2 : Public, Static, Literal, HasDefault
     Decon2LS.Readers.FileType FINNIGAN = 1 : Public, Static, Literal, HasDefault
     Decon2LS.Readers.FileType BRUKER = 0 : Public, Static, Literal, HasDefault
-    Decon2LS.Readers.FileType UNDEFINED = 10 : Public, Static, Literal, HasDefault
 Struct Decon2LS.enmProcessState: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
   :System.Enum
   Fields:
