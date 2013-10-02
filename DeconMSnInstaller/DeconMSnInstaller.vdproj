@@ -110,6 +110,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -134,6 +147,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
     }
@@ -433,15 +459,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DeconMSn"
-        "ProductCode" = "8:{DDD4C511-4108-4D2E-B92F-72FA8E9718D9}"
-        "PackageCode" = "8:{AA252870-6C29-4282-A89B-9D334C3A724B}"
+        "ProductCode" = "8:{76DE9750-754E-430E-997D-1B24DDC5178D}"
+        "PackageCode" = "8:{EC4FF1C3-ADD5-4D72-A213-CE8F7C65E858}"
         "UpgradeCode" = "8:{4448E7D4-D5E1-43AC-9A73-009C2BD29C5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.2.2"
+        "ProductVersion" = "8:2.3.0"
         "Manufacturer" = "8:Battelle PNNL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://omics.pnl.gov"
@@ -954,9 +980,20 @@
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\vc_user_stl71_rtl_x86_---.msm"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\vc_user_stl71_rtl_x86_---.msm"
                 "Properties"
                 {
+                    "DIR_RETARGET_TARGETDIR"
+                    {
+                    "Name" = "8:DIR_RETARGET_TARGETDIR"
+                    "DisplayName" = "8:Module Retargetable Folder"
+                    "Description" = "8:"
+                    "Type" = "3:10"
+                    "ContextData" = "8:IsolationDir"
+                    "Attributes" = "3:6"
+                    "Setting" = "3:1"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
                 }
             "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"

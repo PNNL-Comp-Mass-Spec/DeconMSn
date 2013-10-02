@@ -236,9 +236,9 @@ namespace Engine
 		bool FinniganRawData::IsProfileScan(int scan_num)
 		{
 
-			long ms_level = 0;
-			m_xraw2_class->IsProfileScanForScanNum(scan_num, &ms_level) ;
-			if (ms_level == 1)
+			long is_profile_scan = 0;
+			m_xraw2_class->IsProfileScanForScanNum(scan_num, &is_profile_scan) ;
+			if (is_profile_scan == 1)
 				return true ;
 			else
 				return false ;

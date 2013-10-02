@@ -52,6 +52,7 @@ namespace Engine
 			mbln_consider_multiple_precursors = false ; 			
 			menm_dataset_type = Engine::Readers::FINNIGAN ; 
 			mbln_is_profile_data_for_mzXML = false ; 
+			mbln_first_scan_written = false;
 
 		}
 
@@ -91,6 +92,7 @@ namespace Engine
 			mint_isolation_window_size = isolationWindowSize ; 
 			mbln_consider_multiple_precursors = considerMultiplePrecursors ; 
 			mbln_is_profile_data_for_mzXML = isProfileDataForMzXML ; 
+			mbln_first_scan_written = false;
 		}
 
 		void DTAProcessor::SetPeakParameters(double pkBkgRatio, double peptideMinBkgRatio)
@@ -1091,7 +1093,7 @@ namespace Engine
 			std::ofstream fout(mch_log_filename) ; 
 
 			//TODO: Version number is hardcoded and needs to be read off assembly file
-			fout<<"DeconMSn Version:"<<"2.2.2.3"<<std::endl ; 
+			fout<<"DeconMSn Version:"<<"2.3.0.0"<<std::endl ; 
 
 			fout<<"Dataset:"<<mch_dataset_name<<std::endl ; 
 			fout<<"Number of MSn scans processed:"<<mint_NumMSnScansProcessed<<std::endl ;
@@ -1132,7 +1134,7 @@ namespace Engine
 			int numTransforms = mvect_transformRecords.size() ; 			
 
 			char chArray[512] ; 
-
+			
 			if(mbln_consider_multiple_precursors)
 				throw new System::Exception(S"Can only consider multiple precursors for MGF creation. Change param value. ") ; 
 			
@@ -1170,7 +1172,7 @@ namespace Engine
 				mint_NumDTARecords++ ; 
 				
 
-				// to get mono_mass  + H
+				// to get mono_mass + H
 				massplusH = mobj_transformRecord.mdbl_mono_mw + mdbl_cc_mass;
 
 				
@@ -1178,7 +1180,7 @@ namespace Engine
 
 				bool is_profile = false; 
 
-				/* FOR TOME MEtz
+				/* FOR Tom Metz
 				if (mobj_raw_data_dta->IsProfileScan(msN_scan_num))
 					is_profile  = true ; 
 				else
@@ -1199,7 +1201,7 @@ namespace Engine
 				char fileName[256] ;  
 				strcpy(fileName, mch_output_file) ; 
 				
-				/*// Purely for TomMetz's data
+				/*// Purely for Tom Metz's data
 				if (is_profile)
 					strcat(fileName, "_FTMS") ; 
 				else
@@ -1216,6 +1218,12 @@ namespace Engine
 				// for composite dta
 				if (mbln_create_composite_dta)
 				{
+					if (!mbln_first_scan_written)
+					{
+						mfile_comb_dta<<std::endl ; 
+						mbln_first_scan_written = true;
+					}
+
 					//fancy headers
 					strcpy(chArray, "=================================== ") ; 
 					strcat(chArray, "\"") ;					
@@ -1237,14 +1245,26 @@ namespace Engine
 
 
 					// massH and cs
-					mfile_comb_dta.precision(12) ; 
+					mfile_comb_dta.precision(8) ; 
 					mfile_comb_dta<<massplusH<<" "<<mobj_transformRecord.mshort_cs<<" "<<" "<<" " ; 
 					mfile_comb_dta<<"scan="<<msN_scan_num<<" "<<"cs="<<mobj_transformRecord.mshort_cs<<std::endl;
 
-					for (int i = 0; i <(int) mvect_mzs_msN.size(); i++)
+					int numPoints = (int) mvect_mzs_msN.size();
+					for (int i = 0; i < numPoints; i++)
 					{
 						double mz = mvect_mzs_msN[i];
-						double intensity = mvect_intensities_msN[i];					
+						double intensity = mvect_intensities_msN[i];
+
+						if (intensity == 0)
+						{
+							if (i > 0 && mvect_intensities_msN[i-1] == 0)
+							{
+								if (i == numPoints - 1)
+									continue;
+								else if (mvect_intensities_msN[i+1] == 0)
+									continue;
+							}
+						}
 
 						try
 						{

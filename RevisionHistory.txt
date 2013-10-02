@@ -1,5 +1,10 @@
 DeconMSn Revision History
 
+Version 2.3.0.0 ; October 1, 2013
+	- Now adding a blank line to the top of _dta.txt files when using -XCDTA
+	- Now collapsing successive data points with an intensity of 0 to just show the first and last data point (useful for profile mode Thermo data)
+	- Updated to .NET 4
+
 Version 2.2.2.3 ; November 3, 2010
 	- Added support to process zoom scans 
 

@@ -47,6 +47,7 @@ namespace Engine
 			bool mbln_create_composite_dta ; 
 			bool mbln_consider_multiple_precursors ; 
 			bool mbln_is_profile_data_for_mzXML ; 
+			bool mbln_first_scan_written ;
 
 			std::vector<double> mvect_mzs_parent;
 			std::vector<double> mvect_intensities_parent;
