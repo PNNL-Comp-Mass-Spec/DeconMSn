@@ -22,7 +22,7 @@ namespace Engine
 	namespace PeakProcessing
 	{
 		//////////////////////////////////////////////////////////////////////
-		// Construction/Destruction
+		// Constructor/Destructor
 		//////////////////////////////////////////////////////////////////////
 
 		PeakProcessor::PeakProcessor()
@@ -33,7 +33,7 @@ namespace Engine
 			mobj_peak_data = new PeakData() ; 
 			mbln_centroided_data = false ; 
 			menm_profile_type = PROFILE ; 
-
+			mdbl_PeakMergeTolerancePPM = 2;
 		}
 
 		PeakProcessor::~PeakProcessor()
@@ -148,6 +148,9 @@ namespace Engine
 			int ihigh ; 
 
 			Peak peak  ;
+			double previousPeakMz = 0;
+			double previousPeakIntensity = 0;
+			int previousPeakIndex = -1;
 
 			int start_index = mobj_pk_index.GetNearestBinary(*vect_mz, start_mz, 0, num_data_pts-1) ; 
 			int stop_index = mobj_pk_index.GetNearestBinary(*vect_mz, stop_mz, start_index, num_data_pts-1) ; 
@@ -209,30 +212,70 @@ namespace Engine
 									SN = 10;
 							}
 						}
+
 						// Found a peak, make sure it is in the attention list, if there is one.
 						if(SN >= this->mdbl_signal_2_noise_threshold && ( !this->mbln_chk_attention_list || this->IsInAttentionList(current_mz))) 
 						{
 							// Find a more accurate m/z location of the peak.
-							double fittedPeak = mobj_peak_fit.Fit(index, (*vect_mz), (*vect_intensity)); 
+							double fittedPeakMz = mobj_peak_fit.Fit(index, (*vect_mz), (*vect_intensity)); 
 							if (FWHM == -1)
 							{
 								FWHM = this->mobj_peak_statistician.FindFWHM((*vect_mz), (*vect_intensity), index, SN);
 							}
 
+							bool incremented = false ; 
+
 							if (FWHM > 0)
 							{
-								peak.Set(fittedPeak, current_intensity, SN, mobj_peak_data->GetNumPeaks(), index, FWHM) ;	
-								mobj_peak_data->AddPeak(peak) ; 
+								// Compare this peak to the previous peak
+								// If within PeakMergeTolerancePPM then only keep one of the peaks
+
+								// std::cout << fittedPeakMz << "\t" << current_intensity << "\t" << SN << std::endl;
+
+								double deltaPPM = mdbl_PeakMergeTolerancePPM * 2;
+								double addPeak = true;
+
+								if (previousPeakIndex > -1)
+								{
+									deltaPPM = (fittedPeakMz - previousPeakMz) / (previousPeakMz / 1E6);
+
+									if (deltaPPM <= mdbl_PeakMergeTolerancePPM)
+									{
+										
+
+										// Compare this peak's intensity to the previous peak
+										if (current_intensity > previousPeakIntensity)
+										{
+											// Remove the most recently added peak
+											mobj_peak_data->RemoveLastPeak();
+										}
+										else
+										{
+											addPeak = false;
+										}
+										
+									}
+								}
+
+								if (addPeak)
+								{
+									previousPeakMz = fittedPeakMz;
+									previousPeakIntensity = current_intensity;
+									previousPeakIndex = mobj_peak_data->GetNumPeaks();
+
+									peak.Set(fittedPeakMz, current_intensity, SN, previousPeakIndex, index, FWHM) ;	
+									mobj_peak_data->AddPeak(peak) ; 									
+								}
+
+								// move beyond peaks that have the same intensity.							
+								while( index < num_data_pts && (*vect_intensity)[index] == current_intensity)
+								{
+									incremented = true ; 
+									index++ ;
+								}
 							}
-							// move beyond peaks have the same intensity.
-							bool incremented = false ; 
-							while( index < num_data_pts && (*vect_intensity)[index] == current_intensity)
-							{
-								incremented = true ; 
-								index++ ;
-							}
-							if(index > 0 && index < num_data_pts 
-								&& incremented)
+
+							if (index > 0 && index < num_data_pts && incremented)
 								index-- ; 
 						}
 					}

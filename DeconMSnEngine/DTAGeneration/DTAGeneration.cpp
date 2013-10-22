@@ -236,10 +236,10 @@ namespace Engine
 			double maxMZ = parent_mz + mint_window_size ; 
 			int mono_orig_intensity = 0 ; 
 
-			std::vector<double> vect_mzs ;
-			std::vector<double> vect_intensities;
+			std::vector<double> vect_mzs_full;
+			std::vector<double> vect_intensities_full;
 			
-			//Settting to see if found_precursor worked
+			//Setting to see if found_precursor worked
 			bool found_precursor = false ; 
 			if (mvect_transformRecords.size() > 0) 
 				found_precursor = true ; 
@@ -252,17 +252,86 @@ namespace Engine
 			// Still sticking to old way of summing since the fast summing didnt prove anything
 			
 			try{
-				mobj_raw_data_dta->GetSummedSpectra( &vect_mzs, &vect_intensities, parent_scan_number, 2, minMZ, maxMZ) ; 
+				mobj_raw_data_dta->GetSummedSpectra( &vect_mzs_full, &vect_intensities_full, parent_scan_number, 2, minMZ, maxMZ) ; 
 			}
 			catch(char *mesg){
 				return false;
 			}
 			//write output spectra to file
-			//WriteSpectrumToFile (parent_scan_number, &vect_mzs, &vect_intensities);
+			//WriteSpectrumToFile (parent_scan_number, &vect_mzs_full, &vect_intensities_full);
 
-			if (vect_intensities.size() <=1)
+			if (vect_intensities_full.size() <=1)
 				return false  ; 
 
+			// Condense regions where adjacent ions all have an intensity of 0
+			std::vector<double> vect_mzs ;
+			std::vector<double> vect_intensities;
+
+			unsigned int num_pts = (unsigned int) vect_intensities_full.size() ;
+			int condenseDataThreshold = 10000;
+			
+			if (num_pts < condenseDataThreshold)
+			{
+				// Keep all of the data
+				vect_mzs = vect_mzs_full;
+				vect_intensities = vect_intensities_full;
+			}
+			else
+			{
+				double epsilon = 1E-10;
+				double mzMergeTolerancePPM = 0.25;
+				double previousMZ = -1;
+				double previousIntensity = -1;
+
+				for (unsigned int i = 0; i < num_pts; i++)
+				{
+					bool addPeak = true;
+
+					if (i > 0 && i < num_pts - 1)
+					{
+						if (vect_intensities_full[i] > epsilon || 
+						   (vect_intensities_full[i] < epsilon && vect_intensities_full[i-1] > epsilon) || 
+						   (vect_intensities_full[i] < epsilon && vect_intensities_full[i+1] > epsilon) )
+						{
+						
+							if (previousMZ > -1)
+							{
+								double deltaMZ = vect_mzs_full.at(i) - previousMZ;
+								double deltaPPM = deltaMZ / (previousMZ / 1E6);
+								if (deltaPPM < mzMergeTolerancePPM)
+								{
+									if (vect_intensities_full.at(i) > previousIntensity)
+									{
+										// Replace the previous data point with this data point
+										vect_mzs.pop_back();
+										vect_intensities.pop_back();
+									}
+									else
+									{
+										addPeak = false;
+									}
+								}
+							}	
+						} 
+						else
+						{
+							addPeak = false;
+						}
+					}
+
+					if (addPeak)
+					{
+						vect_mzs.push_back(vect_mzs_full.at(i));
+						vect_intensities.push_back(vect_intensities_full.at(i));
+
+						previousMZ = vect_mzs.back();
+						previousIntensity = vect_intensities.back();
+					}
+
+				}
+			}
+
+			unsigned int num_pts2 = (unsigned int) vect_intensities.size() ; 
 			
 			//discover peaks
 			//computes the average of all points in the spectrum (all points below FLT_MAX)

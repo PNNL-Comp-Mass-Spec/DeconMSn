@@ -115,7 +115,7 @@ namespace Engine
 
 		void PeakData::RemovePeak(Peak &pk) 
 		{
-			// oddly enough this wierd way of using namespace with a template works.
+			// oddly enough this weird way of using namespace with a template works.
 			std::multimap<int, int, std::greater<int> >::iterator iter_intensity = mmap_pk_intensity_index.find((int)pk.mdbl_intensity) ; 
 			bool found = false ; 
 			for ( ; iter_intensity != mmap_pk_intensity_index.end() ; iter_intensity++)
@@ -193,6 +193,10 @@ namespace Engine
 				RemovePeaks(peak_mzs[i] - mz_tolerance, peak_mzs[i] + mz_tolerance, debug) ; 
 		}
 
+		void PeakData::RemoveLastPeak()
+		{
+			mvect_peak_tops.pop_back();
+		}
 
 		bool PeakData::GetPeak(double Peak, PeakProcessing::Peak &pk)
 		{		

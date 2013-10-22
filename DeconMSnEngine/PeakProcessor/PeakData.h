@@ -187,7 +187,7 @@ namespace Engine
 				\return returns true if a peak was found and false if none was found.
 				\note The peak that is returned by this function is removed from the processing list. This is essentially the function that is called repeatedly in the deconvolution process which deisotopes peaks in order of decreasing intensity. 
 			*/
-			bool GetNextPeak(double start_mz, double stop_mz, Peak &pk) ;
+			bool GetNextPeak(double start_mz, double stop_mz, Peak &pk) ;			
 			//! Removes the peak from the unprocessed list.
 			/*!
 				\param pk is the peak we want to remove from the unprocessed peaks.
@@ -211,6 +211,9 @@ namespace Engine
 				This function can be used to remove calibration peaks from the list. 
 			*/
 			void RemovePeaks(std::vector<double> &peak_mzs, double mz_tolerance, bool debug = false) ; 
+
+			//! Removes the most recently added peak
+			void RemoveLastPeak();
 
 			//! Sets the tic value for the peaks in current scan.
 			/*!

@@ -51,6 +51,9 @@ namespace Engine
 			PEAK_FIT_TYPE menm_peak_fit_type  ; 
 			PEAK_PROFILE_TYPE menm_profile_type;
 
+			//! peaks in profile spectra within this tolerance will be merged into a single peak
+			double mdbl_PeakMergeTolerancePPM;
+
 			//! This variable helps find the m/z value of a peak using the specified fit function. 
 			PeakFit mobj_peak_fit ; 
 

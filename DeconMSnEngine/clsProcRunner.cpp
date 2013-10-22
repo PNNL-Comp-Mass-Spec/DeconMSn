@@ -600,7 +600,7 @@ namespace Decon2LS
 		}
 	
 		Engine::DTAProcessing::DTAProcessor __nogc *dta_processor = NULL;
-
+		
 		try
 		{
 			clock_t start_time = clock() ; 
@@ -616,7 +616,7 @@ namespace Decon2LS
 			std::ifstream fin(file_name_ch, std::ios::in | std::ios::binary);
 			if (!fin)
 			{
-				std::cout << "Unable to open input file" ;
+				std::cout << "Unable to open input file: " << mstr_file_name ;
 				return;
 			}
 
