@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -66,12 +64,12 @@ IDR_XML1                XML                     "xml1.bin"
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Version 2.3.0.0
+// Version 2.3.0.1
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,3,0,0
- PRODUCTVERSION 2,3,0,0
+ FILEVERSION 2,3,0,1
+ PRODUCTVERSION 2,3,0,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -88,12 +86,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Battelle PNNL"
             VALUE "FileDescription", "DeconMSn Application"
-            VALUE "FileVersion", "2, 3, 0, 0"
+            VALUE "FileVersion", "2.3.0.1"
             VALUE "InternalName", "DeconMSn"
             VALUE "LegalCopyright", "Copyright (C) 2008"
             VALUE "OriginalFilename", "DeconMSn.exe"
             VALUE "ProductName", " DeconMSn Application"
-            VALUE "ProductVersion", "2, 3, 0, 0"
+            VALUE "ProductVersion", "2.3.0.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -102,7 +100,7 @@ BEGIN
     END
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

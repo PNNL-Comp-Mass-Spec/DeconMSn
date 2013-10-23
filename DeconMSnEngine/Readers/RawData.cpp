@@ -361,6 +361,15 @@ namespace Engine
 						int demarcationPoint = (int)((mzs->size()*1.0)/1.414) ; 
 						double mzBin = (*mzs)[demarcationPoint+1] - (*mzs)[demarcationPoint] ; 
 						double minMZBin = (*mzs)[1]-(*mzs)[0] ; 
+						
+						// Do not allow mzBin to be too small
+						if (mzBin < 0.00001)
+							mzBin  = 0.00001;
+
+						// Do not allow minMZBin to be too small
+						if (minMZBin < 0.00001)
+							minMZBin  = 0.00001;
+
 						// need to make sure this bins size never goes below 0.1.
 						// we need a better way than this stupid idea of mine. 
 						if (mzBin > 5*minMZBin)
@@ -399,13 +408,21 @@ namespace Engine
 				try
 				{
 					interpolator.ZeroFillMissing(*mzs, *intensities, numZeroFills) ;
-					//recheck
 					num_mzs = mzs->size() ; 
+					//recheck					
 					if (num_mzs > numZeroFills)
 					{
-						int demarcationPoint = (int) ((mzs->size()*1.0)/1.414) ; 
+						int demarcationPoint = (int)((mzs->size()*1.0)/1.414) ; 
 						double mzBin = (*mzs)[demarcationPoint+1] - (*mzs)[demarcationPoint] ; 
 						double minMZBin = (*mzs)[1]-(*mzs)[0] ; 
+
+						// Do not allow mzBin to be too small
+						if (mzBin < 0.00001)
+							mzBin  = 0.00001;
+
+						// Do not allow minMZBin to be too small
+						if (minMZBin < 0.00001)
+							minMZBin  = 0.00001;
 
 						// need to make sure this bins size never goes below 0.1.
 						// we need a better way than this stupid idea of mine. 
@@ -413,7 +430,6 @@ namespace Engine
 							mzBin = minMZBin ; 
 						else if (mzBin > 0.1)
 							mzBin = 0.1 ; 
-
 					
 						mzs->clear() ; 
 						intensities->clear() ; 				

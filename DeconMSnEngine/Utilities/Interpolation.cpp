@@ -229,6 +229,10 @@ namespace Engine
 					}
 				}
 
+				// Do not allow min_distance to be too small
+				if (min_distance < 0.00001)
+					min_distance  = 0.00001;
+
 				tempX.push_back(x[0]) ; 
 				tempY.push_back(y[0]) ; 
 
