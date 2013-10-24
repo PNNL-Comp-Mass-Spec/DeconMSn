@@ -46,7 +46,7 @@ namespace Engine
 			// Obtain an instance of the Finnigan file reader ActiveX control
 			long nRet = GetXRawFileInstance();
 			if(nRet)
-				std::cerr << "Unable to get instance of XRawFile.ocx" << std::endl ;
+				std::cerr << "Unable to get instance of XRawFile2.dll v2.2.61.0" << std::endl ;
 		};
 
 		void FinniganRawData::GetScanDescription(int scan, char *description)
@@ -692,28 +692,40 @@ namespace Engine
 
 		int FinniganRawData::GetXRawFileInstance(void)
 		{
+			// Version 2.1
+			// C:\Program Files (x86)\Thermo\Foundation\XRawFile2.dll
+			// CLSID: {5FE970B2-29C3-11D3-811D-00104B304896}
+			// IID:   {5FE970B1-29C3-11D3-811D-00104B304896}
+			
+			// Version 2.2.61.0
+			// C:\Program Files (x86)\Thermo\MSFileReader\XRawfile2.dll
+			// CLSID: {1D23188D-53FE-4C25-B032-DC70ACDBDC02}
+			// IID:   {11B488A0-69B1-41FC-A660-FE8DF2A31F5B}
+
 			CoInitialize( NULL );
+
+			// Get CLSID for XRawFile2.dll
 			CLSID clsid ; 
+			HRESULT res =  CLSIDFromString(L"{1D23188D-53FE-4C25-B032-DC70ACDBDC02}", &clsid ); 			
 
-			HRESULT res =  CLSIDFromString(L"{5FE970B2-29C3-11D3-811D-00104B304896}", &clsid ); 	
-
-			if (res ==REGDB_E_WRITEREGDB)
+			if (res == REGDB_E_WRITEREGDB)
 			{
-				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.0.0). Please check that the following dlls from XCalibur are avaialble on your system: CFRDBResources.dll, CFRUtil.dll, ExploreDataObjects.dll, ExploreDataObjectsManaged.dll, ExploreDataObjectsps.dll, FControl2.dll, Fglobal.dll, Fileio.dll, finDB.dll, finSSClientLib.dll, Fregistry.dll, XRawfile2.dll" ;
+				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.2.61.0). Please install MSFileReader 2.2 (32-bit) from http://sjsupport.thermofinnigan.com/public/detail.asp?id=703" ;
 			}
-			IID riid ;
 
-			res = IIDFromString(L"{5FE970B1-29C3-11D3-811D-00104B304896}", &riid) ; 
+			// Get Interface ID for IXRawfile
+			IID riid ;
+			res = IIDFromString(L"{11B488A0-69B1-41FC-A660-FE8DF2A31F5B}", &riid) ; 
 
 			if (res == E_INVALIDARG)
 			{
-				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.0.0). Please check that the following dlls from XCalibur are avaialble on your system: CFRDBResources.dll, CFRUtil.dll, ExploreDataObjects.dll, ExploreDataObjectsManaged.dll, ExploreDataObjectsps.dll, FControl2.dll, Fglobal.dll, Fileio.dll, finDB.dll, finSSClientLib.dll, Fregistry.dll, XRawfile2.dll" ;
+				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.2.61.0). Please install MSFileReader 2.2 (32-bit) from http://sjsupport.thermofinnigan.com/public/detail.asp?id=703" ;
 			}
 
 			res = CoCreateInstance(clsid, NULL,CLSCTX_INPROC_SERVER, riid, (void **) &m_xraw2_class);
 			if(res != S_OK)
 			{
-				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.0.0). Please check that the following dlls from XCalibur are avaialble on your system: CFRDBResources.dll, CFRUtil.dll, ExploreDataObjects.dll, ExploreDataObjectsManaged.dll, ExploreDataObjectsps.dll, FControl2.dll, Fglobal.dll, Fileio.dll, finDB.dll, finSSClientLib.dll, Fregistry.dll, XRawfile2.dll" ;
+				throw "Unable to instantiate Finnigan objects: XRawFile from XRawfile.dll (version 2.2.61.0). Please install MSFileReader 2.2 (32-bit) from http://sjsupport.thermofinnigan.com/public/detail.asp?id=703" ;
 			}
 			
 			return 0;

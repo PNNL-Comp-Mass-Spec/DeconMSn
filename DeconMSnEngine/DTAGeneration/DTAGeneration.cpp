@@ -1162,7 +1162,7 @@ namespace Engine
 			std::ofstream fout(mch_log_filename) ; 
 
 			//TODO: Version number is hardcoded and needs to be read off assembly file
-			fout<<"DeconMSn Version:"<<"2.3.0.1"<<std::endl ; 
+			fout<<"DeconMSn Version:"<<"2.3.1.0"<<std::endl ; 
 
 			fout<<"Dataset:"<<mch_dataset_name<<std::endl ; 
 			fout<<"Number of MSn scans processed:"<<mint_NumMSnScansProcessed<<std::endl ;

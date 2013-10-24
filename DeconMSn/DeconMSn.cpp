@@ -248,7 +248,7 @@ int _tmain( int argc, char *argv[] )
 
 	cout<<"Processing File"<<std::endl ;	
 		
-	obj_proc_runner->HornTransformParameters  = obj_transform_parameters;
+	obj_proc_runner->HornTransformParameters = obj_transform_parameters;
 	obj_proc_runner->PeakProcessorParameters = obj_peak_parameters;
 	obj_proc_runner->DTAGenerationParameters = obj_dta_generation_parameters ; 
 	

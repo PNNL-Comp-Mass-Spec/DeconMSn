@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_04AD313359334A4F884C8D5DF7B4D03B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0B495228F67F427780A168CCC2FA877D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,7 +45,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_632486D4F1FF48E89EBDFA47BF9C24AA"
+        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_714027A0A32D42E484F70D4886B67AE1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7DF6F33AB59D4F32B36D8A00F37D1342"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -47,24 +65,6 @@
         {
         "MsmKey" = "8:_99543EFE19014338B0D37C59C5021B47"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A0AF6FCF60C545A985DC281B3F004960"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A3952AD0D8F2AB673726E743153863CC"
-        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_AC8D05A6CF32019B0494A8E9BDB033EA"
-        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -83,6 +83,24 @@
         {
         "MsmKey" = "8:_D470E81D6CA34574AF15782577F70709"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FBF10A9768D7610A789128419DFDED98"
+        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FBF10A9768D7610A789128419DFDED98"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -149,10 +167,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -182,7 +200,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
                 "SupportedRuntimes" = "8:1.1.4322"
@@ -291,58 +309,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A3952AD0D8F2AB673726E743153863CC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DeconMsnEngine, Version=2.2.2.3, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:DeconMsnEngine.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D8719F2843494B77AFEC22C100D6E972"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AC8D05A6CF32019B0494A8E9BDB033EA"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DeconMsnEngine, Version=2.2.2.3, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:deconmsnengine.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D8719F2843494B77AFEC22C100D6E972"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C9220962934842C1B674DC618C1938AB"
             {
             "SourcePath" = "8:..\\DeconMSn\\app.ico"
@@ -403,6 +369,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FBF10A9768D7610A789128419DFDED98"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DeconMsnEngine, Version=2.3.1.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_FBF10A9768D7610A789128419DFDED98"
+                    {
+                    "Name" = "8:DeconMsnEngine.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DeconMsnEngine.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D8719F2843494B77AFEC22C100D6E972"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -459,21 +456,21 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DeconMSn"
-        "ProductCode" = "8:{76DE9750-754E-430E-997D-1B24DDC5178D}"
-        "PackageCode" = "8:{EC4FF1C3-ADD5-4D72-A213-CE8F7C65E858}"
+        "ProductCode" = "8:{8D33503A-933D-4B0E-9DF7-1D02ED6803AB}"
+        "PackageCode" = "8:{B9B88A54-F144-4943-8B56-2CCA78BC5979}"
         "UpgradeCode" = "8:{4448E7D4-D5E1-43AC-9A73-009C2BD29C5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.3.0"
+        "ProductVersion" = "8:2.3.1"
         "Manufacturer" = "8:Battelle PNNL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://omics.pnl.gov"
         "Title" = "8:DeconMSn"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Anuj Shah"
+        "ARPCONTACT" = "8:Matthew Monroe"
         "Keywords" = "8:Parent mass correction, tandem MS"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:http://omics.pnl.gov/software/"
@@ -976,11 +973,50 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A0AF6FCF60C545A985DC281B3F004960"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_04AD313359334A4F884C8D5DF7B4D03B"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\vc_user_stl71_rtl_x86_---.msm"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\VC_User_STL71_RTL_X86_---.msm"
+                "Properties"
+                {
+                    "DIR_RETARGET_TARGETDIR"
+                    {
+                    "Name" = "8:DIR_RETARGET_TARGETDIR"
+                    "DisplayName" = "8:Module Retargetable Folder"
+                    "Description" = "8:"
+                    "Type" = "3:10"
+                    "ContextData" = "8:IsolationDir"
+                    "Attributes" = "3:6"
+                    "Setting" = "3:1"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_632486D4F1FF48E89EBDFA47BF9C24AA"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_7DF6F33AB59D4F32B36D8A00F37D1342"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:c:\\program files (x86)\\common files\\merge modules\\vc_user_crt71_rtl_x86_---.msm"
                 "Properties"
                 {
                     "DIR_RETARGET_TARGETDIR"
@@ -1006,7 +1042,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_99543EFE19014338B0D37C59C5021B47"
             {
-            "SourcePath" = "8:..\\Debug\\DeconMSn.exe"
+            "SourcePath" = "8:..\\Release\\DeconMSn.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D8719F2843494B77AFEC22C100D6E972"
