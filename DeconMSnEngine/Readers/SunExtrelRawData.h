@@ -90,14 +90,14 @@ namespace Engine
 
 		public:
 			virtual void Load(char *file) ; 
-			double GetSignalRange(int scan_num) ; 
+			double GetSignalRange(int scan_num, bool centroid) ; 
 
 			const char *GetFileName() ;
 			FileType GetFileType() { return SUNEXTREL ; } ;  
 			
 			double GetScanTime(int scan_num) ; 
-			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 			int GetScanSize() ; 
 			SunExtrelRawData(void) ;
 			~SunExtrelRawData(void) ;

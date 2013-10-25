@@ -24,16 +24,18 @@ namespace Decon2LS
 			mint_consider_charge = 0 ; 			
 			mint_window_size_to_check = 5 ; 			
 			mdbl_min_mass = 200 ;
-			mdbl_max_mass = 5000;			
-			mdbl_cc_mass = 1.00727638;							
-			menm_output_type = OUTPUT_TYPE::DTA; 		
+			mdbl_max_mass = 5000;
+			mdbl_cc_mass = 1.00727638;
+			menm_output_type = OUTPUT_TYPE::DTA;
 			mstr_svm_file_name = "svm_params.xml" ; 
 			mbln_consider_multiple_precursors = false ; 
+			mbln_centroid_msn = true;
 			mint_isolation_window_size = 3 ; 
 			mbln_is_profile_data_for_mzXML = false ; 
-			mbln_ignore_msn_scans = false ; 
+			mbln_write_progress_file = false ; 
+			mbln_ignore_msn_scans = false ; 			
 			mint_num_msn_levels_to_ignore = 0 ;			
-			mvect_msn_levels_to_ignore = new std::vector<int> ; 
+			mvect_msn_levels_to_ignore = new std::vector<int> ; 		
 		}		
 
 		clsDTAGenerationParameters::~clsDTAGenerationParameters(void)
@@ -97,6 +99,9 @@ namespace Decon2LS
 			xwriter->WriteWhitespace(S"\n\t") ; 
 
 			xwriter->WriteElementString(S"IsProfileDataForMzXML", System::Convert::ToString(this->IsProfileDataForMzXML)) ; 
+			xwriter->WriteWhitespace(S"\n\t") ; 
+
+			xwriter->WriteElementString(S"WriteProgressFile", System::Convert::ToString(this->WriteProgressFile)); 
 			xwriter->WriteWhitespace(S"\n\t") ; 
 
 			xwriter->WriteElementString(S"IgnoreMSnScans", System::Convert::ToString(this->IgnoreMSnScans)); 
@@ -240,7 +245,19 @@ namespace Decon2LS
 								rdr->Read() ; 
 							}
 							this->set_IsProfileDataForMzXML(System::Convert::ToBoolean(rdr->Value)) ; 
-						}	
+						}
+						else if (rdr->Name->Equals(S"WriteProgressFile"))
+						{
+							if (!rdr->IsEmptyElement)
+							{
+								rdr->Read(); 
+								while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+								{
+									rdr->Read() ; 
+								}
+								this->set_WriteProgressFile(System::Convert::ToBoolean(rdr->Value)) ; 
+							}
+						}
 						else if (rdr->Name->Equals(S"IgnoreMSnScans"))
 						{
 							if (rdr->IsEmptyElement)

@@ -238,17 +238,20 @@ namespace Engine
 			return false ; 
 		}
 
-		bool MicromassRawData::GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		bool MicromassRawData::GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
+			// Not implemented
 			return false ; 
 		}
 
-		bool MicromassRawData::GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		bool MicromassRawData::GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
+			// Not implemented
 			return false ; 
 		}
 
-		bool MicromassRawData::GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		// Note that Centroid is ignored by this class
+		bool MicromassRawData::GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
 	#ifdef MASSLYNX_4_INSTALLED
 			if (scan_num < 1)
@@ -294,7 +297,8 @@ namespace Engine
 			return false ;
 		}
 
-		bool MicromassRawData::GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool MicromassRawData::GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 	#ifdef MASSLYNX_4_INSTALLED
 			_bstr_t bstr = marr_filename ;
@@ -341,15 +345,15 @@ namespace Engine
 			return false ; 
 		}
 
-		bool MicromassRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		bool MicromassRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
 			switch (menm_masslynx_version)
 			{
 				case Readers::V_3:
-					return GetRawDataV3(mzs, intensities, scan_num) ; 
+					return GetRawDataV3(mzs, intensities, scan_num, centroid) ; 
 					break ; 
 				case Readers::V_4:
-					return GetRawDataV4(mzs, intensities, scan_num) ; 
+					return GetRawDataV4(mzs, intensities, scan_num, centroid) ; 
 					break ; 
 				default:
 					break ; 
@@ -357,15 +361,15 @@ namespace Engine
 			return false ; 
 		}
 
-		bool MicromassRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		bool MicromassRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 			switch (menm_masslynx_version)
 			{
 				case Readers::V_3:
-					return GetRawDataV3(mzs, intensities, scan_num, num_pts) ; 
+					return GetRawDataV3(mzs, intensities, scan_num, centroid, num_pts) ; 
 					break ; 
 				case Readers::V_4:
-					return GetRawDataV4(mzs, intensities, scan_num, num_pts) ; 
+					return GetRawDataV4(mzs, intensities, scan_num, centroid, num_pts) ; 
 					break ; 
 				default:
 					break ; 
@@ -418,7 +422,7 @@ namespace Engine
 			return (int) mvectScanInfo.size() ; 
 		}
 
-		double MicromassRawData::GetSignalRange(int scan_num)
+		double MicromassRawData::GetSignalRange(int scan_num, bool centroid)
 		{
 			return 0; 
 		}

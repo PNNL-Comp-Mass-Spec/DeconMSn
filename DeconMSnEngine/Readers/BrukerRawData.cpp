@@ -249,16 +249,19 @@ namespace Engine
 			return num_read ; 
 		}
 
-		bool BrukerRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		// Note that Centroid is ignored by this class
+		bool BrukerRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
 			int num_pts = mint_num_points_in_scan ; 
-			return GetRawData(mzs, intensities, scan_num, num_pts) ; 
+			return GetRawData(mzs, intensities, scan_num, centroid, num_pts) ; 
 		}
+
 		int BrukerRawData::GetParentScan(int scan_num)
 		{
 			//future work 
 			return 0;
 		}
+
 		bool BrukerRawData::IsMSScan(int scan_num)
 		{
 			//future work
@@ -284,7 +287,7 @@ namespace Engine
 		}
 		
 
-		double BrukerRawData::GetSignalRange(int scan_num) 
+		double BrukerRawData::GetSignalRange(int scan_num, bool centroid) 
 		{
 			// only returns a value if the current scan is the one we are asking for. 
 			if (mint_last_scan_num == scan_num)
@@ -292,7 +295,8 @@ namespace Engine
 			return 0 ; 
 		}
 
-		bool BrukerRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool BrukerRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 			// scan_nums are supposed to be 0 indexed for retrieval, but the function is expected to pass in 1 indexed. 
 			// hence substract 1 from scan_num.
@@ -407,10 +411,12 @@ namespace Engine
 			std::vector<double> scan_mzs ; 
 			std::vector<double> scan_intensities ; 
 
+			bool centroid = false;
+
 			for (int scan_num = 1 ; scan_num < mint_num_spectra ; scan_num++)
 			{
 				// its time to read in that scan.
-				bool got_data = GetRawData(&scan_mzs, &scan_intensities, scan_num) ; 
+				bool got_data = GetRawData(&scan_mzs, &scan_intensities, scan_num, centroid) ; 
 				if (!got_data)
 					continue ; 
 

@@ -1,5 +1,8 @@
 DeconMSn Revision History
 
+Version 2.3.1.1 ; October 24, 2013
+	- Added switch -W to optionally write a progress file every 50 scans
+
 Version 2.3.1.0 ; October 23, 2013
 	- Updated to XRawFile32.dll version 2.2.61.0
 

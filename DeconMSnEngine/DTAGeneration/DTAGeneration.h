@@ -46,6 +46,7 @@ namespace Engine
 			bool mbln_create_log_file_only ; 
 			bool mbln_create_composite_dta ; 
 			bool mbln_consider_multiple_precursors ; 
+			bool mbln_centroid_msn;
 			bool mbln_is_profile_data_for_mzXML ; 
 			bool mbln_first_scan_written ;
 
@@ -77,12 +78,15 @@ namespace Engine
 				int mint_NumMSnScansProcessed ; 				
 				int mint_NumDTARecords ; 
 
+				bool mbln_write_progress_file ;
+
 				Engine::Readers::RawData *mobj_raw_data_dta;	
 				Engine::Readers::FileType menm_dataset_type ; 
 
 				std::map <int, int> mmap_msN_parentIndex;			
 
 				char mch_log_filename[256]; 
+				char mch_progress_filename[256]; 
 				char mch_comb_dta_filename[256] ; 
 				char mch_profile_filename[256] ; 
 				char mch_mgf_filename[256] ; 
@@ -105,8 +109,11 @@ namespace Engine
 					\param fit_type Peak-Fit Type					
 				*/
 
-				void SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass, bool createLogFileOnly, bool createCompositeDTA, int considerCharge, bool considerMultiplePrecursors, 
-					int isolationWindowSize, bool isProfileDataForMzXML) ;
+				void SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass, 
+					               bool createLogFileOnly, bool createCompositeDTA, int considerCharge, 
+								   bool considerMultiplePrecursors, bool centroid,
+					               int isolationWindowSize, bool isProfileDataForMzXML) ;
+
 				int GetSpectraType(int msN_scan_number);
 				void SetPeakProcessorOptions(double s2n, double thresh, bool thresholded, Engine::PeakProcessing::PEAK_FIT_TYPE fit_type);
 				
@@ -118,11 +125,12 @@ namespace Engine
 					bool thrash_or_not, bool complete_fit, bool chk_again_ch1,   Engine::HornTransform::IsotopicFittingType fit_type, Engine::TheoreticalProfile::AtomicInformation atomic_info) ; 
 	
 				void GetParentScanSpectra(int parent_scan_num,  double peakBkgRatio, double peptideMinBkgRatio);
-				void GetMsNSpectra(int msN_scan_number, double peakBkgRatio, double peptideMinBkgRatio);									
+				void GetMsNSpectra(int msN_scan_number, double peakBkgRatio, double peptideMinBkgRatio);
 				bool GenerateDTA(int msN_scan_number, int parent_scan_number) ; 
 				bool GenerateDTAZoomScans(int msN_scan_number, int parent_scan_number, int scan_index);
 				void WriteDTAFile(int msN_scan_num, int parent_scan_num);	
 				void WriteLogFile() ; 		
+				void WriteProgressFile(int scansProcessed, int totalScans, int percentComplete);
 				void WriteProfileFile() ; 
 				void CreateMSnRecord(int msn_scan_num, int msn_scan_level, int parent_scan, int parent_scan_level ) ; 												
 				void CreateProfileRecord(int msn_scan_num, int parent_scan_num) ; 

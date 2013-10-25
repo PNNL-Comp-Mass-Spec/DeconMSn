@@ -190,12 +190,13 @@ namespace Engine
 				return false ; 
 		}
 
-		bool MZXmlRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num) 
+		// Note that Centroid is ignored by this class
+		bool MZXmlRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num, bool centroid) 
 		{
-			return GetRawData(mzs, intensities,	scan_num, -1) ;	
+			return GetRawData(mzs, intensities,	scan_num, centroid, -1) ;	
 		}
-
-		bool MZXmlRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool MZXmlRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 
 			if (scan_num > mint_num_scans)
@@ -245,7 +246,7 @@ namespace Engine
 			return true	; 
 		}
 
-		double MZXmlRawData::GetSignalRange(int scan_num)
+		double MZXmlRawData::GetSignalRange(int scan_num, bool centroid)
 		{
 			return 0 ; 
 		}

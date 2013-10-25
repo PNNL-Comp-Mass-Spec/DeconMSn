@@ -75,15 +75,15 @@ namespace Engine {
 	public:
 		virtual void Load(char *file) ; 
 		void AddScanFile(char *file_name, int scan_num) ; 
-		double GetSignalRange(int scan_num) ; 
+		double GetSignalRange(int scan_num, bool centroid) ; 
 
 		const char *GetFileName() ;
 		FileType GetFileType() { return ICR2LSRAWDATA ; } ;  
 		
 		double GetSampleRate() { return mdbl_sample_rate ; } 
 		double GetScanTime(int scan_num) ; 
-		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 		int GetScanSize() ; 
 		int GetNumScansLoaded() { return GetNumScans() ; } 
 		Icr2lsRawData(void) ;

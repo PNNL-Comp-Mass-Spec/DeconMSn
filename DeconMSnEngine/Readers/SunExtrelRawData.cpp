@@ -359,10 +359,11 @@ namespace Engine {
 			strcpy(temp_path, (*iter).second.c_str()) ; 
 		}
 
-		bool SunExtrelRawData::GetRawData(std::vector <double>*mzs, std::vector<double>*intensities, int scan_num) 
+		// Note that Centroid is ignored by this class
+		bool SunExtrelRawData::GetRawData(std::vector <double>*mzs, std::vector<double>*intensities, int scan_num, bool centroid) 
 		{
 			int num_pts = mint_num_points_in_scan ; 
-			return GetRawData(mzs, intensities, scan_num, num_pts) ; 
+			return GetRawData(mzs, intensities, scan_num, centroid, num_pts) ; 
 		}
 
 		double SunExtrelRawData::GetScanTime(int scan_num)
@@ -370,7 +371,7 @@ namespace Engine {
 			return scan_num ; 
 		}
 
-		double SunExtrelRawData::GetSignalRange(int scan_num) 
+		double SunExtrelRawData::GetSignalRange(int scan_num, bool centroid) 
 		{
 			// only returns a value if the current scan is the one we are asking for. 
 			if (mint_last_scan_num == scan_num)
@@ -378,8 +379,8 @@ namespace Engine {
 			return 0 ; 
 		}
 
-
-		bool SunExtrelRawData::GetRawData(std::vector <double>*mzs, std::vector<double>*intensities, int scan_num, int num_pts) 
+		// Note that Centroid is ignored by this class
+		bool SunExtrelRawData::GetRawData(std::vector <double>*mzs, std::vector<double>*intensities, int scan_num, bool centroid, int num_pts) 
 		{
 			int i = 0 ; 
 			char file_name[256] ; 

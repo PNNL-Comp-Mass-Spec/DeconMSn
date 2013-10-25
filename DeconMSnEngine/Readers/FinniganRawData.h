@@ -94,9 +94,9 @@ namespace Engine {
 			virtual void Load(char *file_n) ;
 			double GetScanTime(int scan_num) ; 
 			short GetSpectrumType(int scan_num);
-			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  
-			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_points) ;  
-			double GetSignalRange(int scan_num) ; 
+			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ;  
+			bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_points) ;  
+			double GetSignalRange(int scan_num, bool centroid) ; 
 			bool IsProfileScan(int scan_num) ;
 			bool IsZoomScan(int scan_num);
 			void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 

@@ -199,6 +199,8 @@ namespace Decon2LS
 			int peak_discover_time = 0 ;
 			int peak_save_time = 0 ;
 			
+			bool centroid = false;
+
 			// If it is in an IMS file
 			if (transform_parameters->get_SumSpectraAcrossScanRange())
 			{
@@ -224,12 +226,15 @@ namespace Decon2LS
 				//Check if it needs to be processed
 				if (raw_data->IsMSScan(scan_num))
 				{
-					scan_ms_level = 1 ; 
+					scan_ms_level = 1 ;
+					centroid = false;
 				}
 				else 
 				{
 					scan_ms_level = 2 ; 
+					centroid = mobj_dta_generation_parameters->get_CentroidMSn();
 				}
+
 				if (scan_ms_level != 1 && !transform_parameters->get_ProcessMSMS())
 					continue ; 
 				
@@ -238,8 +243,8 @@ namespace Decon2LS
 					continue ; 
 
 				//Get this scan first
-				raw_data->GetRawData(&vect_mzs, &vect_intensities, scan_num) ;	
-				raw_data->GetRawData(&temp_vect_mzs, &temp_vect_intensities, scan_num) ;	
+				raw_data->GetRawData(&vect_mzs, &vect_intensities, scan_num, centroid) ;
+				raw_data->GetRawData(&temp_vect_mzs, &temp_vect_intensities, scan_num, centroid) ;
 
 				
 				if (transform_parameters->get_SumSpectra())
@@ -484,7 +489,7 @@ namespace Decon2LS
 				}
 				if (save_peaks)
 				{
-					double signal_range = raw_data->GetSignalRange(scan_num) ; 
+					double signal_range = raw_data->GetSignalRange(scan_num, false) ; 
 					if (file_type == Decon2LS::Readers::PNNL_IMS)
 						lcms_results->AddInfoForIMSScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks, numDeisotoped, scan_time, scan_ms_level, drift_time) ;							
 					else
@@ -616,7 +621,7 @@ namespace Decon2LS
 			std::ifstream fin(file_name_ch, std::ios::in | std::ios::binary);
 			if (!fin)
 			{
-				std::cout << "Unable to open input file: " << mstr_file_name ;
+				std::cout << "Unable to open input file"<<std::endl ;
 				return;
 			}
 
@@ -687,6 +692,16 @@ namespace Decon2LS
 			{
 				create_log_file_only = true ; 
 			}
+
+			dta_processor->mbln_write_progress_file = false;
+			strcpy(dta_processor->mch_progress_filename, output_file_ch);
+			strcat(dta_processor->mch_progress_filename, "_DeconMSn_progress.txt");
+
+			if (mobj_dta_generation_parameters->get_WriteProgressFile())
+			{
+				dta_processor->mbln_write_progress_file = true ; 
+			}
+
 			//file name for composite dta file
 			bool create_composite_dta = false ; 
 			if (mobj_dta_generation_parameters->get_OutputType() == Decon2LS::DTAGeneration::OUTPUT_TYPE::CDTA)
@@ -729,7 +744,8 @@ namespace Decon2LS
 			dta_processor->SetDTAOptions(mobj_dta_generation_parameters->get_MinIonCount(), 
 				mobj_dta_generation_parameters->get_MinScan(), mobj_dta_generation_parameters->get_MaxScan(), 
 				mobj_dta_generation_parameters->get_MinMass(), mobj_dta_generation_parameters->get_MaxMass(), 
-				create_log_file_only, create_composite_dta , mobj_dta_generation_parameters->get_ConsiderChargeValue(), mobj_dta_generation_parameters->get_ConsiderMultiplePrecursors(), 
+				create_log_file_only, create_composite_dta , mobj_dta_generation_parameters->get_ConsiderChargeValue(), 
+				mobj_dta_generation_parameters->get_ConsiderMultiplePrecursors(), mobj_dta_generation_parameters->get_CentroidMSn(), 
 				mobj_dta_generation_parameters->get_IsolationWindowSize(), mobj_dta_generation_parameters->get_IsProfileDataForMzXML()) ; 
 			dta_processor->SetPeakProcessorOptions(mobj_peak_parameters->get_SignalToNoiseThreshold(), 0, thresholded, 
 				(Engine::PeakProcessing::PEAK_FIT_TYPE)mobj_peak_parameters->get_PeakFitType()) ;
@@ -749,21 +765,27 @@ namespace Decon2LS
 
             //begin process
 			//stick in range
-			int scan_num = mobj_dta_generation_parameters->get_MinScan();
+			int scan_start = mobj_dta_generation_parameters->get_MinScan();
 			int msNScanIndex = 0;
-			int num_scans ;
+			int scan_end ;
 			int parent_scan ;
 			double parent_mz = 0 ; 
 			bool low_resolution = false ;
 
 			if (mobj_dta_generation_parameters->get_MaxScan() <= dta_processor->mobj_raw_data_dta->GetNumScans())
-				num_scans = mobj_dta_generation_parameters->get_MaxScan() ;
+				scan_end = mobj_dta_generation_parameters->get_MaxScan() ;
 			else
-				num_scans = dta_processor->mobj_raw_data_dta->GetNumScans();			 
-						
-			while (scan_num <= num_scans)
+				scan_end = dta_processor->mobj_raw_data_dta->GetNumScans();			 
+
+			int totalScansToProcess = scan_end - scan_start + 1;
+			int scansProcessed = 0;
+			int scan_num = scan_start;
+
+			while (scan_num <= scan_end)
 			{	
-				mint_percent_done = (scan_num*100)/num_scans ;	
+				// Value between 0 and 100
+				int scansProcessed = scan_num - scan_start + 1;
+				mint_percent_done = (scansProcessed * 100) / totalScansToProcess;
 
 				bool isMS1 = dta_processor->mobj_raw_data_dta->IsMSScan(scan_num);
 
@@ -774,7 +796,7 @@ namespace Decon2LS
 					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																												
 					
 					int msN_scan;
-					for(msN_scan = scan_num +1; msN_scan < num_scans && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
+					for(msN_scan = scan_num +1; msN_scan < scan_end && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
 					{				
 						//GetMS level and see if it is to be ignored
 						if(mobj_dta_generation_parameters->get_IgnoreMSnScans())
@@ -792,9 +814,9 @@ namespace Decon2LS
 
 							if (found_msN_level)
 								continue ; 
-						}						
+						}
 						//Get msN spectra								
-						dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());										
+						dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());
 						//Identify which is parent_scan
 						parent_scan = dta_processor->mobj_raw_data_dta->GetParentScan(msN_scan);	
 						// AM Modified to recieve new spectra everytime if (parent_scan != scan_num) //MSN data 
@@ -859,7 +881,7 @@ namespace Decon2LS
 						}
 					}
 
-					dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());				
+					dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());
 					
 					if ( mobj_dta_generation_parameters->get_SpectraType() == 0 || dta_processor->GetSpectraType(msN_scan) == mobj_dta_generation_parameters->get_SpectraType()){
 						
@@ -906,6 +928,9 @@ namespace Decon2LS
 					}
 				}
 				scan_num++;
+
+				if (scansProcessed % 25 == 0 && dta_processor->mbln_write_progress_file)
+					dta_processor->WriteProgressFile(scansProcessed, totalScansToProcess, mint_percent_done);
 			}
 
 			if (low_resolution && !mobj_dta_generation_parameters->get_ConsiderChargeValue())
@@ -919,6 +944,9 @@ namespace Decon2LS
 					dta_processor->WriteLowResolutionDTAFile();
 			}
 			
+			mint_percent_done = 100;
+			dta_processor->WriteProgressFile(scansProcessed, totalScansToProcess, mint_percent_done);
+
 			// Write out log file
 			dta_processor->WriteLogFile() ; 
 

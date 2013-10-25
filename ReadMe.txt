@@ -72,6 +72,7 @@ of these runtimes are installed:
 	                 LOG  : Creates only log file (_log.txt) and profile file (_profile.txt)
 	                 MGF  : Creates .mgf file along with log file(_log.txt) and profile file (_profile.txt)
 	                 CDTA : Creates .dta files, log file(_log.txt), a composite dta file (_dta.txt), and profile file (_profile.txt)
+			 -W      : instructs the program to create a _progress.txt file, updating the percent complete every 50 scans
 	filename : input file [mzXML or RAW]	
 
 Note that the switch parameters are case-sensitive (for example you must use -P an not -p)

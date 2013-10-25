@@ -40,8 +40,7 @@ namespace Engine {
 		Calibrations::CCalibrator *mobj_calibrator ;
 		virtual void GetSummedSpectra(std::vector <double> *bins, std::vector <double> *intensities, int scan, int scan_range,
 			double min_mz, double max_mz, double mz_bin) ;
-		virtual void GetRawData(std::vector <double> &vectMZs, std::vector<double> &vectIntensities, int scan, double min_mz,
-			double max_mz) ;
+		virtual void GetRawData(std::vector <double> &vectMZs, std::vector<double> &vectIntensities, int scan, double min_mz, double max_mz, bool centroid) ;
 
 	public:
 		static const int MAX_SCAN_SIZE = 4*1024*1024 ;
@@ -51,8 +50,8 @@ namespace Engine {
 		virtual FileType GetFileType() = 0 ;
 		virtual void SetCalibrator (Calibrations::CCalibrator *calib) ;
 		virtual Calibrations::CCalibrator *GetCalibrator() { return mobj_calibrator ; } ;
-		virtual bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)= 0 ;
-		virtual bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)= 0 ;
+		virtual bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)= 0 ;
+		virtual bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)= 0 ;
 		virtual int GetMassIndex(double  mz) ;
 		virtual void Load(char *file_n) = 0 ;
 		virtual void Close() {} ;
@@ -69,7 +68,7 @@ namespace Engine {
 			strcpy(description, "Scan #") ;
 			_itoa(scan, &description[strlen(description)], 10) ;
 		}
-		virtual double GetSignalRange(int scan_num) = 0 ;
+		virtual double GetSignalRange(int scan_num, bool centroid) = 0 ;
 		virtual void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) = 0  ;
 		virtual int GetNextScanNum(int current_scan_num) { return current_scan_num + 1 ; } ;
 		virtual int GetFirstScanNum() { return 1 ; } ;

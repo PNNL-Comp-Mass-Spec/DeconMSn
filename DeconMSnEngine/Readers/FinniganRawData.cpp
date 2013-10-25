@@ -124,7 +124,7 @@ namespace Engine
 			Open(file_n);
 		}
 
-		double FinniganRawData::GetSignalRange(int scan_num)
+		double FinniganRawData::GetSignalRange(int scan_num, bool centroid)
 		{
 			if (scan_num == mint_last_scan_num)
 				return mdbl_signal_range ; 
@@ -149,7 +149,7 @@ namespace Engine
 						0,			// no cutoff
 						0,			// no cutoff
 						0,			// all peaks returned
-						FALSE,			// do not centroid
+						centroid,	
 						&peak_width,
 						&varMassList,		// mass list data
 						&varPeakFlags,		// peak flags data
@@ -211,10 +211,10 @@ namespace Engine
 		}
 
 	
-		bool FinniganRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_points)
+		bool FinniganRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_points)
 		{
-			// Finnigan data is already truncated. Dont mess with it. 
-			return GetRawData(mzs, intensities, scan_num) ; 
+			// Finnigan data is already truncated. Don't mess with it. 
+			return GetRawData(mzs, intensities, scan_num, centroid) ; 
 		}
 	
 		int FinniganRawData::GetParentScan(int scan_num)
@@ -552,7 +552,7 @@ namespace Engine
 
 		}
 		
-		bool FinniganRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		bool FinniganRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
 			mint_last_scan_num = scan_num ; 
 			int lastWholeNumber = 0;
@@ -575,7 +575,7 @@ namespace Engine
 						0,			// no cutoff
 						0,			// no cutoff
 						0,			// all peaks returned
-						FALSE,			// do not centroid
+						centroid,
 						&peak_width,
 						&varMassList,		// mass list data
 						&varPeakFlags,		// peak flags data

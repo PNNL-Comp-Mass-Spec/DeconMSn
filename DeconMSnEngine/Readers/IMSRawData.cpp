@@ -331,16 +331,18 @@ namespace Engine
 			mvect_mxed_data.clear() ; 
 		}
 
-		bool IMSRawData::GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) 
+		// Note that Centroid is ignored by this class
+		bool IMSRawData::GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) 
 		{
-			bool found_data = GetRawData(mzs, intensities,	scan_num, -1) ;	
+			bool found_data = GetRawData(mzs, intensities,scan_num, centroid, -1) ;	
 			if (!found_data)
 				return found_data ;
 			//mobj_savgol.Smooth(mzs, intensities) ; 
 			return true ; 
 		}
 
-		bool IMSRawData::GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool IMSRawData::GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 			std::map<int, double> bin_intensity_map ; 
 			// get all the points for now. 
@@ -452,7 +454,7 @@ namespace Engine
 		{			return mint_num_scans ; 
 		}
 
-		double IMSRawData::GetSignalRange(int scan_num)
+		double IMSRawData::GetSignalRange(int scan_num, bool centroid)
 		{
 			return 0 ;
 		}

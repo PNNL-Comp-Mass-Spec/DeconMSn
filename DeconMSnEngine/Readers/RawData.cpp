@@ -66,8 +66,7 @@ namespace Engine
 		{
 			return mobj_calibrator->FindIndexByMass(mz) ; 
 		}
-		void RawData::GetRawData(std::vector <double> &vectMZs, std::vector<double> &vectIntensities, int scan, double min_mz,
-			double max_mz)
+		void RawData::GetRawData(std::vector <double> &vectMZs, std::vector<double> &vectIntensities, int scan, double min_mz, double max_mz, bool centroid)
 		{
 			Engine::PeakProcessing::PeakIndex<double> peakIndex ; 
 			if (max_mz <= min_mz)
@@ -77,7 +76,7 @@ namespace Engine
 			vectIntensities.clear() ; 
 			std::vector<double> allMZs ; 
 			std::vector<double> allIntensities ; 
-			GetRawData(&allMZs, &allIntensities, scan) ; 
+			GetRawData(&allMZs, &allIntensities, scan, centroid) ; 
 			int numPts = allMZs.size() ; 
 			if (numPts <= 1)
 			{
@@ -113,6 +112,8 @@ namespace Engine
 			double threshold, background_intensity = 0.0;
 			int direction = 0; //0 - means move left while 1 means move right
 			
+			bool centroid = false;
+
 			while ( scan_count < total_scans){
 
 				if ( current_scan < GetFirstScanNum() || current_scan > GetLastScanNum()){
@@ -127,7 +128,7 @@ namespace Engine
 					//if it's the center scan then there won't be any data in the map
 					//nevertheless this is common to all operations and so to keep the 
 					//lines of code to a minimum we do this
-					GetRawData(mzs, intensities, current_scan) ; 
+					GetRawData(mzs, intensities, current_scan, centroid) ; 
 					
 					
 					threshold =  DeconEngine::Utils::GetAverage(*intensities, FLT_MAX);
@@ -210,10 +211,11 @@ namespace Engine
 #ifdef false
 			try
 			{
-	
+				// Old method
+				//
 				//---------- Init ----------//				
 				// AM : Sticking with this way cuz the above way in release threw results off from debug 
-				GetRawData(mzs, intensities, scan_num) ; 
+				GetRawData(mzs, intensities, scan_num, centroid) ; 
 				int num_points = mzs->size() ;
 				if (minMz == 0)
 				{
@@ -251,7 +253,7 @@ namespace Engine
 						num_scans_processed++;
 						scanMzs.clear() ; 
 						scanIntensities.clear() ;
-						GetRawData(&scanMzs, &scanIntensities, current_scan) ; 
+						GetRawData(&scanMzs, &scanIntensities, current_scan, centroid) ; 
 						for(int j = 0 ; j < (int) scanMzs.size() ; j++)
 						{
 							temp_mz1 = scanMzs[j] ; 
@@ -290,7 +292,7 @@ namespace Engine
 						num_scans_processed++;
 						scanMzs.clear() ; 
 						scanIntensities.clear() ;
-						GetRawData(&scanMzs, &scanIntensities, current_scan) ; 
+						GetRawData(&scanMzs, &scanIntensities, current_scan, centroid) ; 
 						for(int j = 0 ; j < (int) scanMzs.size() ; j++)
 						{
 							temp_mz1 = scanMzs[j] ; 
@@ -345,8 +347,10 @@ namespace Engine
 		void RawData::GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int scan_num, int scan_range) 
 		{			
 			Engine::Utilities::Interpolation interpolator ; 
+			bool centroid = false;
+
 			// Get scan info
-			GetRawData(mzs, intensities, scan_num) ; 
+			GetRawData(mzs, intensities, scan_num, centroid) ; 
 			int num_mzs = mzs->size() ; 
 			const int numZeroFills = 3 ;
 			if (num_mzs > numZeroFills)
@@ -399,8 +403,11 @@ namespace Engine
 		{
 			Engine::Utilities::Interpolation interpolator ; 
 
+			bool centroid = false;
+
 			// Get scan info
-			GetRawData(*mzs, *intensities, scan, min_mz, max_mz) ;
+			GetRawData(*mzs, *intensities, scan, min_mz, max_mz, centroid) ;
+
 			int num_mzs = mzs->size() ; 
 			const int numZeroFills = 3 ; 
 			if (num_mzs > numZeroFills)
@@ -482,6 +489,8 @@ namespace Engine
 			int currentScan = scan ; 
 			int numScansSummed = 0 ; 
 
+			bool centroid = false;
+
 			try
 			{
 				// numScansSummed needs to be 1 + the scan range because we are summing the first 
@@ -498,7 +507,7 @@ namespace Engine
 					scan_intensities.clear() ; 	
 					interpolatedIntensities.clear() ; 
 
-					GetRawData(scan_mzs, scan_intensities, currentScan, min_mz, max_mz) ; 
+					GetRawData(scan_mzs, scan_intensities, currentScan, min_mz, max_mz, centroid) ; 
 					
 					if (scan_intensities.size() <= 3) //Keeping the min number of data points same as number of Zero Fill
 					{
@@ -543,7 +552,7 @@ namespace Engine
 					scan_intensities.clear() ; 	
 					interpolatedIntensities.clear() ; 
 
-					GetRawData(scan_mzs, scan_intensities, currentScan, min_mz, max_mz) ; 
+					GetRawData(scan_mzs, scan_intensities, currentScan, min_mz, max_mz, centroid) ; 
 
 					if (scan_intensities.size() <= 3) //Keeping the min number of data points same as number of Zero Fill
 					{

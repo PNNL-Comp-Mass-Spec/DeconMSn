@@ -52,13 +52,13 @@ namespace Engine {
 
 		void SetCalibrator(Engine::Calibrations::CCalibrator *calib);
 		virtual void Load(char *file_n) ; 
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ;  
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ;  
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ;  
 		double GetScanTime(int scan_num) ; 
 		int GetNumScansLoaded() { return mint_last_scan_num ; } ; 
 		int GetNumScans() ; 
 		int GetScanSize() ; 
-		double GetSignalRange(int scan_num) ; 
+		double GetSignalRange(int scan_num, bool centroid) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 
 		int GetParentScan(int scan_num);
 		bool IsMSScan(int scan_num);

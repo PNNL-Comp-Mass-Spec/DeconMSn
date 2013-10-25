@@ -47,10 +47,11 @@ namespace Engine
 			mint_consider_charge = 0 ; 
 			mdbl_min_fit_for_single_spectra = 0.1 ; 			
 			mint_NumDTARecords = 0 ; 
-			mint_NumMSnScansProcessed = 0 ; 
-			mint_isolation_window_size = 3 ; 
-			mbln_consider_multiple_precursors = false ; 			
-			menm_dataset_type = Engine::Readers::FINNIGAN ; 
+			mint_NumMSnScansProcessed = 0 ;
+			mint_isolation_window_size = 3 ;
+			mbln_consider_multiple_precursors = false ;
+			mbln_centroid_msn = true;
+			menm_dataset_type = Engine::Readers::FINNIGAN ;
 			mbln_is_profile_data_for_mzXML = false ; 
 			mbln_first_scan_written = false;
 
@@ -77,9 +78,11 @@ namespace Engine
 				delete mobj_raw_data_dta ;
 			}
 		}
-		
-		void DTAProcessor::SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass, bool createLogFileOnly, bool createCompositeDTA, int considerCharge, bool considerMultiplePrecursors, int isolationWindowSize,
-			bool isProfileDataForMzXML)
+
+		void DTAProcessor::SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass, 
+			                             bool createLogFileOnly, bool createCompositeDTA, int considerCharge, 
+										 bool considerMultiplePrecursors, bool centroid,
+										 int isolationWindowSize, bool isProfileDataForMzXML)
 		{
 			mint_minIonCount = minIonCount ;
 			mdbl_maxMass = maxMass ;
@@ -91,6 +94,7 @@ namespace Engine
 			mint_consider_charge = considerCharge ; 
 			mint_isolation_window_size = isolationWindowSize ; 
 			mbln_consider_multiple_precursors = considerMultiplePrecursors ; 
+			mbln_centroid_msn = centroid;
 			mbln_is_profile_data_for_mzXML = isProfileDataForMzXML ; 
 			mbln_first_scan_written = false;
 		}
@@ -251,7 +255,8 @@ namespace Engine
 			//get raw data first
 			// Still sticking to old way of summing since the fast summing didnt prove anything
 			
-			try{
+			try
+			{
 				mobj_raw_data_dta->GetSummedSpectra( &vect_mzs_full, &vect_intensities_full, parent_scan_number, 2, minMZ, maxMZ) ; 
 			}
 			catch(char *mesg){
@@ -923,7 +928,7 @@ namespace Engine
 			mvect_intensities_msN.clear();
 			mvect_mzs_msN.clear();
 
-			mobj_raw_data_dta->GetRawData(&mvect_mzs_msN, &mvect_intensities_msN, msN_scan_number);
+			mobj_raw_data_dta->GetRawData(&mvect_mzs_msN, &mvect_intensities_msN, msN_scan_number, mbln_centroid_msn);
 
 			double thres =  DeconEngine::Utils::GetAverage(mvect_intensities_msN, FLT_MAX) ; 
 			double background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_msN, (float)(5*thres)) ;
@@ -939,7 +944,7 @@ namespace Engine
 			mvect_intensities_parent.clear();
 			mvect_mzs_parent.clear();
 			
-			mobj_raw_data_dta->GetRawData(&mvect_mzs_parent, &mvect_intensities_parent, parent_scan_number);			
+			mobj_raw_data_dta->GetRawData(&mvect_mzs_parent, &mvect_intensities_parent, parent_scan_number, mbln_centroid_msn);
 			
 			double thres =  DeconEngine::Utils::GetAverage(mvect_intensities_parent, FLT_MAX) ; 
 			double background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_parent, (float)(5*thres)) ;
@@ -1046,7 +1051,7 @@ namespace Engine
 			}	
 			catch(char *mesg)					
 			{
-				std::cerr<<"Error in creating ,MGF"<<std::endl ; 				
+				std::cerr<<"Error in creating ,MGF"<<std::endl ;
 			}
 		}
 
@@ -1134,40 +1139,26 @@ namespace Engine
 
 		void DTAProcessor::WriteLogFile()
 		{
-			//get date and time
-			char date[9] ; 			
-			__time64_t ltime ; 
-			time_t rawtime ; 
-			struct tm *timeinfo ; 
-
-			time(&rawtime) ;
-			timeinfo = localtime(&rawtime) ; 
-			
-			char ampm[] = "AM" ; 
+			// get date and time
 		
-			_strdate(date) ;
-						
-			if (timeinfo->tm_hour >= 12)
-			{
-				strcpy(ampm, "PM") ; 
-				if (timeinfo->tm_hour > 12 )
-				{
-					timeinfo->tm_hour -= 12 ; 
-				}
-			}
+			std::time_t rawtime;
+			std::tm* timeinfo;
+			char timeStampBuffer [80];
 
-			if (timeinfo->tm_hour ==0) // Adjust for midnight hour
-					timeinfo->tm_hour = 12 ; 
-			
+			std::time(&rawtime);
+			timeinfo = std::localtime(&rawtime);
+
+			std::strftime(timeStampBuffer,80,"%Y-%m-%d %I:%M:%S %p",timeinfo);
+		
 			std::ofstream fout(mch_log_filename) ; 
 
 			//TODO: Version number is hardcoded and needs to be read off assembly file
-			fout<<"DeconMSn Version:"<<"2.3.1.0"<<std::endl ; 
+			fout<<"DeconMSn Version:"<<"2.3.1.1"<<std::endl ; 
 
 			fout<<"Dataset:"<<mch_dataset_name<<std::endl ; 
 			fout<<"Number of MSn scans processed:"<<mint_NumMSnScansProcessed<<std::endl ;
 			fout<<"Number of DTAs generated:"<<mint_NumDTARecords<<std::endl ; 			
-			fout<<"Date/Time:\t"<<date<<"\t"<<timeinfo->tm_hour<<":"<<timeinfo->tm_min<<":"<<timeinfo->tm_sec<<" "<<ampm<<std::endl ; 
+			fout<<"Date/Time:"<<timeStampBuffer<<std::endl ; 
 			fout<<"-----------------------------------------------------------"<<std::endl<<std::endl<<std::endl ; 
 			
 			fout<<"MSn_Scan"<<"\t"<<"MSn_Level"<<"\t"<<"Parent_Scan"<<"\t"<<"Parent_Scan_Level"<<"\t"<<"Parent_Mz" ; 
@@ -1194,6 +1185,37 @@ namespace Engine
 			fout.close() ; 
 		}
 
+		// percentComplete is a value between 0 and 100
+		void DTAProcessor::WriteProgressFile(int scansProcessed, int totalScans, int percentComplete)
+		{
+			// get date and time
+		
+			std::time_t rawtime;
+			std::tm* timeinfo;
+			char timeStampBuffer [80];
+
+			std::time(&rawtime);
+			timeinfo = std::localtime(&rawtime);
+
+			std::strftime(timeStampBuffer,80,"%Y-%m-%d %I:%M:%S %p",timeinfo);
+
+			try 
+			{
+				std::ofstream fout(mch_progress_filename) ; 
+				fout<<"Percent complete:              "<<percentComplete<<"%"<<std::endl ; 			
+				fout<<"Date/Time:                     "<<timeStampBuffer<<std::endl ;
+				fout<<"Number of MSn scans processed: "<<scansProcessed<<std::endl ;
+				fout<<"Total scans:                   "<<totalScans<<std::endl ; 
+				fout<<"Dataset: "<<mch_dataset_name<<std::endl ; 
+				fout.close() ; 
+			}
+			catch (char *mesg)
+			{
+				std::cerr<<"Exception writing progress to "<<mch_progress_filename<<": "<<mesg<<std::endl ;
+			}
+			
+		}
+
 		void DTAProcessor::WriteDTAFile(int msN_scan_num, int parent_scan_num)
 		{
 			//create file_name
@@ -1205,7 +1227,7 @@ namespace Engine
 			char chArray[512] ; 
 			
 			if(mbln_consider_multiple_precursors)
-				throw new System::Exception(S"Can only consider multiple precursors for MGF creation. Change param value. ") ; 
+				throw new System::Exception(S"Can only consider multiple precursors for MGF creation. Change param value to false. ") ; 
 			
 			//check size, else has failed params
 			if (numTransforms == 0)

@@ -32,8 +32,8 @@ namespace Engine
 			virtual void Load (char *file_name) ; 
 			MZXmlRawData(void);
 			~MZXmlRawData(void);
-			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ;
-			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ;
+			bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 			virtual const char *GetFileName() ;
 			virtual FileType GetFileType() ; 
 			virtual void Close() ; 
@@ -47,7 +47,7 @@ namespace Engine
 				_itoa(scan, &description[strlen(description)], 10) ; 
 			}
 
-			virtual double GetSignalRange(int scan_num) ; 
+			virtual double GetSignalRange(int scan_num, bool centroid) ; 
 			virtual void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ;  
 			virtual int GetNextScanNum(int current_scan_num) { return current_scan_num + 1 ; } ; 
 			virtual int GetFirstScanNum() { return 1 ; } ; 

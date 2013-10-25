@@ -76,14 +76,14 @@ namespace Engine
 			mint_last_scan_num = 0 ; 
 		}
 
-
-		bool BrukerAsciiRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num)
+		// Note that Centroid is ignored by this class
+		bool BrukerAsciiRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid)
 		{
 			int num_pts = mint_num_points_in_scan ; 
-			return GetRawData(mzs, intensities, scan_num, num_pts) ; 
+			return GetRawData(mzs, intensities, scan_num, centroid, num_pts) ; 
 		}
 
-		double BrukerAsciiRawData::GetSignalRange(int scan_num) 
+		double BrukerAsciiRawData::GetSignalRange(int scan_num, bool centroid) 
 		{
 			// only returns a value if the current scan is the one we are asking for. 
 			if (mint_last_scan_num == scan_num)
@@ -91,7 +91,8 @@ namespace Engine
 			return 0 ; 
 		}
 
-		bool BrukerAsciiRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool BrukerAsciiRawData::GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 			// scan_nums are supposed to be 0 indexed for retrieval, but the function is expected to pass in 1 indexed. 
 			// hence substract 1 from scan_num.
@@ -289,13 +290,15 @@ namespace Engine
 			std::vector<double> scan_mzs ; 
 			std::vector<double> scan_intensities ; 
 
+			bool centroid = false;
+
 			// remember that we are not going to know the number of spectra to begin with at it will update itself each time.
 			bool got_data = true ; 
 			int scan_num = 1 ; 
 			while(got_data)
 			{
 				// its time to read in that scan.
-				got_data = GetRawData(&scan_mzs, &scan_intensities, scan_num) ; 
+				got_data = GetRawData(&scan_mzs, &scan_intensities, scan_num, centroid) ; 
 				if (!got_data)
 					break ; 
 

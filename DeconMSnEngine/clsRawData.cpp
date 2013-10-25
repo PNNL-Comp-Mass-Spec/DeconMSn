@@ -235,7 +235,7 @@ namespace Decon2LS
 			}			
 		}
 
-		void clsRawData::GetSpectrum(int scan_num, float  (&mzs) __gc [], float (&intensities) __gc [])
+		void clsRawData::GetSpectrum(int scan_num, float  (&mzs) __gc [], float (&intensities) __gc [], bool centroid)
 		{
 			if (mobj_raw_data == NULL) 
 			{
@@ -245,7 +245,7 @@ namespace Decon2LS
 			std::vector<double> vect_intensities; 
 			try
 			{
-				mobj_raw_data->GetRawData(&vect_mzs, &vect_intensities, scan_num) ; 
+				mobj_raw_data->GetRawData(&vect_mzs, &vect_intensities, scan_num, centroid) ; 
 				int num_pts = (int) vect_intensities.size() ; 
 				intensities = new float __gc [num_pts] ;
 				mzs = new float __gc [num_pts] ;

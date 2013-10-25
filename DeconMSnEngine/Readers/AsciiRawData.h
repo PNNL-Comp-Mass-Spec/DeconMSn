@@ -46,14 +46,14 @@ namespace Engine {
 		FileType GetFileType() { return ASCII ; } ;  
 
 		virtual void Load(char *file_n) ; 
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ;  
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ;  
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ;  
 		double GetScanTime(int scan_num) ; 
 		int GetNumScans() ; 
 		int GetFirstScanNum() ; 
 		int GetLastScanNum() { return GetNumScans()-1 ; } 
 		int GetScanSize() ; 
-		double GetSignalRange(int scan_num) ; 
+		double GetSignalRange(int scan_num, bool centroid) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 
 
 		virtual int GetNumScansLoaded() { return mint_num_spectra ; } ;

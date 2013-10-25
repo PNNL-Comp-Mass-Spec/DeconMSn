@@ -175,10 +175,12 @@ Class Decon2LS.DTAGeneration.clsDTAGenerationParameters: AutoLayout, AnsiClass, 
   Properties:
     Decon2LS.DTAGeneration.SPECTRA_TYPE SpectraType 'get set' : 
     Decon2LS.DTAGeneration.OUTPUT_TYPE OutputType 'get set' : 
+    Boolean WriteProgressFile 'get set' : 
     Int32 WindowSizetoCheck 'get set' : 
     Double CCMass 'get set' : 
     Int32 ConsiderChargeValue 'get set' : 
     Int32 IsolationWindowSize 'get set' : 
+    Boolean CentroidMSn 'get set' : 
     Boolean ConsiderMultiplePrecursors 'get set' : 
     System.String SVMParamFile 'get set' : 
     Double MaxMass 'get set' : 
@@ -217,6 +219,8 @@ Class Decon2LS.DTAGeneration.clsDTAGenerationParameters: AutoLayout, AnsiClass, 
     get_SVMParamFile(): PrivateScope, Public, SpecialName
     set_ConsiderMultiplePrecursors(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
     get_ConsiderMultiplePrecursors(): PrivateScope, Public, SpecialName
+    set_CentroidMSn(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
+    get_CentroidMSn(): PrivateScope, Public, SpecialName
     set_IsolationWindowSize(Int32): PrivateScope, Public, SpecialName
     get_IsolationWindowSize(): PrivateScope, Public, SpecialName
     get_ConsiderChargeValue(): PrivateScope, Public, SpecialName
@@ -225,6 +229,8 @@ Class Decon2LS.DTAGeneration.clsDTAGenerationParameters: AutoLayout, AnsiClass, 
     set_CCMass(Double): PrivateScope, Public, SpecialName
     get_WindowSizetoCheck(): PrivateScope, Public, SpecialName
     set_WindowSizetoCheck(Int32): PrivateScope, Public, SpecialName
+    get_WriteProgressFile(): PrivateScope, Public, SpecialName
+    set_WriteProgressFile(Boolean(HasFieldMarshal)): PrivateScope, Public, SpecialName
     get_OutputType(): PrivateScope, Public, SpecialName
     set_OutputType(OUTPUT_TYPE): PrivateScope, Public, SpecialName
     set_SpectraType(SPECTRA_TYPE): PrivateScope, Public, SpecialName
@@ -523,7 +529,7 @@ Class Decon2LS.Readers.clsRawData: AutoLayout, AnsiClass, Class, Public, BeforeF
     GetScanSize(): PrivateScope, Public
     GetSpectrumType(Int32): PrivateScope, Public
     GetTicFromFile(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Boolean(HasFieldMarshal)): PrivateScope, Public
-    GetSpectrum(Int32, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced): PrivateScope, Public
+    GetSpectrum(Int32, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Boolean(HasFieldMarshal)): PrivateScope, Public
     GetParentScan(Int32): PrivateScope, Public
     GetMzsInRange(Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single[]& IsImplicitlyDereferenced, Single, Single): PrivateScope, Public
     GetScanDescription(Int32): PrivateScope, Public

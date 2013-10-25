@@ -70,8 +70,8 @@ namespace Engine {
 		FileType GetFileType() { return PNNL_IMS ; } ;  
 		const char* GetFileName() ;
 
-		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 		double GetScanTime(int scan_num) ; 
 		int GetScanSize() ; 
 		IMSRawData(void) ;
@@ -83,7 +83,7 @@ namespace Engine {
 		void GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int current_scan, int scan_range) ; 
 		void GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int start_scan, int stop_scan, double min_mz, double max_mz)  ; 
 		
-		double GetSignalRange(int scan_num) ; 
+		double GetSignalRange(int scan_num, bool centroid) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 
 
 		int GetFirstScanNum() ;

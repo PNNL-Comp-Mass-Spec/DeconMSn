@@ -42,8 +42,10 @@ namespace Decon2LS
 			
 			bool mbln_is_profile_data_for_mzXML ; 
 			bool mbln_consider_multiple_precursors ; 
-			
-			bool mbln_ignore_msn_scans ; 			
+			bool mbln_centroid_msn ;
+
+			bool mbln_write_progress_file ;
+			bool mbln_ignore_msn_scans ; 						
 			int mint_num_msn_levels_to_ignore ; 
 		
 			std::vector<int> *mvect_msn_levels_to_ignore ;
@@ -82,8 +84,10 @@ namespace Decon2LS
 				new_params->set_SpectraType(this->get_SpectraType());
 				new_params->set_SVMParamFile(this->mstr_svm_file_name) ; 
 				new_params->set_ConsiderMultiplePrecursors(this->get_ConsiderMultiplePrecursors()) ; 
+				new_params->set_CentroidMSn(this->get_CentroidMSn()) ;
 				new_params->set_IsolationWindowSize(this->get_IsolationWindowSize()) ;
 				new_params->set_IsProfileDataForMzXML(this->get_IsProfileDataForMzXML()) ; 
+				new_params->set_WriteProgressFile(this->get_WriteProgressFile()) ; 
 				new_params->set_IgnoreMSnScans(this->get_IgnoreMSnScans()) ; 
 				new_params->set_NumMSnLevelsToIgnore(this->get_NumMSnLevelsToIgnore()) ; 				
 	
@@ -196,6 +200,16 @@ namespace Decon2LS
 				return mbln_consider_multiple_precursors ; 
 			}
 
+			__property void set_CentroidMSn(bool value)
+			{
+				mbln_centroid_msn = value ; 
+			}
+				
+			__property bool get_CentroidMSn()
+			{
+				return mbln_centroid_msn ; 
+			}
+
 			__property void set_IsolationWindowSize(int value)
 			{
 				mint_isolation_window_size = value ; 
@@ -235,7 +249,15 @@ namespace Decon2LS
 			{
 				mint_window_size_to_check = value ;
 			}
-
+			
+			__property bool get_WriteProgressFile()
+			{
+				return mbln_write_progress_file ; 
+			}
+			__property void set_WriteProgressFile(bool value)
+			{
+				mbln_write_progress_file = value ; 
+			}
 			__property OUTPUT_TYPE get_OutputType()
 			{
 				return menm_output_type ; 

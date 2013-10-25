@@ -58,11 +58,11 @@ namespace Engine {
 		DACSERVERLib::IDACFunctionInfo *mptr_dac_func_info ; 
 #endif 
 
-		bool GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-		bool GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+		bool GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+		bool GetRawDataV3(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 
-		bool GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-		bool GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+		bool GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+		bool GetRawDataV4(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 
 		double GetScanTimeV4(int scan_num) ; 
 		int GetScanSizeV4() ; 
@@ -88,15 +88,15 @@ namespace Engine {
 
 		enmMassLynxVersion GetLatestInstalledVersion() ; 
 		virtual void Load(char *file) ; 
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ; 
-		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, int num_pts) ; 
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) ; 
+		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts) ; 
 		double GetScanTime(int scan_num) ; 
 		int GetScanSize() ; 
 		int GetFirstScanNum() { return 1 ; } 
 		int GetLastScanNum() { return GetNumScans()-1 ; } ;
 		int GetNumScans() ;
 		int GetNumScansLoaded() { return GetNumScans() ; } 
-		double GetSignalRange(int scan_num) ; 
+		double GetSignalRange(int scan_num, bool centroid) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ;  
 		
 		int GetParentScan(int scan_num)

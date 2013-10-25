@@ -117,7 +117,7 @@ namespace Decon2LS
 			int GetScanSize() ; 
 			int GetSpectrumType(int scan_num) ;
 			void GetTicFromFile(float  (&intensities) __gc [], float (&scan_times) __gc [], bool base_peak_tic); 
-			void GetSpectrum(int scan_num, float  (&mzs) __gc [], float (&intensities) __gc []) ; 
+			void GetSpectrum(int scan_num, float  (&mzs) __gc [], float (&intensities) __gc [], bool centroid) ; 
 			int GetParentScan(int scan_num);
 			void GetMzsInRange(float (&in_mzs) __gc [], float (&in_intensities) __gc [], float (&out_mzs) __gc [], float (&out_intensities) __gc [], float central_value, float range);
 			System::String *GetScanDescription(int scan_num) ; 

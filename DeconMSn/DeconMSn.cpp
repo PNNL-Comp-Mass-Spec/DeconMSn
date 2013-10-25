@@ -17,6 +17,8 @@
 #include "stdafx.h"
 #include <stdio.h>
 #include <time.h>
+#include <string>
+#include <iostream>
 
 #using <mscorlib.dll>
 #using <system.dll>
@@ -26,6 +28,7 @@ using namespace System;
 using namespace System::Reflection ; 
 using namespace System::IO ; 
 using namespace System::Xml ; 
+using namespace System::Runtime::InteropServices;
 using namespace std;
 
 
@@ -38,6 +41,7 @@ int _tmain( int argc, char *argv[] )
     clock_t Begin, End;             //initialize Begin and End for the timer
 
 	void PrintUsage() ;
+	std::string ManagedToSTL(System::String *managed);
 
 	System::IO::Path *ioPath ; 
 	System::String *strAppFolder ; 
@@ -144,6 +148,8 @@ int _tmain( int argc, char *argv[] )
 
 	if (argc > 1)
 	{
+		obj_dta_generation_parameters->set_CentroidMSn(true);
+
 		for (argvIndex = 1; argvIndex < argc-1; argvIndex++)
 		{
 			commandLine = argv[argvIndex];
@@ -218,13 +224,15 @@ int _tmain( int argc, char *argv[] )
 								stringFileName = commandLine->Remove(0, beginIndex+1) ;														
 								obj_proc_runner->OutputPathForDTACreation = stringFileName ; 
 								break;									
-					case 'G':	beginIndex = commandLine->IndexOf('G');	
+					case 'G':	beginIndex = commandLine->IndexOf('G');		// Used by Extract_msn; ignored by DeconMSn
 								break ; 
-					case 'M':	beginIndex = commandLine->IndexOf('M');	
-								break ; 		
-					//case 'S':	beginIndex = commandLine->IndexOf('S');	
-					//			break ; 	
-					case 'P':	beginIndex = commandLine->IndexOf('P') ; 
+					case 'M':	beginIndex = commandLine->IndexOf('M');		// Used by Extract_msn; ignored by DeconMSn
+								break ; 							
+					case 'P':	beginIndex = commandLine->IndexOf('P') ;	// Already handled above
+								break ; 
+					case 'W':	obj_dta_generation_parameters->set_WriteProgressFile(true);
+								break ; 
+					case 'R':	obj_dta_generation_parameters->set_CentroidMSn(false);
 								break ; 
 					default :	PrintUsage();
 								error = true ; 
@@ -243,10 +251,12 @@ int _tmain( int argc, char *argv[] )
 
 	if (error) //Anoop 05/08 
 	{
-		return 0 ; 
+		return -1 ; 
 	}
+	
+	string filenameToProcess = ManagedToSTL(commandLine);
 
-	cout<<"Processing File"<<std::endl ;	
+	cout<<"Processing File " << filenameToProcess <<std::endl ;	
 		
 	obj_proc_runner->HornTransformParameters = obj_transform_parameters;
 	obj_proc_runner->PeakProcessorParameters = obj_peak_parameters;
@@ -287,14 +297,39 @@ void PrintUsage()
 	cout<<"\t -Pstring : string is the parameter XML file name to be used for processing [default options are set]" <<endl; 
 	cout<<"\t -Dstring : string is the output directory[default - set to same directory as input file]" <<endl;
 	cout<<"\t -Sstring : string is the type of spectra to process, options are"<<endl;
+	cout<<"\t -R       : Disables centroiding MSn data (when acquired as profile data)"<<endl;
+	cout<<"\t -W       : Creates a _progress.txt file with a percent complete value every 50 scans"<<endl;
 	cout<<"\t \t ALL : to process all spectra present in the raw file (default)"<<endl;
 	cout<<"\t \t CID : to process only CID spectra present in the raw file"<<endl;
 	cout<<"\t \t ETD : to process only ETD spectra present in the raw file"<<endl;
 	cout<<"\t \t HCD : to process only HCD spectra present in the raw file"<<endl;
 	cout<<"\t -Xstring : string is output file format, options are"<<endl;
 	cout<<"\t \t DTA  : Creates .dta files along with a log file (_log.txt) and profile file (_profile.txt)[default option]"<<endl ; 
-	cout<<"\t \t LOG  : Creates only log file (_log.txt) and profile file (_profile.txt)"<<endl; 
-	cout<<"\t \t MGF  : Creates .mgf file along with log file(_log.txt) and profile file (_profile.txt)"<<endl; 
-	cout<<"\t \t CDTA : Creates .dta files, log file(_log.txt), a composite dta file (_dta.txt) and profile file (_profile.txt)"<<endl; 		
+	cout<<"\t \t LOG  : Creates only the log file (_log.txt) and profile file (_profile.txt)"<<endl; 
+	cout<<"\t \t MGF  : Creates a .mgf file along with the log file and profile file"<<endl; 
+	cout<<"\t \t CDTA : Creates a concatenated dta file (_dta.txt), a log file, and a profile file"<<endl; 		
 	cout<<"filename : input file [mzXML or RAW]"<<endl; 
+	cout<<endl; 
+	cout<<"Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy"<<endl; 
+	cout<<"Maintained by Matthew Monroe"<<endl; 
+	cout<<"E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov"<<endl; 
+	cout<<"Website: http://omics.pnl.gov or http://panomics.pnnl.gov"<<endl; 
+
+}
+
+//Converts a System::String to a std::string
+//This code assumes that you have used the following namespace:
+// using namespace System::Runtime::InteropServices;
+std::string ManagedToSTL(System::String *managed) {
+    //get a pointer to an array of ANSI chars
+    char *chars = (char*) Marshal::StringToHGlobalAnsi(managed).ToPointer();
+
+    //assign the array to an STL string
+    std::string stl = chars;
+
+    //free the memory used by the array
+    //since the array is not managed, it will not be claimed by the garbage collector
+    Marshal::FreeHGlobal(chars);
+
+    return stl;
 }

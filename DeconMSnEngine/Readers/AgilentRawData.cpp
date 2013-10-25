@@ -194,9 +194,10 @@ namespace Engine
 			}
 		}
 
-		bool AgilentRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num) 
+		// Note that Centroid is ignored by this class
+		bool AgilentRawData::GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num, bool centroid) 
 		{
-			return GetRawData(mzs, intensities,	scan_num, -1) ;	
+			return GetRawData(mzs, intensities,	scan_num, centroid, -1) ;	
 		}
 
 		void AgilentRawData::GetScanDescription(int scan, char *description)
@@ -206,7 +207,8 @@ namespace Engine
 			strcpy(description,(char*)bstr_filter);		
 		}
 
-		bool AgilentRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num, int num_pts)
+		// Note that Centroid is ignored by this class
+		bool AgilentRawData::GetRawData(std::vector <double>	*mzs, std::vector<double> *intensities, int scan_num, bool centroid, int num_pts)
 		{
 			float start_time = mobj_wiff_file->GetActualTimeFromPeriodAndCycle(mlng_sample_num,	mlng_period_num, mlng_experiment_num, (long) scan_num) ; 
 			//start_time = start_time/60 ; 
@@ -260,8 +262,8 @@ namespace Engine
 			return (mlng_stop_cycle	- mlng_start_cycle + 1)	; 
 		}
 
-
-		double AgilentRawData::GetSignalRange(int scan_num)
+		// Note: the centroid parameter is ignored here
+		double AgilentRawData::GetSignalRange(int scan_num, bool centroid)
 		{
 			if (scan_num ==	mint_last_scan_num)
 				return mdbl_signal_level ; 
