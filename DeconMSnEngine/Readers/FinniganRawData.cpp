@@ -143,13 +143,25 @@ namespace Engine
 
 			long scanN = scan_num;
 
+			int centroidFlag = 0;
+			if (centroid)
+				centroidFlag = 1;
+
+			// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+			//          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
+			//          Profile m/z         Centroid m/z	Delta_PPM
+			//			112.051 			112.077			232
+			//			652.3752			652.4645		137
+			//			1032.56495			1032.6863		118
+			//			1513.7252			1513.9168		127
+
 			HRESULT res = m_xraw2_class->SetCurrentController(0,1) ;
 			long nRet = m_xraw2_class->GetMassListFromScanNum (&scanN, 
 						bstr_type,	// no filter
 						0,			// no cutoff
 						0,			// no cutoff
 						0,			// all peaks returned
-						centroid,	
+						centroidFlag,	
 						&peak_width,
 						&varMassList,		// mass list data
 						&varPeakFlags,		// peak flags data
@@ -569,13 +581,17 @@ namespace Engine
 
 			long scanN = scan_num;
 
+			int centroidFlag = 0;
+			if (centroid)
+				centroidFlag = 1;
+
 			HRESULT res = m_xraw2_class->SetCurrentController(0,1) ;
 			long nRet = m_xraw2_class->GetMassListFromScanNum (&scanN, 
 						bstr_type,	// no filter
 						0,			// no cutoff
 						0,			// no cutoff
 						0,			// all peaks returned
-						centroid,
+						centroidFlag,
 						&peak_width,
 						&varMassList,		// mass list data
 						&varPeakFlags,		// peak flags data

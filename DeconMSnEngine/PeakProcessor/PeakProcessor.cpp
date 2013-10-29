@@ -113,7 +113,7 @@ namespace Engine
 			mobj_peak_fit.SetOptions(type) ; 
 		}
 
-		void PeakProcessor::SetPeaksProfileType(bool profile)
+		void PeakProcessor::SetPeakDataIsProfileMode(bool profile)
 		{
 			if(profile)
 				menm_profile_type = PROFILE;			

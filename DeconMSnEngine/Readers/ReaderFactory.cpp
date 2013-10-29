@@ -26,7 +26,7 @@ namespace Engine
 {
 	namespace Readers
 	{
-		RawData* ReaderFactory::GetRawData(FileType file_type, char *file_name)
+		RawData* ReaderFactory::GetMSDataReader(FileType file_type, char *file_name)
 		{
 			char *header_n = "header" ; 
 			switch(file_type)
@@ -103,7 +103,7 @@ namespace Engine
 			return NULL ; 
 		}
 
-		void ReaderFactory::GetRawData(RawData **raw_data, FileType file_type)
+		void ReaderFactory::GetMSDataReader(RawData **raw_data, FileType file_type)
 		{
 			char *header_n = "header" ; 
 			*raw_data = NULL ; 
@@ -161,7 +161,7 @@ namespace Engine
 			return  ; 
 		}
 
-		RawData* ReaderFactory::GetRawData(FileType file_type)
+		RawData* ReaderFactory::GetMSDataReader(FileType file_type)
 		{
 			char *header_n = "acqu" ; 
 			switch(file_type)

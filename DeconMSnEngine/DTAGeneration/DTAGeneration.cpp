@@ -50,7 +50,7 @@ namespace Engine
 			mint_NumMSnScansProcessed = 0 ;
 			mint_isolation_window_size = 3 ;
 			mbln_consider_multiple_precursors = false ;
-			mbln_centroid_msn = true;
+			mbln_centroid_msn = false;				// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
 			menm_dataset_type = Engine::Readers::FINNIGAN ;
 			mbln_is_profile_data_for_mzXML = false ; 
 			mbln_first_scan_written = false;
@@ -349,7 +349,7 @@ namespace Engine
 			//double calc_background_intensity = DeconEngine::Utils::GetBackgroundLevel(vect_intensities, FLT_MAX);
 
 			mobj_summed_peak_processor->SetPeakIntensityThreshold( background_intensity *5) ; //hard-coded now, need to change it later
-			mobj_summed_peak_processor->SetPeaksProfileType(mobj_raw_data_dta->IsProfileScan(parent_scan_number)) ;
+			mobj_summed_peak_processor->SetPeakDataIsProfileMode(mobj_raw_data_dta->IsProfileScan(parent_scan_number)) ;
 
 			int numPeaks = mobj_summed_peak_processor->DiscoverPeaks(&vect_mzs, &vect_intensities) ; 					
 			mobj_summed_peak_processor->mobj_peak_data->InitializeUnprocessedPeakData() ;	
@@ -528,8 +528,11 @@ namespace Engine
 			//check if we have enough values in the ms2						
 			int numPeaks = mvect_mzs_msN.size();
 			if (numPeaks < mint_minIonCount)
+			{
+				std::cout<<"Skipping scan "<<msN_scan_number<<" since too few peaks: "<<numPeaks<<" < "<<mint_minIonCount<<std::endl;
 				return found_transform;	
-			
+			}
+
 			mint_NumMSnScansProcessed++ ; 
 
 			//get parent
@@ -597,18 +600,12 @@ namespace Engine
 
 				if (numDeisotoped == 1)
 				{
-					// only  one so get it in
+					// only one so get it in
 					found_transform_record = false ; 
 					transformRecord = vectTransformRecord[0] ; 
 					int num_isotopes = transformRecord.mint_num_isotopes_observed ; 
 					if (transformRecord.mdbl_fit < mdbl_min_fit_for_single_spectra) // AM: to give slight edge to summing
 					{
-
-						if ( num_isotopes > 3 ){
-							std::cout<<"*******************************************************"<<std::endl;
-							std::cout<<"There's some distribution that has more than 3 isotopes"<<std::endl;
-							std::cout<<"*******************************************************"<<std::endl;
-						}
 
 						for (int isotope_num = 0 ; isotope_num < num_isotopes && !found_transform_record; isotope_num++)
 						{
@@ -931,9 +928,20 @@ namespace Engine
 			mobj_raw_data_dta->GetRawData(&mvect_mzs_msN, &mvect_intensities_msN, msN_scan_number, mbln_centroid_msn);
 
 			double thres =  DeconEngine::Utils::GetAverage(mvect_intensities_msN, FLT_MAX) ; 
-			double background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_msN, (float)(5*thres)) ;
+			double background_intensity;			
+
+			if (mbln_centroid_msn)
+			{
+				mobj_msN_peak_processor->SetPeakDataIsProfileMode(false);
+				background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_msN, (float)(5*thres)) ;
+			}
+			else
+			{
+				mobj_msN_peak_processor->SetPeakDataIsProfileMode(mobj_raw_data_dta->IsProfileScan(msN_scan_number));
+				background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_msN, (float)(5*thres)) ;
+			}
+
 			mobj_msN_peak_processor->SetPeakIntensityThreshold(background_intensity * peakBkgRatio) ; 
-			mobj_msN_peak_processor->SetPeaksProfileType(mobj_raw_data_dta->IsProfileScan(msN_scan_number));
 
 			int numPeaks = mobj_msN_peak_processor->DiscoverPeaks(&mvect_mzs_msN, &mvect_intensities_msN) ; 			
 			mobj_msN_peak_processor->mobj_peak_data->InitializeUnprocessedPeakData() ;				
@@ -944,12 +952,12 @@ namespace Engine
 			mvect_intensities_parent.clear();
 			mvect_mzs_parent.clear();
 			
-			mobj_raw_data_dta->GetRawData(&mvect_mzs_parent, &mvect_intensities_parent, parent_scan_number, mbln_centroid_msn);
+			mobj_raw_data_dta->GetRawData(&mvect_mzs_parent, &mvect_intensities_parent, parent_scan_number, false);
 			
 			double thres =  DeconEngine::Utils::GetAverage(mvect_intensities_parent, FLT_MAX) ; 
 			double background_intensity = DeconEngine::Utils::GetAverage(mvect_intensities_parent, (float)(5*thres)) ;
 			mobj_parent_peak_processor->SetPeakIntensityThreshold(background_intensity * peakBkgRatio) ; 
-			mobj_parent_peak_processor->SetPeaksProfileType(mobj_raw_data_dta->IsProfileScan(parent_scan_number)) ;
+			mobj_parent_peak_processor->SetPeakDataIsProfileMode(mobj_raw_data_dta->IsProfileScan(parent_scan_number)) ;
 
 			int numPeaks = mobj_parent_peak_processor->DiscoverPeaks(&mvect_mzs_parent, &mvect_intensities_parent) ; 
 			mdbl_min_peptide_intensity = background_intensity * peptideMinBkgRatio ; 
@@ -1153,7 +1161,7 @@ namespace Engine
 			std::ofstream fout(mch_log_filename) ; 
 
 			//TODO: Version number is hardcoded and needs to be read off assembly file
-			fout<<"DeconMSn Version:"<<"2.3.1.1"<<std::endl ; 
+			fout<<"DeconMSn Version:"<<"2.3.1.2"<<std::endl ; 
 
 			fout<<"Dataset:"<<mch_dataset_name<<std::endl ; 
 			fout<<"Number of MSn scans processed:"<<mint_NumMSnScansProcessed<<std::endl ;
@@ -1285,7 +1293,9 @@ namespace Engine
 				if (mbln_create_log_file_only)
 					continue ;	
 								
-				sprintf(scanNum, "%d", msN_scan_num);
+				sprintf(scanNum, "%04d", msN_scan_num);
+
+
 				sprintf(charge, "%d", (int)mobj_transformRecord.mshort_cs);			
 
 

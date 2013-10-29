@@ -199,7 +199,9 @@ namespace Decon2LS
 			{
 				return mbln_consider_multiple_precursors ; 
 			}
-
+			
+			// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+			// See the definition of mbln_centroid_msn for an example
 			__property void set_CentroidMSn(bool value)
 			{
 				mbln_centroid_msn = value ; 
@@ -257,6 +259,35 @@ namespace Decon2LS
 			__property void set_WriteProgressFile(bool value)
 			{
 				mbln_write_progress_file = value ; 
+			}
+
+			__property System::String * get_OutputTypeName()
+			{
+				System::String *stringOutputFileFormat;
+
+				switch (menm_output_type)
+				{
+					case DTA:
+						stringOutputFileFormat = "DTA files";
+						break;
+					case MGF:
+						stringOutputFileFormat = "MGF file";
+						break;
+					case LOG:
+						stringOutputFileFormat = "Log file only";
+						break;
+					case CDTA:
+						stringOutputFileFormat = "CDTA (_dta.txt)";
+						break;
+					case MZXML:
+						stringOutputFileFormat = "MzXML";
+						break;
+					default:
+						stringOutputFileFormat = "Unknown";
+						break;
+				}
+
+				return stringOutputFileFormat;
 			}
 			__property OUTPUT_TYPE get_OutputType()
 			{

@@ -52,7 +52,7 @@ namespace Decon2LS
 			// DeconWrapperManaged namespace.
 			try
 			{
-				mobj_raw_data = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)file_type) ; 
+				mobj_raw_data = Engine::Readers::ReaderFactory::GetMSDataReader((Engine::Readers::FileType)file_type) ; 
 				if (file_type == ICR2LSRAWDATA && mobj_preprocess_options != NULL && 
 					mobj_preprocess_options->get_ApodizationType() != NOAPODIZATION)
 				{

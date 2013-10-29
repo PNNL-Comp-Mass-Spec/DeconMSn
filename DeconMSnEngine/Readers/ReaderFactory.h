@@ -17,9 +17,9 @@ namespace Engine
 		class   ReaderFactory
 		{
 		public:
-			static RawData* GetRawData(FileType file_type) ; 
-			static RawData* GetRawData(FileType file_type, char *file_name) ; 
-			static void GetRawData(RawData **raw_data, FileType file_type) ; 
+			static RawData* GetMSDataReader(FileType file_type) ; 
+			static RawData* GetMSDataReader(FileType file_type, char *file_name) ; 
+			static void GetMSDataReader(RawData **raw_data, FileType file_type) ; 
 		} ; 
 	}
 }

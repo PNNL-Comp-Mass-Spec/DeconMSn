@@ -115,7 +115,7 @@ namespace Engine
 			/*! 
 				\param profile is  a boolean, tru if profile data, false if centroided 
 			*/
-			void SetPeaksProfileType(bool profile);
+			void SetPeakDataIsProfileMode(bool profile);
 			//! sets the flag for searching for m/z values in attention list in the raw data vectors.
 			/*!
 				\param set true/false value sets/unsets the flag to search for element in the m/z attention list. 

@@ -101,7 +101,7 @@ namespace Decon2LS
 			DeconEngine::Utils::GetStr(file_name, file_name_ch) ;
 			// enumerations of file type are the same in Readers namespace and
 			// DeconWrapperManaged namespace.
-			raw_data = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)file_type, file_name_ch) ;
+			raw_data = Engine::Readers::ReaderFactory::GetMSDataReader((Engine::Readers::FileType)file_type, file_name_ch) ;
 			if (file_type == Decon2LS::Readers::ICR2LSRAWDATA && fticr_preprocess_parameters != NULL)
 			{
 				Engine::Readers::Icr2lsRawData *icr_raw_data = (Engine::Readers::Icr2lsRawData *)raw_data ; 
@@ -648,6 +648,10 @@ namespace Decon2LS
 				int slashIndex = mstr_file_name->LastIndexOf("\\") ; 					
 				System::String __gc *raw_name_plus_extension = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex);
 				System::String __gc *raw_name = raw_name_plus_extension->Remove(0, slashIndex) ; 
+				
+				if (mstr_output_path_for_dta_creation->EndsWith("\\") && raw_name->StartsWith("\\"))
+					raw_name = raw_name->Remove(0, 1);
+
 				DeconEngine::Utils::GetStr(raw_name, raw_file_ch) ;
 				DeconEngine::Utils::GetStr(mstr_output_path_for_dta_creation, output_path_ch) ; 
 				output_file_ch = strcat(output_path_ch, raw_file_ch) ; 
@@ -667,7 +671,7 @@ namespace Decon2LS
 				thresholded = mobj_peak_parameters->get_ThresholdedData() ;
 			
 			//Raw Object
-			dta_processor->mobj_raw_data_dta = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)menm_file_type, file_name_ch) ;
+			dta_processor->mobj_raw_data_dta = Engine::Readers::ReaderFactory::GetMSDataReader((Engine::Readers::FileType)menm_file_type, file_name_ch) ;
 			dta_processor->menm_dataset_type = (Engine::Readers::FileType)menm_file_type ; 
 			
 			//File name base for all dtas
@@ -783,7 +787,7 @@ namespace Decon2LS
 
 			while (scan_num <= scan_end)
 			{	
-				// Value between 0 and 100
+				// Update Percent Complete (value between 0 and 100)
 				int scansProcessed = scan_num - scan_start + 1;
 				mint_percent_done = (scansProcessed * 100) / totalScansToProcess;
 
@@ -793,7 +797,7 @@ namespace Decon2LS
 				if (isMS1)
 				{	
 				    //Get MS spectra					
-					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																												
+					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );
 					
 					int msN_scan;
 					for(msN_scan = scan_num +1; msN_scan < scan_end && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
@@ -896,7 +900,7 @@ namespace Decon2LS
 						}
 
 						// get parent data
-						dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																										
+						dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );
 					
 						if(dta_processor->IsFTData(parent_scan))					
 						{

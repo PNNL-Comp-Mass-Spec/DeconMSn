@@ -62,6 +62,9 @@ of these runtimes are installed:
 	         -Cstring : string is the charge to be considered [NULL]
 	         -Pstring : string is the parameter XML file name to be used for processing [default options are set]
 	         -Dstring : string is the output directory[default - set to same directory as input file]
+			 -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default
+                        since the m/z values reported by the centroiding algorithm are typically off by several hundred ppm
+			 -Progress: Creates a _progress.txt file with a percent complete value every 25 scans
 	         -Sstring : string is the type of spectra to process, options are
 	                 ALL : to process all spectra present in the raw file (default)
 	                 CID : to process only CID spectra present in the raw file
@@ -72,15 +75,17 @@ of these runtimes are installed:
 	                 LOG  : Creates only log file (_log.txt) and profile file (_profile.txt)
 	                 MGF  : Creates .mgf file along with log file(_log.txt) and profile file (_profile.txt)
 	                 CDTA : Creates .dta files, log file(_log.txt), a composite dta file (_dta.txt), and profile file (_profile.txt)
-			 -W      : instructs the program to create a _progress.txt file, updating the percent complete every 50 scans
 	filename : input file [mzXML or RAW]	
 
 Note that the switch parameters are case-sensitive (for example you must use -P an not -p)
 
 Some examples
 
-Process sample.RAW, create .dta files
+Process sample.RAW, create a concatenated DTA (_dta.txt) file
 > DeconMSn.exe C:\data\sample.RAW 
+
+Process sample.RAW, create .dta files
+> DeconMSn.exe -XDTA C:\data\sample.RAW 
 
 Process sample.RAW with scan range of 1000-1200 and mass range of 200-1000, create .dta files
 > DeconMSn.exe -F1000 -L1200 -B200 -T1000 C:\data\sample.RAW 

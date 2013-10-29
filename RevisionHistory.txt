@@ -1,5 +1,13 @@
 DeconMSn Revision History
 
+Version 2.3.1.2 ; October 28, 2013
+	- Default output mode is now -XCDTA
+	- Added -Progress, which will create a _progress.txt file
+	- Added -Centroid switch, which will centroid profile-mode MSn spectra
+		- Warning: the masses reported when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+		- This appears to be due to a bug in GetMassListFromScanNum in MSFileReader
+		- Thus, the -Centroid switch should be used with caution
+
 Version 2.3.1.1 ; October 24, 2013
 	- Added switch -W to optionally write a progress file every 50 scans
 

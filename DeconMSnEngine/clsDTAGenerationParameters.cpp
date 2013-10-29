@@ -26,7 +26,7 @@ namespace Decon2LS
 			mdbl_min_mass = 200 ;
 			mdbl_max_mass = 5000;
 			mdbl_cc_mass = 1.00727638;
-			menm_output_type = OUTPUT_TYPE::DTA;
+			menm_output_type = OUTPUT_TYPE::CDTA;
 			mstr_svm_file_name = "svm_params.xml" ; 
 			mbln_consider_multiple_precursors = false ; 
 			mbln_centroid_msn = true;

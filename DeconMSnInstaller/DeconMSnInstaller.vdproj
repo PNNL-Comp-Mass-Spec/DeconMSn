@@ -45,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_632486D4F1FF48E89EBDFA47BF9C24AA"
-        "OwnerKey" = "8:_99543EFE19014338B0D37C59C5021B47"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_714027A0A32D42E484F70D4886B67AE1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -376,11 +370,6 @@
             "AssemblyAsmDisplayName" = "8:DeconMsnEngine, Version=2.3.1.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_FBF10A9768D7610A789128419DFDED98"
-                    {
-                    "Name" = "8:DeconMsnEngine.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DeconMsnEngine.dll"
             "TargetName" = "8:"
@@ -456,15 +445,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DeconMSn"
-        "ProductCode" = "8:{8D33503A-933D-4B0E-9DF7-1D02ED6803AB}"
-        "PackageCode" = "8:{B9B88A54-F144-4943-8B56-2CCA78BC5979}"
+        "ProductCode" = "8:{200272AF-A8E6-4576-91D5-081CAF9AC39E}"
+        "PackageCode" = "8:{D10F945E-7329-4889-A519-02FF422F3930}"
         "UpgradeCode" = "8:{4448E7D4-D5E1-43AC-9A73-009C2BD29C5A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.3.1"
+        "ProductVersion" = "8:2.3.2"
         "Manufacturer" = "8:Battelle PNNL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://omics.pnl.gov"
@@ -991,20 +980,6 @@
                     "Setting" = "3:1"
                     "UsePlugInResources" = "11:FALSE"
                     }
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_632486D4F1FF48E89EBDFA47BF9C24AA"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
-                "Properties"
-                {
                 }
             "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"

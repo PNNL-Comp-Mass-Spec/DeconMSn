@@ -46,7 +46,16 @@ namespace Engine
 			bool mbln_create_log_file_only ; 
 			bool mbln_create_composite_dta ; 
 			bool mbln_consider_multiple_precursors ; 
+
+			// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+			//          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
+			//          Profile m/z         Centroid m/z	Delta_PPM
+			//			112.051 			112.077			232
+			//			652.3752			652.4645		137
+			//			1032.56495			1032.6863		118
+			//			1513.7252			1513.9168		127
 			bool mbln_centroid_msn;
+
 			bool mbln_is_profile_data_for_mzXML ; 
 			bool mbln_first_scan_written ;
 
