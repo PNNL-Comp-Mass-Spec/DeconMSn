@@ -783,6 +783,7 @@ namespace Decon2LS
 
 			int totalScansToProcess = scan_end - scan_start + 1;
 			int scansProcessed = 0;
+			int nextProgressScan = 50;
 			int scan_num = scan_start;
 
 			while (scan_num <= scan_end)
@@ -933,8 +934,18 @@ namespace Decon2LS
 				}
 				scan_num++;
 
-				if (scansProcessed % 25 == 0 && dta_processor->mbln_write_progress_file)
-					dta_processor->WriteProgressFile(scansProcessed, totalScansToProcess, mint_percent_done);
+				if (dta_processor->mbln_write_progress_file)
+				{
+					if (scansProcessed >= nextProgressScan)
+					{
+						dta_processor->WriteProgressFile(scansProcessed, totalScansToProcess, mint_percent_done);
+
+						nextProgressScan += 50;
+						while (nextProgressScan <= scansProcessed)
+							nextProgressScan += 50;
+					}
+				}
+					
 			}
 
 			if (low_resolution && !mobj_dta_generation_parameters->get_ConsiderChargeValue())

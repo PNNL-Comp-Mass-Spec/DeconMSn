@@ -348,7 +348,7 @@ void PrintUsage()
 	cout<<"\t -Dstring : string is the output directory[default - set to same directory as input file]" <<endl;
 	cout<<"\t -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default" <<endl;
 	cout<<"              since the m/z values reported by the centroiding algorithm are typically off by several hundred ppm"<<endl;
-	cout<<"\t -Progress: Creates a _progress.txt file with a percent complete value every 25 scans"<<endl;
+	cout<<"\t -Progress: Creates a _progress.txt file with a percent complete value every 50 scans"<<endl;
 	cout<<"\t -Sstring : string is the type of spectra to process, options are"<<endl;
 	cout<<"\t \t ALL : to process all spectra present in the raw file (default)"<<endl;
 	cout<<"\t \t CID : to process only CID spectra present in the raw file"<<endl;

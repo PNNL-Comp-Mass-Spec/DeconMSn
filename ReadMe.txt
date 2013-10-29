@@ -64,7 +64,7 @@ of these runtimes are installed:
 	         -Dstring : string is the output directory[default - set to same directory as input file]
 			 -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default
                         since the m/z values reported by the centroiding algorithm are typically off by several hundred ppm
-			 -Progress: Creates a _progress.txt file with a percent complete value every 25 scans
+			 -Progress: Creates a _progress.txt file with a percent complete value every 50 scans
 	         -Sstring : string is the type of spectra to process, options are
 	                 ALL : to process all spectra present in the raw file (default)
 	                 CID : to process only CID spectra present in the raw file
