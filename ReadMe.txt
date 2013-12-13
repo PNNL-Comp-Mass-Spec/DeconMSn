@@ -107,7 +107,7 @@ the .mzXML format, then DeconMSn can process the data without vendor specific li
 
 - When compiling the source code, the user must first install Xerces 
 (http://xerces.apache.org/xerces-c/) and then modify the paths for header and library
-in the solution to indicate any change in the Xerces installation folder (the default 
+in the DeconMSnEngine project to indicate any change in the Xerces installation folder (the default 
 installation path given in DeconMSN is C:\xerces\)
 	- Current version of this program is built with xerces 2.8.
 

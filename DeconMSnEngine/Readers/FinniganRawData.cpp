@@ -312,8 +312,13 @@ namespace Engine
 		{			
 			variant_t var_value ; 
 			m_xraw2_class->GetTrailerExtraValueForScanNum((long)scan_num, "Ion Injection Time (ms):", &var_value.GetVARIANT());
-			double time = 0.0 ; 
-			time = (double) var_value.fltVal ; 
+			double time = 0.0 ;
+
+			if (var_value.vt == VT_R8)
+				time = (double) var_value.dblVal; 
+			else if (var_value.vt == VT_R4)
+				time = (double) var_value.fltVal; 	
+
 			return time ; 
 		}
 

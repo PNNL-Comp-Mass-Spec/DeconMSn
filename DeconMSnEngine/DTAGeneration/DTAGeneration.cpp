@@ -1067,7 +1067,7 @@ namespace Engine
 		{
 			double agc_acc_time = mobj_raw_data_dta->GetAGCAccumulationTime(parent_scan_num) ; 
 			double tic_val = mobj_raw_data_dta->GetTICForScan(parent_scan_num) ; 
-				
+			
 			mobj_profile_record.mint_msn_scan_num = msn_scan_num ; 
 			mobj_profile_record.mint_parent_scan_num = parent_scan_num ; 
 			mobj_profile_record.mdbl_agc_time = agc_acc_time ; 
@@ -1161,7 +1161,7 @@ namespace Engine
 			std::ofstream fout(mch_log_filename) ; 
 
 			//TODO: Version number is hardcoded and needs to be read off assembly file
-			fout<<"DeconMSn Version:"<<"2.3.1.2"<<std::endl ; 
+			fout<<"DeconMSn Version:"<<"2.3.1.3"<<std::endl ; 
 
 			fout<<"Dataset:"<<mch_dataset_name<<std::endl ; 
 			fout<<"Number of MSn scans processed:"<<mint_NumMSnScansProcessed<<std::endl ;
