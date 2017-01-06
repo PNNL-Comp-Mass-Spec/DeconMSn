@@ -312,6 +312,9 @@
     <ClCompile Include="ResultChecker\ResultChecker.cpp">
       <Filter>ResultChecker\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DTAGeneration\DTAScanTypeGeneration.cpp">
+      <Filter>DTAGeneration\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clsAveragine.h">
@@ -526,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="ResultChecker\ResultChecker.h">
       <Filter>ResultChecker\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTAGeneration\DTAScanTypeGeneration.h">
+      <Filter>DTAGeneration\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

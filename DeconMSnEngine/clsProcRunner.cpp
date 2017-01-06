@@ -17,6 +17,7 @@
 #include "clsTransformResults.h"
 #include "HornTransform/MassTransform.h"
 #include "DTAGeneration/DTAGeneration.h"
+#include "DTAGeneration/DTAScanTypeGeneration.h"
 #include "Utilities/SavGolSmoother.h"
 #include "Readers/IMSRawData.h"
 #include <time.h>
@@ -605,6 +606,7 @@ namespace Decon2LS
 		}
 	
 		Engine::DTAProcessing::DTAProcessor __nogc *dta_processor = NULL;
+		Engine::DTAProcessing::DTAScanTypeGeneration __nogc *dta_scanType = NULL;
 		
 		try
 		{
@@ -614,6 +616,7 @@ namespace Decon2LS
 			menm_state = RUNNING ;
 			
 			dta_processor = new Engine::DTAProcessing::DTAProcessor();
+			dta_scanType = new Engine::DTAProcessing::DTAScanTypeGeneration();
 
 			//Read the rawfile in		
 			char file_name_ch[256] ;
@@ -714,6 +717,10 @@ namespace Decon2LS
 					strcat(dta_processor->mch_comb_dta_filename, "_dta.txt");
 					dta_processor->mfile_comb_dta.open(dta_processor->mch_comb_dta_filename, std::ios::out) ; 				
 					create_composite_dta = true ; 
+					strcpy(dta_scanType->mch_scanType_filename, output_file_ch);
+					strcat(dta_scanType->mch_scanType_filename, "_ScanType.txt");
+					dta_scanType->mfile_dta_scanType.open(dta_scanType->mch_scanType_filename, std::ios::out);
+					dta_scanType->mobj_raw_data_dta = dta_processor->mobj_raw_data_dta;
 			}
 			//file name for .mgf file
 			if (mobj_dta_generation_parameters->get_OutputType() == Decon2LS::DTAGeneration::OUTPUT_TYPE::MGF)		
@@ -959,6 +966,11 @@ namespace Decon2LS
 					dta_processor->WriteLowResolutionDTAFile();
 			}
 			
+			if (create_composite_dta)
+			{
+				dta_scanType->GenerateScanTypeFile();
+			}
+
 			mint_percent_done = 100;
 			dta_processor->WriteProgressFile(scansProcessed, totalScansToProcess, mint_percent_done);
 
@@ -970,7 +982,10 @@ namespace Decon2LS
 			//Shutdown
 			//dta_processor->mfile_log.close() ;
 			if (mobj_dta_generation_parameters->get_OutputType() == Decon2LS::DTAGeneration::OUTPUT_TYPE::CDTA)
+			{
 				dta_processor->mfile_comb_dta.close() ; 
+				dta_scanType->mfile_dta_scanType.close();
+			}
 			if (mobj_dta_generation_parameters->get_OutputType() == Decon2LS::DTAGeneration::OUTPUT_TYPE::MGF)		
 				dta_processor->mfile_mgf.close() ; 
 		
@@ -986,6 +1001,7 @@ namespace Decon2LS
 			if( dta_processor != NULL)
 			{
 				delete dta_processor ; 
+				delete dta_scanType;
 			}
 			System::String *exception_msg = new System::String(mesg) ; 
 			throw new System::Exception(exception_msg) ; 
@@ -994,6 +1010,7 @@ namespace Decon2LS
 		if(dta_processor != NULL)
 		{
 			delete dta_processor ; 
+			delete dta_scanType;
 		}
 	}
 	

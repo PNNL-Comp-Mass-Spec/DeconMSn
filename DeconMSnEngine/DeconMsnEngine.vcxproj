@@ -138,6 +138,7 @@
     <ClCompile Include="clsTransformResults.cpp" />
     <ClCompile Include="DeconEngine.cpp" />
     <ClCompile Include="DeconEngineUtils.cpp" />
+    <ClCompile Include="DTAGeneration\DTAScanTypeGeneration.cpp" />
     <ClCompile Include="Readers\AgilentRawData.cpp" />
     <ClCompile Include="Readers\AsciiRawData.cpp" />
     <ClCompile Include="Readers\BrukerAsciiRawData.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="clsTransformResults.h" />
     <ClInclude Include="DeconEngine.h" />
     <ClInclude Include="DeconEngineUtils.h" />
+    <ClInclude Include="DTAGeneration\DTAScanTypeGeneration.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Readers\AgilentRawData.h" />
     <ClInclude Include="Readers\AsciiRawData.h" />
