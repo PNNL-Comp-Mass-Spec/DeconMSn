@@ -53,7 +53,26 @@ namespace Engine {
 				double dMass;
 				double dIntensity;
 			} DataPeak;
-			
+
+			typedef struct _labelPeak : DataPeak
+			{
+				// Inherited from DataPeak
+				//double dMass;
+				//double dIntensity;
+
+				// Apparently the additional data is of the following formats
+				//float fRes;
+				//float fBase;
+				//float fNoise;
+				//int charge;
+
+				// The array is always in 8 byte chunks, so use 8 byte data formats
+				double fRes;
+				double fBase;
+				double fNoise;
+				long long charge;
+			} LabelPeak;
+
 			char *marr_rawfileName;
 
 			long mlong_num_spectra ; 
@@ -69,7 +88,7 @@ namespace Engine {
 			float *marr_temp_data_block ; 
 			
 			
-			XRAWFILE2Lib::IXRawfile *m_xraw2_class ;
+			XRAWFILE2Lib::IXRawfile3 *m_xraw2_class ;
 			
 
 			void SetDataSize(int sz) ; 

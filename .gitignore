@@ -1,0 +1,7 @@
+DeconMSnEngine/Release/
+DeconMSnEngine/Debug/
+DeconMSn/Release/
+DeconMSn/Debug/
+*.sdf
+*.opensdf
+*.user

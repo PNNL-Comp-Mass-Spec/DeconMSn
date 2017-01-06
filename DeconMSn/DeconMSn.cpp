@@ -19,6 +19,7 @@
 #include <time.h>
 #include <string>
 #include <iostream>
+#include <Windows.h>
 
 #using <mscorlib.dll>
 #using <system.dll>
@@ -32,7 +33,23 @@ using namespace System::Runtime::InteropServices;
 using namespace std;
 
 
-int _tmain( int argc, char *argv[] )
+int _tmain2(int argc, char *argv[]);
+
+int _tmain(int argc, char *argv[])
+{
+	// Test load the dll, and give more meaningful messages
+	HMODULE hMod = LoadLibraryW(L"DeconMsnEngine.dll");
+	if (!hMod)
+	{
+		cout << "Failed to load dll" << endl;
+		return -1;
+	}
+
+	// Run the original main, which loads DeconMsnEngine before entering the function
+	return _tmain2(argc, argv);
+}
+
+int _tmain2( int argc, char *argv[] )
 {
 	System::String *commandLine;
 	

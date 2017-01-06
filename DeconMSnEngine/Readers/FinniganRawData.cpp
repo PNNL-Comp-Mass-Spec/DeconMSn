@@ -147,16 +147,42 @@ namespace Engine
 			if (centroid)
 				centroidFlag = 1;
 
-			// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
-			//          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
-			//          Profile m/z         Centroid m/z	Delta_PPM
-			//			112.051 			112.077			232
-			//			652.3752			652.4645		137
-			//			1032.56495			1032.6863		118
-			//			1513.7252			1513.9168		127
+			HRESULT res = m_xraw2_class->SetCurrentController(0, 1);
 
-			HRESULT res = m_xraw2_class->SetCurrentController(0,1) ;
-			long nRet = m_xraw2_class->GetMassListFromScanNum (&scanN, 
+			SAFEARRAY FAR* psa = NULL;
+
+			DataPeak** ppDataPeaks = NULL;
+
+			if (centroid && IsFTScan(scanN))
+			{
+				long nRet = m_xraw2_class->GetLabelData(&varMassList, &varPeakFlags, &scanN);
+
+				if (nRet == 0)
+				{
+					psa = varMassList.parray;
+					nArraySize = psa->rgsabound[0].cElements;
+
+					LabelPeak* pLabelPeaks = NULL;
+					SafeArrayAccessData(psa, (void**)(&pLabelPeaks));
+
+					ppDataPeaks = new DataPeak*[nArraySize];
+					for (int i = 0; i < nArraySize; i++)
+					{
+						ppDataPeaks[i] = &pLabelPeaks[i];
+					}
+				}
+			}
+			else
+			{
+				// Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+				//          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
+				//          Profile m/z         Centroid m/z	Delta_PPM
+				//			112.051 			112.077			232
+				//			652.3752			652.4645		137
+				//			1032.56495			1032.6863		118
+				//			1513.7252			1513.9168		127
+
+				long nRet = m_xraw2_class->GetMassListFromScanNum(&scanN,
 						bstr_type,	// no filter
 						0,			// no cutoff
 						0,			// no cutoff
@@ -167,26 +193,40 @@ namespace Engine
 						&varPeakFlags,		// peak flags data
 						&nArraySize );		// size of mass list array
 
-			if( nArraySize )
+				if (nArraySize)
+				{
+					// Get a pointer to the SafeArray
+					psa = varMassList.parray;
+
+					DataPeak* pDataPeaks = NULL;
+					SafeArrayAccessData(psa, (void**)(&pDataPeaks));
+
+					ppDataPeaks = new DataPeak*[nArraySize];
+					for (int i = 0; i < nArraySize; i++)
+					{
+						ppDataPeaks[i] = &pDataPeaks[i];
+					}
+				}
+			}
+
+			if (nArraySize)
 			{
-				// Get a pointer to the SafeArray
-				SAFEARRAY FAR* psa = varMassList.parray;
-
-				DataPeak* pDataPeaks = NULL;
-				SafeArrayAccessData( psa, (void**)(&pDataPeaks) );
-
 				double min_intensity = DBL_MAX ; 
 				double max_intensity = DBL_MIN ; 
 
 				for( long j=0; j<nArraySize; j++ )
 				{
-					double intensity = pDataPeaks[j].dIntensity ; 
+					double intensity = ppDataPeaks[j]->dIntensity ;
 					if (intensity > max_intensity) 
 						max_intensity = intensity ; 
 					if (intensity < min_intensity) 
 						min_intensity = intensity ; 
 				}
-			
+				delete ppDataPeaks;
+
+				// Release the data handle
+				SafeArrayUnaccessData(psa);
+
 				signal_range = (max_intensity - min_intensity) ; 
 			}
 
@@ -208,6 +248,7 @@ namespace Engine
 				SafeArrayDestroy( psa );
 			}
 
+			mdbl_signal_range = signal_range;
 			return signal_range ; 
 
 		}
@@ -591,7 +632,36 @@ namespace Engine
 				centroidFlag = 1;
 
 			HRESULT res = m_xraw2_class->SetCurrentController(0,1) ;
-			long nRet = m_xraw2_class->GetMassListFromScanNum (&scanN, 
+
+			// Get a pointer to the SafeArray
+			SAFEARRAY FAR* psa = NULL;
+
+			DataPeak** ppDataPeaks = NULL;
+
+			if (centroid && IsFTScan(scanN))
+			{
+				long nRet = m_xraw2_class->GetLabelData(&varMassList, &varPeakFlags, &scanN);
+
+				if (nRet == 0)
+				{
+					psa = varMassList.parray;
+					nArraySize = psa->rgsabound[0].cElements;
+
+					LabelPeak* pLabelPeaks = NULL;
+					SafeArrayAccessData(psa, (void**)(&pLabelPeaks));
+
+					ppDataPeaks = new DataPeak*[nArraySize];
+					for (int i = 0; i < nArraySize; i++)
+					{
+						ppDataPeaks[i] = &pLabelPeaks[i];
+						//std::cout << &pLabelPeaks[i] << "\t" << ppDataPeaks[i] << std::endl;
+						//std::cout << pLabelPeaks[i].dMass << "\t" << pLabelPeaks[i].dIntensity << "\t" << pLabelPeaks[i].fRes << "\t" << pLabelPeaks[i].fBase << "\t" << pLabelPeaks[i].fNoise << "\t" << pLabelPeaks[i].charge << std::endl;
+					}
+				}
+			}
+			else
+			{
+				long nRet = m_xraw2_class->GetMassListFromScanNum(&scanN,
 						bstr_type,	// no filter
 						0,			// no cutoff
 						0,			// no cutoff
@@ -601,6 +671,22 @@ namespace Engine
 						&varMassList,		// mass list data
 						&varPeakFlags,		// peak flags data
 						&nArraySize );		// size of mass list array
+
+				if (nRet == 0)
+				{
+					// Get a pointer to the SafeArray
+					psa = varMassList.parray;
+
+					DataPeak* pDataPeaks = NULL;
+					SafeArrayAccessData( psa, (void**)(&pDataPeaks) );
+
+					ppDataPeaks = new DataPeak*[nArraySize];
+					for (int i = 0; i < nArraySize; i++)
+					{
+						ppDataPeaks[i] = &pDataPeaks[i];
+					}
+				}
+			}
 
 			long num_packets ; 
 			double start_time ; 
@@ -619,10 +705,10 @@ namespace Engine
 			if( nArraySize )
 			{
 				// Get a pointer to the SafeArray
-				SAFEARRAY FAR* psa = varMassList.parray;
+				//SAFEARRAY FAR* psa = varMassList.parray;
 
-				DataPeak* pDataPeaks = NULL;
-				SafeArrayAccessData( psa, (void**)(&pDataPeaks) );
+				//DataPeak* pDataPeaks = NULL;
+				//SafeArrayAccessData( psa, (void**)(&pDataPeaks) );
 
 				intensities->clear();
 				mzs->clear();
@@ -637,19 +723,20 @@ namespace Engine
 
 				for( long j=0; j<nArraySize; j++ )
 				{
-					if (pDataPeaks[j].dMass > high_mass)
+					if (ppDataPeaks[j]->dMass > high_mass)
 					{
 						break ; 
 					}
-					double intensity = pDataPeaks[j].dIntensity ; 
+					double intensity = ppDataPeaks[j]->dIntensity ;
 					if (intensity > max_intensity) 
 						max_intensity = intensity ; 
 					if (intensity < min_intensity) 
 						min_intensity = intensity ; 
 
-					mzs->push_back(pDataPeaks[j].dMass) ;
+					mzs->push_back(ppDataPeaks[j]->dMass) ;
 					intensities->push_back(intensity) ;
 				}
+				delete ppDataPeaks;
 			
 				mdbl_signal_range = (max_intensity - min_intensity) ; 
 
@@ -713,15 +800,25 @@ namespace Engine
 
 		int FinniganRawData::GetXRawFileInstance(void)
 		{
-			// Version 2.1
+			// Version 2.1 - Thermo Foundation
 			// C:\Program Files (x86)\Thermo\Foundation\XRawFile2.dll
+			// TypeLib: {5FE970A2-29C3-11D3-811D-00104B304896}
 			// CLSID: {5FE970B2-29C3-11D3-811D-00104B304896}
-			// IID:   {5FE970B1-29C3-11D3-811D-00104B304896}
-			
-			// Version 2.2.61.0
+			// IID:   {5FE970B1-29C3-11D3-811D-00104B304896} IXRawfile
+			// IID:   {5E256644-7300-481F-9D43-33D892BFD912} IXRawfile2
+			// IID:   {5E256644-7301-481F-9D43-33D892BFD912} IXRawfile3
+			// IID:   {E7CF6760-11CD-4260-B5B0-FCE2AD9754B3} IXRawfile4
+			// IID:   {06F53853-E43C-4F30-9E5F-D1B3668F0C3C} IXRawfile5
+
+			// Version 2.2.61.0 - MSFileReader
 			// C:\Program Files (x86)\Thermo\MSFileReader\XRawfile2.dll
+			// TypeLib: {F0C5F3E3-4F2A-443E-A74D-0AABE3237494}
 			// CLSID: {1D23188D-53FE-4C25-B032-DC70ACDBDC02}
-			// IID:   {11B488A0-69B1-41FC-A660-FE8DF2A31F5B}
+			// IID:   {11B488A0-69B1-41FC-A660-FE8DF2A31F5B}  IXRawFile
+			// IID:   {55A25FF7-F437-471F-909A-D7F2B5930805}  IXRawfile2
+			// IID:   {19A00B1E-1559-42B1-9A46-08A5E599EDEE}  IXRawfile3
+			// IID:   {E7CF6760-11CD-4260-B5B0-FCE2AD97547B}  IXRawfile4
+			// IID:   {06F53853-E43C-4F30-9E5F-D1B3668F0C3C}  IXRawfile5
 
 			CoInitialize( NULL );
 
@@ -736,7 +833,8 @@ namespace Engine
 
 			// Get Interface ID for IXRawfile
 			IID riid ;
-			res = IIDFromString(L"{11B488A0-69B1-41FC-A660-FE8DF2A31F5B}", &riid) ; 
+			//res = IIDFromString(L"{11B488A0-69B1-41FC-A660-FE8DF2A31F5B}", &riid) ;
+			res = IIDFromString(L"{19A00B1E-1559-42B1-9A46-08A5E599EDEE}", &riid) ;
 
 			if (res == E_INVALIDARG)
 			{
