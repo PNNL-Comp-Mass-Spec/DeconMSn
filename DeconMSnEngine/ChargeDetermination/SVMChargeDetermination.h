@@ -9,46 +9,11 @@
 // http://www.apache.org/licenses/LICENSE-2.0
 
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <float.h>
-#include <math.h>
 #include <vector>
-#include <string>
-#include <algorithm>
-#include <complex>
 
 #include "FeatureSpace.h"
 #include "../Utilities/Matrix.h"
 #include "../PeakProcessor/PeakData.h"
-
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/AbstractDOMParser.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/dom/DOMBuilder.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMEntity.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMLocator.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMTreeWalker.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/TransService.hpp>
-#include <xercesc/framework/LocalFileFormatTarget.hpp>
 
 
 

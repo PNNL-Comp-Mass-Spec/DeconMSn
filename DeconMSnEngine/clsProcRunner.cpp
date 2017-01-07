@@ -21,6 +21,7 @@
 #include "Utilities/SavGolSmoother.h"
 #include "Readers/IMSRawData.h"
 #include <time.h>
+#include <algorithm>
 
 namespace Decon2LS
 {

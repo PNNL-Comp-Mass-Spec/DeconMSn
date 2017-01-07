@@ -9,36 +9,11 @@
 // http://www.apache.org/licenses/LICENSE-2.0
 
 #include "AtomicInformation.h"
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/AbstractDOMParser.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/dom/DOMBuilder.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMEntity.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMLocator.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMTreeWalker.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include<xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/TransService.hpp>
-#include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <string.h>
 #include <iostream>
+
+#using <System.Xml.dll>
+
 namespace Engine
 {
 	namespace TheoreticalProfile
@@ -1991,233 +1966,263 @@ namespace Engine
 			//}
 		}
 
+		ElementalIsotopes ReadElementFromXml(System::Xml::XmlReader *rdr);
 		void AtomicInformation::LoadData(const char *file_name)
 		{
-			mvect_elemental_isotopes.clear() ; 
-			/** Function that reads from xml file, creates a DOM tree and writes the isotope config 
-			into mvect_elemental_isotopes **/
-			ElementalIsotopes isotopes ;	
-
-			bool	doNamespaces = false;
-			bool	doSchema = false;
-			bool	schemaFullChecking = false;			
-			bool	doCreate = false;
-			bool	bFailed = false;		
-			const char* element_tag = "element";
-			const char* symbol_tag = "symbol";
-			const char* num_isotopes_tag = "num_isotopes";
-			const char* isotope_tag = "isotope";
-			const char* atomicity_tag = "atomicity";
-			const char* mass_tag = "mass";
-			const char* probability_tag = "probability";
-			const char *isotopes_tag = "isotopes";
-			const char *name_tag = "name";
-			int num_isotopes = 0;
-			int atomicity = 0;
-			int i = 0;
-
+			System::String *fileName = new System::String(file_name);
 			mvect_elemental_isotopes.clear();
+			/** Function that reads from xml file, creates a DOM tree and writes the isotope config
+			into mvect_elemental_isotopes **/
 
-			static XERCES_CPP_NAMESPACE::XercesDOMParser::ValSchemes    valScheme = XERCES_CPP_NAMESPACE::XercesDOMParser::Val_Auto ;
-			//Initialize the XML 
+			System::String *xmlElementsTag = S"elements";
+			System::String *xmlElementTag = S"element";
+			System::String *xmlNameTag = S"name";
+			System::String *xmlSymbolTag = S"symbol";
+			System::String *xmlAtomicityTag = S"atomicity";
+			System::String *xmlNumIsotopesTag = S"num_isotopes";
+			System::String *xmlIsotopesTag = S"isotopes";
+			System::String *xmlIsotopeTag = S"isotope";
+			System::String *xmlMassTag = S"mass";
+			System::String *xmlProbabilityTag = S"probability";
+
+			/*
+			* <elements>
+			*   <element>
+			*     <name>Hydrogen</name>
+			*     <symbol>H</symbol>
+			*     <atomicity>1</atomicity>
+			*     <num_isotopes>2</num_isotopes>
+			*     <isotopes>
+			*       <isotope>
+			*         <mass>1.007825</mass>
+			*         <probability>0.999850</probability>
+			*       </isotope>
+			*       <isotope>
+			*         <mass>2.014102</mass>
+			*         <probability>0.000150</probability>
+			*       </isotope>
+			*       ...
+			*     </isotopes>
+			*   </element>
+			*
+			*   <element>
+			*     <name>Helium</name>
+			*     <symbol>He</symbol>
+			*     <atomicity>2</atomicity>
+			*     <num_isotopes>2</num_isotopes>
+			*     <isotopes>
+			*       <isotope>
+			*         <mass>3.016030</mass>
+			*         <probability>0.000001</probability>
+			*       </isotope>
+			*       <isotope>
+			*         <mass>4.002600</mass>
+			*         <probability>0.999999</probability>
+			*       </isotope>
+			*       ...
+			*     </isotopes>
+			*   </element>
+			*   ...
+			* </elements>
+			*/
+
+			//Initialize the XML
 			try
 			{
-				XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();			
-			}
-			catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-			{
-				throw toCatch.getMessage() ; 
-			}
-
-			XERCES_CPP_NAMESPACE::XercesDOMParser *parser = new XERCES_CPP_NAMESPACE::XercesDOMParser();
-			if (parser)
-			{
-				parser->setValidationScheme(valScheme);
-				parser->setDoNamespaces(doNamespaces);
-				parser->setDoSchema(doSchema);
-				parser->setValidationSchemaFullChecking(schemaFullChecking);
-				try
-				{
-					parser->parse(file_name);
-				}
-				catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-				{
-					SetDefaultIsotopeDistribution() ; 
-					delete parser ; 
-					throw toCatch.getMessage() ; 
-				}
-
+				System::Xml::XmlReaderSettings *rdrSettings = new System::Xml::XmlReaderSettings();
+				rdrSettings->IgnoreWhitespace = true;
+				System::Xml::XmlReader *rdr = System::Xml::XmlReader::Create(new System::IO::FileStream(fileName, System::IO::FileMode::Open), rdrSettings);
+				rdr->MoveToContent();
 				//create DOM tree
-				XERCES_CPP_NAMESPACE::DOMDocument *doc = NULL ;				
-				try
+				//start walking down the tree
+				if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == xmlElementsTag) //elements
 				{
-					doc = parser->getDocument();				
-				}
-				catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-				{
-					SetDefaultIsotopeDistribution() ; 
-					delete parser ; 
-					throw toCatch.getMessage() ; 
-				}
-				catch(const XERCES_CPP_NAMESPACE::DOMException &toCatch)
-				{
-					SetDefaultIsotopeDistribution() ; 
-					delete parser ; 
-					throw toCatch.getMessage() ; 
-				}
-				catch(const char *toCatch)
-				{
-					SetDefaultIsotopeDistribution() ; 
-					delete parser ; 
-					throw toCatch ; 
-				}
-				catch(const std::exception &toCatch)
-				{
-					SetDefaultIsotopeDistribution() ; 
-					delete parser ; 
-					throw toCatch.what() ; 
-				}
-
-				XERCES_CPP_NAMESPACE::DOMNode *nRoot = NULL;			
-
-				if (doc)
-				{
-					//start walking down the tree
-					nRoot = (XERCES_CPP_NAMESPACE::DOMNode*) doc->getDocumentElement();
-					XERCES_CPP_NAMESPACE::DOMNode *nCurrent = NULL;					
-					XERCES_CPP_NAMESPACE::DOMTreeWalker *walker = doc->createTreeWalker(nRoot, XERCES_CPP_NAMESPACE::DOMNodeFilter::SHOW_ELEMENT, NULL, false); //at elements
-					nCurrent = walker->nextNode();//first "element" get the element name
-					/*DOMNamedNodeMap *attr =  nCurrent->getAttributes();
-					DOMNode *att= attr->item(0);
-					char *element_name = XMLString::transcode(att->getNodeValue());
-					strcpy(isotopes.marr_name, element_name );*/
-		
-					nCurrent = walker->nextNode(); //goes to "name"
-
-					while (nCurrent!=0)
+					rdr->ReadStartElement(); // Read the elements tag, to get to the contents
+					while (rdr->NodeType != System::Xml::XmlNodeType::EndElement)
 					{
-						char *nName = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getNodeName());
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, name_tag))
+						if (rdr->Name->Equals(xmlElementTag))
 						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-							char *element_name = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent());
-							strcpy(isotopes.marr_name, element_name );
-							XERCES_CPP_NAMESPACE::XMLString::release(&element_name) ; 
-							nCurrent = walker->nextNode();
-							continue;
+							//if (isotopes != null)
+							//{
+							//    mvect_elemental_isotopes.Add(isotopes);
+							//}
+							//isotopes = new ElementalIsotopes();
+							mvect_elemental_isotopes.push_back(ReadElementFromXml(rdr->ReadSubtree()));
+							rdr->ReadEndElement();
 						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, symbol_tag))
+						else if (rdr->Name->Equals(xmlNameTag))
 						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-							char *element_symbol = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent());
-							strcpy(isotopes.marr_symbol, element_symbol );
-							XERCES_CPP_NAMESPACE::XMLString::release(&element_symbol) ; 
-							nCurrent = walker->nextNode();
-							continue;
+							rdr->Skip();
 						}
-
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, atomicity_tag))
-						{	
-							//can be modified to store in atomicity if needed
-							atomicity =  XERCES_CPP_NAMESPACE::XMLString::parseInt(nCurrent->getTextContent());
-							isotopes.mint_atomicity = atomicity;
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-							nCurrent = walker->nextNode();
-							continue;
-						}
-
-						if(XERCES_CPP_NAMESPACE::XMLString::equals(nName, num_isotopes_tag))
-						{	
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);		
-							num_isotopes = XERCES_CPP_NAMESPACE::XMLString::parseInt(nCurrent->getTextContent());
-							isotopes.mint_num_isotopes = num_isotopes;
-							isotopes.mdbl_average_mass = 0 ; 
-							isotopes.mdbl_mass_variance = 0 ; 
-							nCurrent = walker->nextNode();
-							continue;
-						}
-
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, isotopes_tag))
+						else if (rdr->Name->Equals(xmlSymbolTag))
 						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-							nCurrent = walker->nextNode();
-							continue;
-						}						
-
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, isotope_tag))
-						{	
-							//keeping track of i
-							nCurrent = walker->nextNode();
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-							const XMLCh*  text_context = nCurrent->getTextContent() ;
-
-							char *ch_text = XERCES_CPP_NAMESPACE::XMLString::transcode(text_context) ; 
-							double mass = atof(ch_text) ;
-							isotopes.marr_isotope_mass[i] = mass ; 
-							XERCES_CPP_NAMESPACE::XMLString::release(&ch_text) ; 
-
-							nCurrent = walker->nextNode();
-							text_context = nCurrent->getTextContent() ;
-							ch_text = XERCES_CPP_NAMESPACE::XMLString::transcode(text_context) ; 
-							double prob = atof(ch_text) ;
-							isotopes.marr_isotope_prob[i] = prob ; 
-							XERCES_CPP_NAMESPACE::XMLString::release(&ch_text) ; 
-
-							isotopes.mdbl_average_mass += isotopes.marr_isotope_mass[i] * isotopes.marr_isotope_prob[i];
-							nCurrent = walker->nextNode();	
-							i = i+1;
-							continue;
+							rdr->Skip();
 						}
-
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, element_tag))
+						else if (rdr->Name->Equals(xmlAtomicityTag))
 						{
-							if (i != num_isotopes)
-								return; //error if unequal
-
-							isotopes.mdbl_mass_variance = 0.0 ; 
-							for (int j = 0 ; j < num_isotopes ; j++)
-							{
-								double mass_diff = isotopes.marr_isotope_mass[j] - isotopes.mdbl_average_mass ; 
-								isotopes.mdbl_mass_variance += mass_diff * mass_diff * isotopes.marr_isotope_prob[j] ; 
-							 }
-							
-							//next element							
-							i = 0;
-							/*DOMNamedNodeMap *attrMap =  nCurrent->getAttributes();
-							DOMNode *attItem = attr->item(0);
-							char *element_name = XERCES_CPP_NAMESPACE::XMLString::transcode(att->getNodeValue());
-							strcpy(isotopes.marr_name, element_name );*/
-							nCurrent = walker->nextNode(); //goes to "name"
-							mvect_elemental_isotopes.push_back(isotopes) ;
+							rdr->Skip();
 						}
-
-						XERCES_CPP_NAMESPACE::XMLString::release(&nName) ; 
+						else if (rdr->Name->Equals(xmlNumIsotopesTag))
+						{
+							rdr->Skip();
+						}
+						else if (rdr->Name->Equals(xmlIsotopesTag))
+						{
+							rdr->Skip();
+						}
+						else if (rdr->Name->Equals(xmlIsotopeTag))
+						{
+							rdr->Skip();
+						}
+						else if (rdr->Name->Equals(xmlMassTag))
+						{
+							rdr->Skip();
+						}
+						else if (rdr->Name->Equals(xmlProbabilityTag))
+						{
+							rdr->Skip();
+						}
+						else
+						{
+							rdr->Skip();
+						}
 					}
+				}
+				if (rdr != 0)
+				{
+					rdr->Close();
+				}
+			}
+			catch (System::Exception *e)
+			{
+#if DEBUG
+				throw e;
+#endif
+			}
+		}
+
+		void ManagedToCharArray(System::String *str, char target[], int targetSize)
+		{
+			char *temp = (char*)(void*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str);
+			strncpy(target, temp, targetSize);
+			System::Runtime::InteropServices::Marshal::FreeHGlobal(temp);
+		}
+
+		ElementalIsotopes ReadElementFromXml(System::Xml::XmlReader *rdr)
+		{
+			System::String *xmlElementsTag = S"elements";
+			System::String *xmlElementTag = S"element";
+			System::String *xmlNameTag = S"name";
+			System::String *xmlSymbolTag = S"symbol";
+			System::String *xmlAtomicityTag = S"atomicity";
+			System::String *xmlNumIsotopesTag = S"num_isotopes";
+			System::String *xmlIsotopesTag = S"isotopes";
+			System::String *xmlIsotopeTag = S"isotope";
+			System::String *xmlMassTag = S"mass";
+			System::String *xmlProbabilityTag = S"probability";
+
+			ElementalIsotopes isotopes;
+			rdr->MoveToContent();
+			if (rdr->Name != xmlElementTag)
+			{
+				throw new System::Exception("Bad tag! Reading Isotopes XML file");
+			}
+			rdr->ReadStartElement(); // Read the element tag, to get to the contents
+			while (rdr->NodeType != System::Xml::XmlNodeType::EndElement)
+			{
+				if (rdr->Name->Equals(xmlNameTag))
+				{
+					//isotopes.marr_name = rdr->ReadElementContentAsString();
+					ManagedToCharArray(rdr->ReadElementContentAsString(), isotopes.marr_name, 32);
+				}
+				else if (rdr->Name->Equals(xmlSymbolTag))
+				{
+					//isotopes.marr_symbol = rdr->ReadElementContentAsString();
+					ManagedToCharArray(rdr->ReadElementContentAsString(), isotopes.marr_symbol, 3);
+				}
+				else if (rdr->Name->Equals(xmlAtomicityTag))
+				{
+					isotopes.mint_atomicity = rdr->ReadElementContentAsInt();
+				}
+				else if (rdr->Name->Equals(xmlNumIsotopesTag))
+				{
+					isotopes.mint_num_isotopes = rdr->ReadElementContentAsInt();
+				}
+				else if (rdr->Name->Equals(xmlIsotopesTag))
+				{
+					System::Xml::XmlReader *irdr = rdr->ReadSubtree();
+					irdr->MoveToContent();
+					irdr->ReadStartElement();
+					int pos = 0;
+					while (irdr->NodeType != System::Xml::XmlNodeType::EndElement)
+					{
+						if (irdr->Name->Equals(xmlIsotopeTag))
+						{
+							System::Xml::XmlReader *irdr2 = irdr->ReadSubtree();
+							irdr2->MoveToContent();
+							irdr2->ReadStartElement();
+							while (irdr2->NodeType != System::Xml::XmlNodeType::EndElement)
+							{
+								if (irdr2->Name->Equals(xmlMassTag))
+								{
+									isotopes.marr_isotope_mass[pos] = irdr2->ReadElementContentAsDouble();
+								}
+								else if (irdr2->Name->Equals(xmlProbabilityTag))
+								{
+									isotopes.marr_isotope_prob[pos] = irdr2->ReadElementContentAsDouble();
+								}
+								else
+								{
+									irdr2->Skip();
+								}
+							}
+							isotopes.mdbl_average_mass += isotopes.marr_isotope_mass[pos] *
+								isotopes.marr_isotope_prob[pos];
+							pos++;
+							irdr2->Close();
+							irdr->ReadEndElement();
+						}
+						else if (irdr->Name->Equals(xmlMassTag))
+						{
+							irdr->Skip();
+						}
+						else if (irdr->Name->Equals(xmlProbabilityTag))
+						{
+							irdr->Skip();
+						}
+						else
+						{
+							irdr->Skip();
+						}
+					}
+					irdr->Close();
+					rdr->ReadEndElement();
+				}
+				else if (rdr->Name->Equals(xmlIsotopeTag))
+				{
+					rdr->Skip();
+				}
+				else if (rdr->Name->Equals(xmlMassTag))
+				{
+					rdr->Skip();
+				}
+				else if (rdr->Name->Equals(xmlProbabilityTag))
+				{
+					rdr->Skip();
 				}
 				else
 				{
-					throw "Unable to open isotopes.xml. Perhaps the file does not exist ?" ; 
+					rdr->Skip();
 				}
-
-				doc->release() ; 
-				delete doc ; 
 			}
-			if (i != num_isotopes)
-				return; //error if unequal
-			else
+			rdr->Close();
+
+			for (int j = 0; j < isotopes.mint_num_isotopes; j++)
 			{
-				for (int j = 0 ; j < num_isotopes ; j++)
-				{
-					double mass_diff = isotopes.marr_isotope_mass[j] - isotopes.mdbl_average_mass ; 
-					isotopes.mdbl_mass_variance += mass_diff * mass_diff * isotopes.marr_isotope_prob[j] ; 
-				}
-				mvect_elemental_isotopes.push_back(isotopes) ;
+				double massDiff = isotopes.marr_isotope_mass[j] - isotopes.mdbl_average_mass;
+				isotopes.mdbl_mass_variance += massDiff * massDiff * isotopes.marr_isotope_prob[j];
 			}
-
-			if (parser)
-				delete parser ; 
-			XERCES_CPP_NAMESPACE::XMLPlatformUtils::Terminate();
-
+			return isotopes;
 		}
 
 		void AtomicInformation::LoadData() {
@@ -2225,134 +2230,62 @@ namespace Engine
 		}
 
 		void AtomicInformation::WriteData(const char *file_name)
-		{			
-			ElementalIsotopes isotopes ;
-			const char* name_tag = "name";
-			const char* elements_tag = "elements";
-			const char* element_tag = "element";
-			const char* symbol_tag = "symbol";
-			const char* num_isotopes_tag = "num_isotopes";
-			const char* isotope_tag = "isotope";
-			const char* atomicity_tag = "atomicity";
-			const char* mass_tag = "mass";
-			const char* probability_tag = "probability";
-			const char *isotopes_tag = "isotopes";
+		{
+			System::String *xmlElementsTag = S"elements";
+			System::String *xmlElementTag = S"element";
+			System::String *xmlNameTag = S"name";
+			System::String *xmlSymbolTag = S"symbol";
+			System::String *xmlAtomicityTag = S"atomicity";
+			System::String *xmlNumIsotopesTag = S"num_isotopes";
+			System::String *xmlIsotopesTag = S"isotopes";
+			System::String *xmlIsotopeTag = S"isotope";
+			System::String *xmlMassTag = S"mass";
+			System::String *xmlProbabilityTag = S"probability";
 
+			System::String *fileName = new System::String(file_name);
+			System::Xml::XmlWriterSettings *wrtrSettings = new System::Xml::XmlWriterSettings();
+			wrtrSettings->CheckCharacters = false;
+			wrtrSettings->CloseOutput = true;
+			wrtrSettings->Encoding = System::Text::Encoding::UTF8;
+			wrtrSettings->Indent = true;
+			wrtrSettings->IndentChars = "  ";
+			//wrtrSettings->WriteEndDocumentOnClose = true; // Requires minimum .NET 4.5
 
-			try
+			System::Xml::XmlWriter *wrtr = System::Xml::XmlWriter::Create(new System::IO::StreamWriter(
+				new System::IO::FileStream(fileName, System::IO::FileMode::Create, System::IO::FileAccess::ReadWrite, System::IO::FileShare::None)), wrtrSettings);
+
+			wrtr->WriteStartDocument();
+			wrtr->WriteStartElement(xmlElementsTag); // Open elements tag
+			for (int i = 0; i < mvect_elemental_isotopes.size(); i++)
 			{
-				XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();			
-			}
-			catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-			{
-				std::cerr<<toCatch.getMessage()<<std::endl ; 
-				//Do something
-				return;
-			}
-
-			XERCES_CPP_NAMESPACE::DOMImplementation* impl =  XERCES_CPP_NAMESPACE::DOMImplementationRegistry::getDOMImplementation(XERCES_CPP_NAMESPACE::XMLString::transcode("Core"));
-			XERCES_CPP_NAMESPACE::DOMWriter *theSerializer = impl->createDOMWriter();	
-
-			 if (theSerializer->canSetFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTSplitCdataSections, true))
-                theSerializer->setFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTSplitCdataSections, true);
-
-            if (theSerializer->canSetFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTDiscardDefaultContent, true))
-                theSerializer->setFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTDiscardDefaultContent, true);
-
-            if (theSerializer->canSetFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTFormatPrettyPrint, true))
-                theSerializer->setFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTFormatPrettyPrint, true);
-
-            if (theSerializer->canSetFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTBOM, true))
-                theSerializer->setFeature(XERCES_CPP_NAMESPACE::XMLUni::fgDOMWRTBOM, true);
-
-
-
-			if (impl != NULL)
-			{
-
-				XERCES_CPP_NAMESPACE::DOMDocument* doc = impl->createDocument(0, XERCES_CPP_NAMESPACE::XMLString::transcode(elements_tag), 0);
-				XERCES_CPP_NAMESPACE::DOMElement* rootElem = doc->getDocumentElement();				
-
-				int size = mvect_elemental_isotopes.size();
-
-				for (int j = 0; j<size; j++)
+				ElementalIsotopes element = mvect_elemental_isotopes[i];
+				wrtr->WriteStartElement(xmlElementTag); // Open element tag
+				wrtr->WriteElementString(xmlNameTag, new System::String(element.marr_name));
+				wrtr->WriteElementString(xmlSymbolTag, new System::String(element.marr_symbol));
+				wrtr->WriteStartElement(xmlAtomicityTag);
+				wrtr->WriteValue(element.mint_atomicity);
+				wrtr->WriteEndElement();
+				wrtr->WriteStartElement(xmlNumIsotopesTag);
+				wrtr->WriteValue(element.mint_num_isotopes);
+				wrtr->WriteEndElement();
+				wrtr->WriteStartElement(xmlIsotopesTag);
+				for (int j = 0; j < element.mint_num_isotopes; j++)
 				{
-
-					isotopes = mvect_elemental_isotopes[j];
-
-					XERCES_CPP_NAMESPACE::DOMElement* elementElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(element_tag));
-					XERCES_CPP_NAMESPACE::DOMElement* nameElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(name_tag));
-					XERCES_CPP_NAMESPACE::DOMElement* symbolElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(symbol_tag));
-					XERCES_CPP_NAMESPACE::DOMElement* atomicityElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(atomicity_tag));
-					XERCES_CPP_NAMESPACE::DOMElement* numisotopesElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(num_isotopes_tag));
-					XERCES_CPP_NAMESPACE::DOMElement* isotopesElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(isotopes_tag));
-
-					rootElem->appendChild(elementElem);				
-
-
-					elementElem->appendChild(nameElem);
-					char *element_name = NULL;			
-					element_name = isotopes.marr_name;	
-					XERCES_CPP_NAMESPACE::DOMText* nameElemValue = doc->createTextNode(XERCES_CPP_NAMESPACE::XMLString::transcode(element_name));
-					nameElem->appendChild(nameElemValue);
-					//elementElem->setAttribute(XERCES_CPP_NAMESPACE::XMLString::transcode("id"), XERCES_CPP_NAMESPACE::XMLString::transcode(element_name));				
-
-					elementElem->appendChild(symbolElem);
-					char *elemental_symbol = isotopes.marr_symbol;
-					XERCES_CPP_NAMESPACE::DOMText* symbolElemValue = doc->createTextNode(XERCES_CPP_NAMESPACE::XMLString::transcode(elemental_symbol));
-					symbolElem->appendChild(symbolElemValue);				
-
-					elementElem->appendChild(atomicityElem);				
-					XMLCh* temp1 = new XMLCh[10];
-					XERCES_CPP_NAMESPACE::XMLString::binToText(isotopes.mint_atomicity, temp1, 9 ,10);
-					XERCES_CPP_NAMESPACE::DOMText* atomicityElemValue = doc->createTextNode(temp1);
-					atomicityElem->appendChild(atomicityElemValue);
-
-					elementElem->appendChild(numisotopesElem);
-					XERCES_CPP_NAMESPACE::XMLString::binToText(isotopes.mint_num_isotopes, temp1, 9 ,10);
-					XERCES_CPP_NAMESPACE::DOMText* numisotopesElemValue = doc->createTextNode(temp1);
-					numisotopesElem->appendChild(numisotopesElemValue);
-
-					elementElem->appendChild(isotopesElem);
-					for( int i=0;i<isotopes.mint_num_isotopes;i++)
-					{
-						XERCES_CPP_NAMESPACE::DOMElement* isotopeElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(isotope_tag));
-						XERCES_CPP_NAMESPACE::DOMElement* massElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(mass_tag));	
-						XERCES_CPP_NAMESPACE::DOMElement* probElem = doc->createElement(XERCES_CPP_NAMESPACE::XMLString::transcode(probability_tag));
-						char buf[100];
-
-						sprintf(buf, "%f",isotopes.marr_isotope_mass[i]);
-						XERCES_CPP_NAMESPACE::DOMText* massElemValue = doc->createTextNode(XERCES_CPP_NAMESPACE::XMLString::transcode(buf));					
-						massElem->appendChild(massElemValue);
-						isotopeElem->appendChild(massElem);
-
-						sprintf(buf, "%f",isotopes.marr_isotope_prob[i]);
-						XERCES_CPP_NAMESPACE::DOMText* probElemValue = doc->createTextNode(XERCES_CPP_NAMESPACE::XMLString::transcode(buf));
-						probElem->appendChild(probElemValue);
-						isotopeElem->appendChild(probElem);
-
-						isotopesElem->appendChild(isotopeElem);						
-					}				
-				}	
-				XERCES_CPP_NAMESPACE::XMLFormatTarget *myFormTarget;
-				myFormTarget = new XERCES_CPP_NAMESPACE::LocalFileFormatTarget(file_name);
-				theSerializer->writeNode(myFormTarget, *doc);
-				theSerializer->release() ; 
-				delete myFormTarget ; 
-				theSerializer = NULL ; 
-				if (doc)
-				{
-					doc->release() ; 
-					delete doc ; 
+					wrtr->WriteStartElement(xmlIsotopeTag); // Open isotope tag
+					wrtr->WriteStartElement(xmlMassTag);
+					wrtr->WriteValue(System::Double(element.marr_isotope_mass[j]).ToString(S"F6"));
+					wrtr->WriteEndElement();
+					wrtr->WriteStartElement(xmlProbabilityTag);
+					wrtr->WriteValue(System::Double(element.marr_isotope_prob[j]).ToString(S"F6"));
+					wrtr->WriteEndElement();
+					wrtr->WriteEndElement(); // Close isotope tag
 				}
-				if (impl)
-				{
-					delete impl ; 
-				}
+				wrtr->WriteEndElement(); // Close isotopes tag
+				wrtr->WriteEndElement(); // Close element tag
 			}
+			wrtr->WriteEndElement(); // Close elements tag
 
-			XERCES_CPP_NAMESPACE::XMLPlatformUtils::Terminate();
-
+			wrtr->Close(); // Close XmlWriter
 		}
 
 		int AtomicInformation::GetNumElements()

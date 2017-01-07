@@ -8,7 +8,11 @@
 // in compliance with the License.  You may obtain a copy of the License at 
 // http://www.apache.org/licenses/LICENSE-2.0
 
+#include <algorithm>
+
 #include "SVMChargeDetermination.h"
+
+#using <System.Xml.dll>
 
 namespace Engine
 {
@@ -44,7 +48,7 @@ namespace Engine
 		SVMChargeDetermine::~SVMChargeDetermine(void)
 		{
 			if (mobj_scan_features != NULL)
-                delete mobj_scan_features;
+				delete mobj_scan_features;
 			if (mobj_support_features !=NULL)
 				delete mobj_support_features;
 			if (mmat_C != NULL)
@@ -176,7 +180,7 @@ namespace Engine
 			double **second_term3_value;
 			first_term3_value = (double **)first_term3->ptr;
 			second_term3_value = (double **)second_term3->ptr;
-            fscore3 = first_term3_value[0][0] - 0.5*second_term3_value[0][0] + prob[1];
+			fscore3 = first_term3_value[0][0] - 0.5*second_term3_value[0][0] + prob[1];
 			
 		}
 
@@ -680,7 +684,7 @@ namespace Engine
 				}		
 				//This is for ease of matrix addition
 				for (int col_num=0; col_num < norm_x->cols; col_num++)
-                    norm_x_value[row_num][col_num] = sumX;
+					norm_x_value[row_num][col_num] = sumX;
 			}
 
 			xsup2 = matrix_mult_pwise(xsup, xsup);
@@ -704,7 +708,7 @@ namespace Engine
 			norm_xsup_t_val = (double **) norm_xsup_t->ptr;
 
 			double scale = -2.0;
-            psTemp = matrix_scale(ps, scale);
+			psTemp = matrix_scale(ps, scale);
 			double **psTemp_val;
 			psTemp_val = (double **) psTemp->ptr;
 			
@@ -956,179 +960,287 @@ namespace Engine
 		
 		}
 
+#undef EOF
+
+		void ReadXmlBias(System::Xml::XmlReader *rdr, std::vector<double> &mvect_b);
+		void ReadXmlSupportBias(System::Xml::XmlReader *rdr, std::vector<double> &mvect_nbsv);
+		int ReadXmlSupportWeights(System::Xml::XmlReader *rdr, std::vector<double> &mvect_w);
+		int ReadXmlSupportVectors(System::Xml::XmlReader *rdr, std::vector<Engine::ChargeDetermination::FeatureList> &mvect_xsup);
 		void SVMChargeDetermine::LoadSVMFromXml()
 		{
-			static XERCES_CPP_NAMESPACE::XercesDOMParser::ValSchemes    valScheme = XERCES_CPP_NAMESPACE::XercesDOMParser::Val_Never;
-			bool	doNamespaces = false;
-			bool	doSchema = false;
-			bool	schemaFullChecking = false;			
-			bool	doCreate = false;
-			bool	bFailed = false;
+			System::String *svm_tag = S"SVMParams";
+			System::String *b_tag = S"b";
+			System::String *w_tag = S"w";
+			System::String *nbsv_tag = S"nbsv";
+			System::String *bias_tag = S"Bias";
+			System::String *weights_tag = S"Support_Weights";
+			System::String *support_tag = S"Support_Vectors";
+			System::String *bias_support_tag = S"Support_Bias";
+			System::String *xsup_tag = S"xsup";
+			System::String *feature_tag = S"feature";
 
-			const char* svm_tag = "SVMParams";
-			const char* b_tag = "b";
-			const char* w_tag = "w";
-			const char* nbsv_tag = "nbsv";
-			const char* bias_tag = "Bias";
-			const char* weights_tag = "Support_Weights";
-			const char* support_tag = "Support_Vectors";
-			const char* bias_support_tag = "Support_Bias" ; 
-			const char* xsup_tag = "xsup";
-			const char* feature_tag = "feature";
 			int weight_count = 0;
 			int feature_count = 0;
 			int support_count = 0;
 
+			/* Format
+			* <SVMParams>
+			*   <Bias>
+			*     <b>double</b>
+			*     <b>double</b>
+			*     ...
+			*   </Bias>
+			*   <Support_Bias>
+			*     <nbsv>double</double>
+			*     <nbsv>double</double>
+			*     ...
+			*   </Support_Bias>
+			*   <Support_Weights>
+			*     <w>double</w>
+			*     <w>double</w>
+			*     ...
+			*   </Support_Weights>
+			*   <Support_Vectors>
+			*     <xsup>
+			*       <feature>double</double>
+			*       <feature>double</double>
+			*       ...
+			*     </xsup>
+			*     <xsup>
+			*       <feature>double</double>
+			*       <feature>double</double>
+			*       ...
+			*     </xsup>
+			*     ...
+			*   </Support_Vectors>
+			* </SVMParams>
+			*/
 
-			
-			char *pEnd;
-			//Initialize the XML 
-			try
+			System::Xml::XmlReaderSettings *rdrSettings = new System::Xml::XmlReaderSettings();
+			rdrSettings->IgnoreWhitespace = true;
+			System::Xml::XmlReader *rdr = System::Xml::XmlReader::Create(new System::IO::FileStream(mchar_svm_param_xml_file, System::IO::FileMode::Open), rdrSettings);
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == svm_tag) //svm_params
 			{
-				XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();			
-			}
-			catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-			{
-				//Do something
-				return;
-			}
-
-			XERCES_CPP_NAMESPACE::XercesDOMParser *parser = new XERCES_CPP_NAMESPACE::XercesDOMParser;
-			if (parser)
-			{
-				parser->setValidationScheme(valScheme);
-				parser->setDoNamespaces(doNamespaces);
-				parser->setDoSchema(doSchema);
-				parser->setValidationSchemaFullChecking(schemaFullChecking);
-				try
+				//at elements
+				rdr->ReadStartElement(); // Read the SVMParams tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
 				{
-					parser->parse(mchar_svm_param_xml_file);				
-				}
-				catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-				{
-					throw toCatch.getMessage();
-					printf((char*)toCatch.getMessage());
-				}
-
-				//create DOM tree
-				XERCES_CPP_NAMESPACE::DOMDocument *doc = NULL ;				
-				try
-				{
-					doc = parser->getDocument();				
-				}
-				catch(const XERCES_CPP_NAMESPACE::XMLException &toCatch)
-				{
-					throw toCatch.getMessage() ; 
-				}
-				catch(const XERCES_CPP_NAMESPACE::DOMException &toCatch)
-				{
-					throw toCatch.getMessage() ; 
-				}
-				catch(const char *toCatch)
-				{
-					throw toCatch ; 
-				}
-				catch(const std::exception &toCatch)
-				{
-					throw toCatch.what() ; 
-				}
-				
-							
-				XERCES_CPP_NAMESPACE::DOMNode *nRoot = NULL;			
-
-				if (doc)
-				{
-					//start walking down the tree					
-					nRoot = (XERCES_CPP_NAMESPACE::DOMNode*) doc->getDocumentElement();	
-					char *rootName = XERCES_CPP_NAMESPACE::XMLString::transcode(nRoot->getNodeName()); // svm_params
-					XERCES_CPP_NAMESPACE::DOMNode *nCurrent = NULL;						
-					XERCES_CPP_NAMESPACE::DOMTreeWalker *walker = doc->createTreeWalker(nRoot, XERCES_CPP_NAMESPACE::DOMNodeFilter::SHOW_ELEMENT, NULL, false); //at elements
-					
-					nCurrent = walker->nextNode(); //first bias
-
-					while(nCurrent!=0)
+					if (rdr->Name->Equals(bias_tag))
 					{
-						char *nName = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getNodeName());
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, bias_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, b_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							double b = strtod(XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent()), &pEnd);	
-							mvect_b.push_back(b) ;
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, bias_support_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, nbsv_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							double nbsv = strtod(XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent()), &pEnd);	
-							mvect_nbsv.push_back(nbsv) ;
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, weights_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, w_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							double w = strtod(XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent()), &pEnd);	
-							mvect_w.push_back(w);
-							nCurrent = walker->nextNode();
-							weight_count++;
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, support_tag))
-						{
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);													
-							nCurrent = walker->nextNode();
-							continue;
-						}
-						if (XERCES_CPP_NAMESPACE::XMLString::equals(nName, xsup_tag))
-						{
-							std::vector <double> vect_xsup;
-							XERCES_CPP_NAMESPACE::XMLString::release(&nName);	
-							nCurrent = walker->nextNode();
-							nName = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getNodeName());
-							feature_count = 0;
-							while (XERCES_CPP_NAMESPACE::XMLString::equals(nName, feature_tag))
-							{
-								XERCES_CPP_NAMESPACE::XMLString::release(&nName);
-                                double feature = strtod(XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getTextContent()), &pEnd);	
-								vect_xsup.push_back(feature);
-								nCurrent = walker->nextNode();
-								if (nCurrent!=0)
-									nName = XERCES_CPP_NAMESPACE::XMLString::transcode(nCurrent->getNodeName());
-								else
-									nName = NULL;
-								feature_count++;
-							}
-							mobj_support_features->InitValues(vect_xsup) ;
-							mvect_xsup.push_back(*mobj_support_features);
-							support_count++;
-							continue;
-						}
+						ReadXmlBias(rdr->ReadSubtree(), mvect_b);
+						rdr->ReadEndElement();
+					}
+					else if (rdr->Name->Equals(bias_support_tag))
+					{
+						ReadXmlSupportBias(rdr->ReadSubtree(), mvect_nbsv);
+						rdr->ReadEndElement();
+					}
+					else if (rdr->Name->Equals(weights_tag))
+					{
+						weight_count += ReadXmlSupportWeights(rdr->ReadSubtree(), mvect_w);
+						rdr->ReadEndElement();
+					}
+					else if (rdr->Name->Equals(support_tag))
+					{
+						support_count += ReadXmlSupportVectors(rdr->ReadSubtree(), mvect_xsup);
+						rdr->ReadEndElement();
+					}
+					else if (rdr->Name->Equals(b_tag))
+					{
+						rdr->Skip();
+					}
+					else if (rdr->Name->Equals(nbsv_tag))
+					{
+						rdr->Skip();
+					}
+					else if (rdr->Name->Equals(w_tag))
+					{
+						rdr->Skip();
+					}
+					else if (rdr->Name->Equals(xsup_tag))
+					{
+						rdr->Skip();
+					}
+					else
+					{
+						rdr->Skip();
 					}
 				}
 			}
-			XERCES_CPP_NAMESPACE::XMLPlatformUtils::Terminate();
+			if (rdr != 0)
+				rdr->Close();
 		}
 
-		
+		void ReadXmlBias(System::Xml::XmlReader *rdr, std::vector<double> &mvect_b)
+		{
+			System::String *b_tag = S"b";
+			System::String *bias_tag = S"Bias";
 
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == bias_tag)
+			{
+				//at elements
+				rdr->ReadStartElement(); // Read the Bias tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
+				{
+					if (rdr->Name->Equals(b_tag))
+					{
+						double b = rdr->ReadElementContentAsDouble();
+						mvect_b.push_back(b);
+					}
+					else
+					{
+						rdr->Skip();
+					}
+				}
+				//if (!rdr->EOF)
+				if (rdr->NodeType == System::Xml::XmlNodeType::EndElement)
+					rdr->ReadEndElement();
+			}
+			rdr->Close();
+		}
+
+		void ReadXmlSupportBias(System::Xml::XmlReader *rdr, std::vector<double> &mvect_nbsv)
+		{
+			System::String *nbsv_tag = S"nbsv";
+			System::String *bias_support_tag = S"Support_Bias";
+
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == bias_support_tag)
+			{
+				//at elements
+				rdr->ReadStartElement(); // Read the Support_Bias tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
+				{
+					if (rdr->Name->Equals(nbsv_tag))
+					{
+						double nbsv = rdr->ReadElementContentAsDouble();
+						mvect_nbsv.push_back(nbsv);
+					}
+					else
+					{
+						rdr->Skip();
+					}
+				}
+				if (!rdr->EOF || rdr->NodeType == System::Xml::XmlNodeType::EndElement)
+					rdr->ReadEndElement();
+			}
+			rdr->Close();
+		}
+
+		int ReadXmlSupportWeights(System::Xml::XmlReader *rdr, std::vector<double> &mvect_w)
+		{
+			System::String *w_tag = S"w";
+			System::String *weights_tag = S"Support_Weights";
+
+			int weight_count = 0;
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == weights_tag)
+			{
+				//at elements
+				rdr->ReadStartElement(); // Read the Support_Weights tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
+				{
+					if (rdr->Name->Equals(w_tag))
+					{
+						double w = rdr->ReadElementContentAsDouble();
+						mvect_w.push_back(w);
+						weight_count++;
+					}
+					else
+					{
+						rdr->Skip();
+					}
+				}
+				if (!rdr->EOF || rdr->NodeType == System::Xml::XmlNodeType::EndElement)
+					rdr->ReadEndElement();
+			}
+			rdr->Close();
+			return weight_count;
+		}
+
+		int ReadXmlSupportVectorFeatures(System::Xml::XmlReader *rdr, Engine::ChargeDetermination::FeatureList *mobj_support_features);
+
+		int ReadXmlSupportVectors(System::Xml::XmlReader *rdr, std::vector<Engine::ChargeDetermination::FeatureList> &mvect_xsup)
+		{
+			System::String *support_tag = S"Support_Vectors";
+			System::String *xsup_tag = S"xsup";
+
+			int feature_count = 0;
+			int support_count = 0;
+			Engine::ChargeDetermination::FeatureList *mobj_support_features = new Engine::ChargeDetermination::FeatureList();
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == support_tag)
+			{
+				//at elements
+				rdr->ReadStartElement(); // Read the Support_Vectors tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
+				{
+					if (rdr->Name->Equals(xsup_tag))
+					{
+						feature_count += ReadXmlSupportVectorFeatures(rdr->ReadSubtree(), mobj_support_features);
+						rdr->ReadEndElement();
+						mvect_xsup.push_back(FeatureList(*mobj_support_features));
+						support_count++;
+					}
+					else
+					{
+						rdr->Skip();
+					}
+				}
+				if (!rdr->EOF || rdr->NodeType == System::Xml::XmlNodeType::EndElement)
+					rdr->ReadEndElement();
+			}
+			rdr->Close();
+			return support_count;
+		}
+
+		int ReadXmlSupportVectorFeatures(System::Xml::XmlReader *rdr, Engine::ChargeDetermination::FeatureList *mobj_support_features)
+		{
+			System::String *xsup_tag = S"xsup";
+			System::String *feature_tag = S"feature";
+
+			int feature_count = 0;
+			std::vector<double> vect_xsup;
+			rdr->MoveToContent();
+			//start walking down the tree
+			if (rdr->NodeType == System::Xml::XmlNodeType::Element && rdr->Name == xsup_tag)
+			{
+				//at elements
+				rdr->ReadStartElement(); // Read the xsup tag, to get to the contents
+				//first bias
+				while (rdr->NodeType != System::Xml::XmlNodeType::EndElement && !rdr->EOF)
+				{
+					if (rdr->Name->Equals(feature_tag))
+					{
+						double feature = rdr->ReadElementContentAsDouble();
+						vect_xsup.push_back(feature);
+						feature_count++;
+					}
+					else
+					{
+						rdr->Skip();
+					}
+				}
+
+				mobj_support_features->InitValues(vect_xsup);
+
+				if (!rdr->EOF || rdr->NodeType == System::Xml::XmlNodeType::EndElement)
+					rdr->ReadEndElement();
+			}
+			rdr->Close();
+			return feature_count;
+		}
 	}
 }
