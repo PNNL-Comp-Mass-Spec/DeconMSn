@@ -315,6 +315,9 @@
     <ClCompile Include="DTAGeneration\DTAScanTypeGeneration.cpp">
       <Filter>DTAGeneration\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChargeDetermination\SVMChargeDeterminationDefaults.cpp">
+      <Filter>ChargeDetermination\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clsAveragine.h">

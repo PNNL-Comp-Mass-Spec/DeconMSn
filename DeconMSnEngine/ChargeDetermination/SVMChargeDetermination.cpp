@@ -968,6 +968,13 @@ namespace Engine
 		int ReadXmlSupportVectors(System::Xml::XmlReader *rdr, std::vector<Engine::ChargeDetermination::FeatureList> &mvect_xsup);
 		void SVMChargeDetermine::LoadSVMFromXml()
 		{
+			if (!System::IO::File::Exists(new System::String(mchar_svm_param_xml_file)))
+			{
+				LoadSVMDefaults();
+				WriteSVMToXml();
+				return;
+			}
+
 			System::String *svm_tag = S"SVMParams";
 			System::String *b_tag = S"b";
 			System::String *w_tag = S"w";

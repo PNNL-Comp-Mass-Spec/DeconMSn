@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="ChargeDetermination\SVMChargeDeterminationDefaults.cpp" />
     <ClCompile Include="clsAveragine.cpp" />
     <ClCompile Include="clsDTAGenerationParameters.cpp" />
     <ClCompile Include="clsElementIsotopes.cpp" />

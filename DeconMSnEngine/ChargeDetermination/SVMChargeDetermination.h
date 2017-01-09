@@ -75,6 +75,8 @@ namespace Engine
 				~SVMChargeDetermine();
 
 				void LoadSVMFromXml();
+				void LoadSVMDefaults();
+				void WriteSVMToXml();
 				void InitializeLDA();
 				void InitVectors();
 				//void GetFeaturesForSpectra(PeakProcessing::PeakData &msN_pk_data, PeakProcessing::Peak &parentPeak, int parentScan) ; 
