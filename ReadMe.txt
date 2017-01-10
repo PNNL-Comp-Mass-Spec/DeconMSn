@@ -33,14 +33,9 @@ C:\Program Files\DeconMSn, unless otherwise specified during installation.
 Type DeconMSn.exe at the command line in the installer directory to see the 
 basic method of usage of the program shown below.  
 
-If the program reports an error when you run it, make sure that both 
-of these runtimes are installed:
-1) Microsoft Visual C++ 2003 runtime (required by Xerces 2.8)
-	- http://www.microsoft.com/en-us/download/details.aspx?id=26
-	- C:\Windows\System32\msvcr71.dll
-	- C:\Windows\System32\msvcp71.dll
-2) Microsoft Visual C++ 2010 SP1 runtime (required by DeconMSn)
-	- http://www.microsoft.com/en-us/download/details.aspx?id=8328
+If the program reports an error when you run it, make sure that the following runtime is installed:
+1) Microsoft Visual C++ 2013 x86 runtime (required by DeconMSn)
+	- https://www.microsoft.com/en-us/download/details.aspx?id=40784 or https://support.microsoft.com/en-us/help/3179560/update-for-visual-c-2013-and-visual-c-redistributable-package
 	- C:\Windows\System32\msvcr100.dll
 	- C:\Windows\System32\msvcp100.dll
 
@@ -62,9 +57,8 @@ of these runtimes are installed:
 	         -Cstring : string is the charge to be considered [NULL]
 	         -Pstring : string is the parameter XML file name to be used for processing [default options are set]
 	         -Dstring : string is the output directory[default - set to same directory as input file]
-			 -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default
-                        since the m/z values reported by the centroiding algorithm are typically off by several hundred ppm
-			 -Progress: Creates a _progress.txt file with a percent complete value every 50 scans
+	         -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default
+	         -Progress: Creates a _progress.txt file with a percent complete value every 50 scans
 	         -Sstring : string is the type of spectra to process, options are
 	                 ALL : to process all spectra present in the raw file (default)
 	                 CID : to process only CID spectra present in the raw file
@@ -105,14 +99,8 @@ Process sample.RAW, use processing options specified by parameter file LTQ_FT_No
 to analyze ThermoFinnigan data.  Alternatively, if the user converts the raw data into 
 the .mzXML format, then DeconMSn can process the data without vendor specific libraries.
 
-- When compiling the source code, the user must first install Xerces 
-(http://xerces.apache.org/xerces-c/) and then modify the paths for header and library
-in the DeconMSnEngine project to indicate any change in the Xerces installation folder (the default 
-installation path given in DeconMSN is C:\xerces\)
-	- Current version of this program is built with xerces 2.8.
-
--This program requires msvcr71.dll and msvcr100.dll, which are often already on your computer.
- The installer should install those DLLs if they're missing
+-This program requires msvcr120.dll, which is often already on your computer.
+ The installer should install this DLL if it is missing
 
 -------------------------------------------------------------------------------
 Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy 
