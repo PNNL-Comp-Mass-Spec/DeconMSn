@@ -1,3 +1,11 @@
+
+              WARNING: The C++ version of DeconMSn has been abandoned.
+
+For the latest version of DeconMSn, see the C#_Version folder in the DeconEngineV2 project at:
+https://github.com/PNNL-Comp-Mass-Spec/DeconEngineV2
+specifically
+https://github.com/PNNL-Comp-Mass-Spec/DeconEngineV2/tree/master/C%23_Version/DeconMSn
+
 --------------------
 -- DeconMSn Overview
 --------------------
