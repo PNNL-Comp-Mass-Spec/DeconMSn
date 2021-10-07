@@ -1,0 +1,4 @@
+# Jekyll configuration
+name: DeconMSn
+description: DeconMSn creates spectrum files for tandem mass spectrometry data.
+url: https://pnnl-comp-mass-spec.github.io/DeconMSn/
